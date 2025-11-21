@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>{{META_TITLE}}</title>
+    <meta name="description" content="{{META_DESC}}">
+    <meta property="og:image" content="{{META_IMAGE}}" />
+
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root { --bg-color: #000; --accent: #fff; --glass: rgba(20, 20, 20, 0.90); --border: rgba(255, 255, 255, 0.3); }
+        * { box-sizing: border-box; }
+        body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: #fff; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.5s ease; }
+        .video-background.dimmed { filter: brightness(0.3) blur(8px); transform: scale(1.02); }
+        .video-background.active { z-index: 50; filter: brightness(1) blur(0); transform: scale(1); }
+        video { width: 100%; height: 100%; object-fit: contain; outline: none; }
+        .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; }
+        .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
+        .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 2px solid #fff; display: inline-block; text-shadow: 0 0 20px rgba(255,255,255,0.4); }
+        .movie-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 30px 80px rgba(0,0,0,1); animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .card-title { font-size: 2.5rem; margin: 0 0 10px 0; line-height: 1.1; color: #fff; text-transform: uppercase; }
+        .card-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; display: block; font-style: italic; }
+        .card-desc { line-height: 1.6; color: #eee; margin-bottom: 40px; border-left: 3px solid #fff; padding-left: 20px; background: rgba(255,255,255,0.05); padding: 15px; }
+        .btn-main { background: #fff; color: #000; border: none; padding: 18px 40px; font-family: 'Space Mono'; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; width: 100%; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
+        .btn-main:hover { background: #ddd; letter-spacing: 4px; box-shadow: 0 0 25px rgba(255,255,255,0.6); }
+        .btn-sort { background: transparent; color: #fff; border: 2px solid #fff; padding: 20px 60px; font-size: 1.2rem; margin-top: 20px; box-shadow: none; }
+        .btn-sort:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+        .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; background: rgba(0,0,0,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.3s; backdrop-filter: blur(5px); }
+        .btn-back-corner:hover { background: #fff; color: #000; }
+        .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; }
+        .btn-login { background: transparent; border: 1px solid #fff; color: #fff; padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.8rem; backdrop-filter: blur(5px); transition: 0.3s; }
+        .btn-login:hover { background: #fff; color: #000; }
+        .user-info { color: #0f0; font-size: 0.8rem; padding: 8px 0; text-shadow: 0 0 10px #0f0; font-weight: bold; }
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .auth-box { background: #111; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(255,255,255,0.1); animation: slideUp 0.3s ease-out; }
+        .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; background: #000; border: 1px solid #444; color: #fff; font-family: 'Space Mono'; outline: none; }
+        .auth-input:focus { border-color: #fff; }
+        .auth-link { color: #aaa; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
+        .auth-error { color: #f00; font-size: 0.8rem; margin-bottom: 15px; border: 1px solid #f00; padding: 10px; }
+        .sorting-anim { font-size: 2rem; font-weight: bold; text-align: center; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); background: rgba(0,0,0,0.8); padding: 40px; border: 1px solid #fff; max-width: 90%; }
+        @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.8rem; } .movie-card { padding: 30px; } .sorting-anim { font-size: 1.5rem; } }
+    </style>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const BUCKET_URL = ""; 
+
+        // --- AUTH SERVICE LIGHT (FALA COM A LAMBDA) ---
+        const AuthService = {
+            signUp: async (email, password) => {
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST', body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.status !== 200) throw new Error(data.body || "Erro cadastro");
+                return data;
+            },
+            confirmSignUp: async (email, code) => {
+                const res = await fetch('/api/auth/confirm', {
+                    method: 'POST', body: JSON.stringify({ email, code })
+                });
+                const data = await res.json();
+                if (res.status !== 200) throw new Error(data.body || "Erro confirmação");
+                return data;
+            },
+            signIn: async (email, password) => {
+                const res = await fetch('/api/auth/signin', {
+                    method: 'POST', body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (res.status !== 200) throw new Error(data.body || "Erro login");
+                
+                // Salva sessão local (Token + Email)
+                localStorage.setItem("sortashort_session", JSON.stringify(data));
+                return data;
+            },
+            signOut: () => {
+                localStorage.removeItem("sortashort_session");
+            },
+            getCurrentUser: () => {
+                const sess = localStorage.getItem("sortashort_session");
+                return sess ? JSON.parse(sess) : null;
+            }
+        };
+
+        // --- API HISTÓRICO ---
+        const ApiService = {
+            saveMovie: async (email, movieId) => {
+                try {
+                    await fetch('/api/history', {
+                        method: 'POST', body: JSON.stringify({ email, movie_id: movieId })
+                    });
+                } catch (e) { console.error(e); }
+            },
+            getHistory: async (email) => {
+                try {
+                    const res = await fetch(`/api/history?email=${email}`);
+                    const data = await res.json();
+                    return data.watched || [];
+                } catch (e) { return []; }
+            }
+        };
+
+        // --- COMPONENTES ---
+        const LoginModal = ({ onClose, onLoginSuccess }) => {
+            const [mode, setMode] = React.useState('signin');
+            const [email, setEmail] = React.useState('');
+            const [pass, setPass] = React.useState('');
+            const [code, setCode] = React.useState('');
+            const [msg, setMsg] = React.useState('');
+            const [loading, setLoading] = React.useState(false);
+
+            const handleSubmit = async () => {
+                setMsg(''); setLoading(true);
+                try {
+                    if (mode === 'signin') {
+                        await AuthService.signIn(email, pass);
+                        onLoginSuccess(); onClose();
+                    } else if (mode === 'signup') {
+                        await AuthService.signUp(email, pass);
+                        setMode('confirm'); setMsg("Código enviado!");
+                    } else if (mode === 'confirm') {
+                        await AuthService.confirmSignUp(email, code);
+                        setMode('signin'); setMsg("Confirmado! Entre.");
+                    }
+                } catch (err) {
+                    setMsg(err.message);
+                }
+                setLoading(false);
+            };
+
+            return (
+                <div className="auth-modal">
+                    <div className="auth-box">
+                        <h2 style={{marginTop:0, color: '#fff'}}>{mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'CADASTRO' : 'CONFIRMAR'}</h2>
+                        {msg && <div className="auth-error">{msg}</div>}
+                        <input className="auth-input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
+                        {mode !== 'confirm' && <input className="auth-input" type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} />}
+                        {mode === 'confirm' && <input className="auth-input" placeholder="Código do Email" value={code} onChange={e => setCode(e.target.value)} />}
+                        <button className="btn-main" onClick={handleSubmit} disabled={loading}>{loading ? '...' : 'ENVIAR'}</button>
+                        {mode === 'signin' && <span className="auth-link" onClick={() => setMode('signup')}>Criar Conta</span>}
+                        {mode === 'signup' && <span className="auth-link" onClick={() => setMode('signin')}>Voltar Login</span>}
+                        <span className="auth-link" onClick={onClose} style={{marginTop: 30}}>Cancelar</span>
+                    </div>
+                </div>
+            );
+        };
+
+        const DashPlayer = ({ url, isPlaying, startAt, enableControls }) => {
+            const videoRef = React.useRef(null);
+            React.useEffect(() => {
+                if (!url || !videoRef.current) return;
+                const player = dashjs.MediaPlayer().create();
+                player.initialize(videoRef.current, url, false);
+                if (startAt > 0) player.seek(startAt);
+                return () => player.destroy();
+            }, [url]);
+            React.useEffect(() => {
+                if (videoRef.current) isPlaying ? videoRef.current.play() : videoRef.current.pause();
+            }, [isPlaying]);
+            return <video ref={videoRef} controls={enableControls} controlsList="nodownload" />;
+        };
+
+        const App = () => {
+            const [phase, setPhase] = React.useState('home'); 
+            const [fullCatalog, setFullCatalog] = React.useState(null);
+            const [currentMovie, setCurrentMovie] = React.useState(null);
+            const [sortText, setSortText] = React.useState("");
+            const [user, setUser] = React.useState(null);
+            const [showLogin, setShowLogin] = React.useState(false);
+            const [watchedList, setWatchedList] = React.useState([]);
+
+            React.useEffect(() => {
+                fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
+                
+                const local = JSON.parse(localStorage.getItem("sortashort_v4"));
+                if (local && local.watched) setWatchedList(local.watched);
+                
+                const u = AuthService.getCurrentUser();
+                setUser(u);
+                if(u) syncHistory(u.email);
+            }, []);
+
+            const syncHistory = async (email) => {
+                const cloud = await ApiService.getHistory(email);
+                setWatchedList(prev => {
+                    const merged = [...new Set([...prev, ...cloud])];
+                    localStorage.setItem("sortashort_v4", JSON.stringify({ watched: merged }));
+                    return merged;
+                });
+            };
+
+            const handleLogout = () => { AuthService.signOut(); setUser(null); };
+            const refreshUser = () => { 
+                const u = AuthService.getCurrentUser(); 
+                setUser(u); if(u) syncHistory(u.email); 
+            };
+
+            const startSort = () => {
+                if (!fullCatalog) return;
+                setPhase('sorting');
+                const titles = Object.values(fullCatalog).map(m => m.titulo);
+                let steps = 0;
+                const interval = setInterval(() => {
+                    setSortText(titles[Math.floor(Math.random() * titles.length)]);
+                    steps++;
+                    if (steps > 20) { clearInterval(interval); finishSort(); }
+                }, 100);
+            };
+
+            const finishSort = () => {
+                let ids = Object.keys(fullCatalog).filter(id => !watchedList.includes(id));
+                if (ids.length === 0) ids = Object.keys(fullCatalog); 
+                const randomId = ids[Math.floor(Math.random() * ids.length)];
+                const movieData = fullCatalog[randomId];
+                const slug = randomId.toLowerCase().replace(/ /g, "_");
+                setCurrentMovie({ id: randomId, ...movieData, videoUrl: `${BUCKET_URL}/videos/${slug}/playlist.mpd` });
+                
+                const newList = [...watchedList, randomId];
+                setWatchedList(newList);
+                localStorage.setItem("sortashort_v4", JSON.stringify({ watched: newList }));
+                if(user) ApiService.saveMovie(user.email, randomId);
+                
+                setPhase('popup');
+            };
+
+            const handleReset = () => { setPhase('home'); setCurrentMovie(null); };
+
+            let videoClass = "video-background";
+            if (phase === 'popup') videoClass += " dimmed";
+            if (phase === 'playing') videoClass += " active";
+
+            return (
+                <>
+                    <div className={videoClass}>
+                        {currentMovie && <DashPlayer url={currentMovie.videoUrl} isPlaying={phase === 'playing'} startAt={currentMovie.capaSeconds || 0} enableControls={phase === 'playing'} />}
+                    </div>
+                    <div className="user-bar">
+                        {user ? (
+                            <>
+                                <div className="user-info">CMD://{user.email.split('@')[0]}</div>
+                                <button className="btn-login" onClick={handleLogout}>SAIR</button>
+                            </>
+                        ) : (
+                            <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN / CADASTRO</button>
+                        )}
+                    </div>
+                    {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
+                    {phase !== 'home' && <button className="btn-back-corner" onClick={handleReset}>&lt; MENU</button>}
+                    <div className="ui-layer">
+                        {phase === 'home' && (
+                            <div className="sort-container">
+                                <div className="big-title">SORT A SHORT</div><br/>
+                                <button className="btn-main btn-sort" onClick={startSort} disabled={!fullCatalog}>
+                                    {fullCatalog ? "SORTEAR FILME" : "CARREGANDO..."}
+                                </button>
+                                <div style={{marginTop: 20, color: '#666', fontSize: '0.8rem'}}>FILMES: {fullCatalog ? Object.keys(fullCatalog).length : 0}</div>
+                            </div>
+                        )}
+                        {phase === 'sorting' && <div className="sorting-anim">{sortText}</div>}
+                        {phase === 'popup' && currentMovie && (
+                            <div className="movie-card">
+                                <div style={{fontSize: '0.8rem', color: '#f00', marginBottom: 10, letterSpacing: 2}}>● FILME SELECIONADO</div>
+                                <h2 className="card-title">{currentMovie.titulo}</h2>
+                                <span className="card-meta">{currentMovie.ano} // DIR. {currentMovie.diretor}</span>
+                                <div className="card-desc">{currentMovie.descricao || "..."}</div>
+                                <button className="btn-main" onClick={() => setPhase('playing')}>► ASSISTIR AGORA</button>
+                            </div>
+                        )}
+                    </div>
+                </>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

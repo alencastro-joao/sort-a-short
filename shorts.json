@@ -1,0 +1,90 @@
+{
+  "1975hedgehoginthefog": {
+    "titulo": "Hedgehog in the Fog",
+    "tituloOriginal": "Yozhik v tumane",
+    "capaSeconds": 15,
+    "ano": 1975,
+    "diretor": "Yuriy Norshteyn",
+    "pais": "União Soviética",
+    "duracao": "10 min",
+    "genero": "Animação / Mistério",
+    "descricao": "Um ouriço atravessa uma névoa misteriosa para encontrar seu amigo urso e tomar chá."
+  },
+  "2008lamaisonenpetitscubes": {
+    "titulo": "La Maison en Petits Cubes",
+    "tituloOriginal": "Tsumiki no Ie",
+    "capaSeconds": 15,
+    "ano": 2008,
+    "diretor": "Kunio Katō",
+    "pais": "Japão",
+    "duracao": "12 min",
+    "genero": "Animação / Drama",
+    "descricao": "Um viúvo constrói andares cada vez mais altos em sua casa para sobreviver à subida do nível do mar, relembrando sua vida."
+  },
+  "2020puparia": {
+    "titulo": "Puparia",
+    "tituloOriginal": "Puparia",
+    "capaSeconds": 15,
+    "ano": 2020,
+    "diretor": "Shingo Tamagawa",
+    "pais": "Japão",
+    "duracao": "3 min",
+    "genero": "Animação / Surrealismo",
+    "descricao": "Uma obra curta e onírica que explora a sensação de algo mudando dentro de nós."
+  },
+  "1972yukissun": {
+    "titulo": "Yuki's Sun",
+    "tituloOriginal": "Yuki no Taiyou",
+    "capaSeconds": 15,
+    "ano": 1972,
+    "diretor": "Hayao Miyazaki",
+    "pais": "Japão",
+    "duracao": "5 min",
+    "genero": "Animação / Piloto",
+    "descricao": "Um raro piloto dirigido por Hayao Miyazaki muito antes da fundação do Studio Ghibli. Conta a história de uma menina forte e enérgica chamada Yuki."
+  },
+  "2011ostinato": {
+    "titulo": "Ostinato",
+    "tituloOriginal": "Ostinato",
+    "capaSeconds": 15,
+    "ano": 2011,
+    "diretor": "Carlo Vogele",
+    "pais": "Suíça",
+    "duracao": "6 min",
+    "genero": "Animação / Musical",
+    "descricao": "Um músico de rua toca seu violino em uma cidade movimentada, mas sua música começa a afetar o ambiente ao seu redor de maneiras inesperadas."
+  },
+  "2007madametutliputli": {
+    "titulo": "Madame Tutli-Putli",
+    "tituloOriginal": "Madame Tutli-Putli",
+    "capaSeconds": 15,
+    "ano": 2007,
+    "diretor": "Chris Lavis e Maciek Szczerbowski",
+    "pais": "Canadá",
+    "duracao": "17 min",
+    "genero": "Animação / Aventura",
+    "descricao": "Madame Tutli-Putli embarca em uma viagem de trem cheia de encontros estranhos e maravilhosos, explorando temas de solidão e coragem."
+  },
+  "1985interopia": {
+    "titulo": "A Voyage to Interopia",
+    "tituloOriginal": "Iz dnevnikov Iyona Tikhogo. Puteshestvie na Interopiyu",
+    "capaSeconds": 15,
+    "ano": 1985,
+    "diretor": "Gennady Tishchenko",
+    "pais": "União Soviética",
+    "duracao": "9 min",
+    "genero": "Animação / Sci-Fi Surreal",
+    "descricao": "Baseado na obra de Stanislaw Lem. O viajante espacial Ijon Tichy descobre o planeta Interopia e suas formas de vida bizarras e em constante mutação."
+  },
+  "1981threemonks": {
+    "titulo": "Three Monks",
+    "tituloOriginal": "San Ge He Shang",
+    "capaSeconds": 15,
+    "ano": 1981,
+    "diretor": "A Da (Xu Jingda)",
+    "pais": "China",
+    "duracao": "19 min",
+    "genero": "Animação / Folclore",
+    "descricao": "Uma fábula chinesa sem diálogos sobre cooperação. Um monge vive em paz no topo da montanha, mas a chegada de outros dois transforma a harmonia em caos."
+  }
+}
