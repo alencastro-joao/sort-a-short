@@ -49,14 +49,14 @@
         /* Box Padrão */
         .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; position: relative; }
         
-        /* Box Perfil */
+        /* Box Perfil (CORRIGIDO) */
         .profile-box { 
             width: 800px; 
             max-width: 100%; 
             text-align: left; 
             display: flex; 
-            flex-direction: column;
-            justify-content: flex-start; 
+            flex-direction: column; /* Correção aqui */
+            justify-content: flex-start; /* Garante topo */
             padding: 40px; 
         }
 
@@ -132,6 +132,17 @@
         .rating-textarea:focus { border-color: var(--highlight); }
         .sorting-anim { font-size: 1.5rem; font-weight: normal; text-align: center; color: #fff; letter-spacing: 3px; background: #000; padding: 20px 40px; border-top: 1px solid #333; border-bottom: 1px solid #333; }
 
+        /* Abas */
+        .tab-header { display: flex; gap: 20px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .tab-btn { background: none; border: none; color: #666; font-family: 'Space Mono'; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; padding: 0; }
+        .tab-btn:hover { color: #fff; }
+        .tab-btn.active { color: var(--highlight); font-weight: bold; }
+
+        /* Stats Box */
+        .stat-box { background: #050505; padding: 20px; border: 1px solid #222; margin-bottom: 10px; }
+        .stat-label { color: #555; font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
+        .stat-value { font-size: 2.5rem; font-weight: bold; color: #fff; line-height: 1; }
+
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.5rem; } .movie-card { padding: 30px; } }
@@ -144,7 +155,7 @@
     <script type="text/babel">
         const BUCKET_URL = ""; 
 
-        // --- API SERVICE (Source of Truth: DB) ---
+        // --- API SERVICE ---
         const Api = {
             signUp: async (email, password) => {
                 const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
@@ -157,7 +168,6 @@
             signIn: async (email, password) => {
                 const res = await fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ email, password }) });
                 const data = await res.json(); if(res.status!==200) throw new Error(data.body);
-                // Apenas o TOKEN de sessão fica no navegador
                 localStorage.setItem("sortashort_session", JSON.stringify(data));
                 return data;
             },
@@ -166,21 +176,18 @@
                 const sess = localStorage.getItem("sortashort_session");
                 return sess ? JSON.parse(sess) : null;
             },
-            // Atualiza sessão local apenas para nome, mas histórico vem da nuvem
             updateLocalUser: (newUsername) => {
                 const sess = Api.getCurrentUser();
                 if(sess) { sess.username = newUsername; localStorage.setItem("sortashort_session", JSON.stringify(sess)); }
             },
             saveMovie: async (email, movieId) => {
-                // Salva diretamente na API
                 try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } catch (e) {}
             },
             getProfile: async (email) => {
-                // Carrega histórico REAL do banco
                 try {
                     const res = await fetch(`/api/history?email=${email}`);
                     const data = await res.json(); return data;
-                } catch (e) { return { watched: [], username: null }; }
+                } catch (e) { return { watched: [], reviews: [], username: null }; }
             },
             saveUsername: async (email, username) => {
                 const res = await fetch('/api/username', { method: 'POST', body: JSON.stringify({ email, username }) });
@@ -233,12 +240,18 @@
             );
         };
 
-        const UserProfile = ({ user, watchedList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
+        const UserProfile = ({ user, watchedList, reviewsList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
             const [editing, setEditing] = React.useState(false);
             const [tempName, setTempName] = React.useState(user.username || "");
             const [msg, setMsg] = React.useState(null);
             const [loading, setLoading] = React.useState(false);
-            const watchedMovies = watchedList.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse(); 
+            const [tab, setTab] = React.useState('history');
+
+            const watchedMovies = watchedList.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse();
+            const userReviews = (reviewsList || []).map(r => {
+                const movie = catalog ? catalog[r.movie_id] : null;
+                return movie ? { ...r, title: movie.titulo } : null;
+            }).filter(r => r !== null).reverse();
 
             const handleSaveName = async () => {
                 if(!tempName.trim()) return;
@@ -254,6 +267,8 @@
             return (
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
+                        
+                        {/* CABEÇALHO CORRIGIDO */}
                         <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #222', paddingBottom: 20, marginBottom: 20, width: '100%' }}>
                             <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button>
                             <div style={{flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 15}}>
@@ -277,25 +292,56 @@
                         </div>
                         {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginBottom: 20}}>{msg.text}</div>}
 
+                        {/* CORPO DIVIDIDO */}
                         <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', width: '100%' }}>
-                            <div style={{ flex: '1 1 200px' }}>
-                                <div style={{ background: '#050505', padding: 20, border: '1px solid #222', marginBottom: 20 }}>
-                                    <div style={{ color: '#555', fontSize: '0.7rem', marginBottom: 5, textTransform: 'uppercase' }}>Vistos</div>
-                                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>{watchedList.length}</div>
+                            <div style={{ flex: '1 1 200px', display:'flex', flexDirection:'column' }}>
+                                <div style={{display:'flex', gap: 10}}>
+                                    <div className="stat-box" style={{flex:1}}>
+                                        <div className="stat-label">Vistos</div>
+                                        <div className="stat-value">{watchedList.length}</div>
+                                    </div>
+                                    <div className="stat-box" style={{flex:1}}>
+                                        <div className="stat-label">Avaliados</div>
+                                        <div className="stat-value">{reviewsList ? reviewsList.length : 0}</div>
+                                    </div>
                                 </div>
-                                <button className="btn-secondary" onClick={onLogout}>SAIR</button>
+                                <button className="btn-secondary" onClick={onLogout} style={{marginTop: 10}}>SAIR</button>
                             </div>
+
                             <div style={{ flex: '2 1 300px' }}>
-                                <h3 style={{ marginTop: 0, fontSize: '0.8rem', color: '#cc0000', marginBottom: 15, textTransform: 'uppercase', letterSpacing: 1 }}>Histórico</h3>
-                                {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
-                                <div className="profile-grid">
-                                    {watchedMovies.map((movie, index) => (
-                                        <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
-                                            <div style={{ fontSize: '0.65rem', color: '#666' }}>{movie.ano}</div>
-                                            <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#ddd' }}>{movie.titulo}</div>
-                                        </div>
-                                    ))}
+                                <div className="tab-header">
+                                    <button className={`tab-btn ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>HISTÓRICO</button>
+                                    <button className={`tab-btn ${tab === 'reviews' ? 'active' : ''}`} onClick={() => setTab('reviews')}>AVALIAÇÕES</button>
                                 </div>
+
+                                {tab === 'history' && (
+                                    <>
+                                        {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
+                                        <div className="profile-grid">
+                                            {watchedMovies.map((movie, index) => (
+                                                <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
+                                                    <div style={{ fontSize: '0.65rem', color: '#666' }}>{movie.ano}</div>
+                                                    <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#ddd' }}>{movie.titulo}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </>
+                                )}
+
+                                {tab === 'reviews' && (
+                                    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                        {userReviews.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Nenhuma avaliação.</div>}
+                                        {userReviews.map((r, idx) => (
+                                            <div key={idx} style={{ background: '#080808', padding: 15, border: '1px solid #222', marginBottom: 10 }}>
+                                                <div style={{display:'flex', justifyContent:'space-between'}}>
+                                                    <span style={{fontWeight:'bold', color: '#fff'}}>{r.title}</span>
+                                                    <span style={{color: 'var(--highlight)'}}>★ {r.rating}</span>
+                                                </div>
+                                                {r.review && <div style={{color:'#888', fontSize:'0.8rem', marginTop: 5, borderLeft: '2px solid #333', paddingLeft: 10}}>"{r.review}"</div>}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -372,31 +418,24 @@
             const [showRating, setShowRating] = React.useState(false); 
             
             const [watchedList, setWatchedList] = React.useState([]);
+            const [reviewsList, setReviewsList] = React.useState([]);
 
             React.useEffect(() => {
                 fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
-                
-                // LÓGICA CORRIGIDA: Não carrega mais de LocalStorage para watchedList
-                const u = Api.getCurrentUser(); 
-                setUser(u);
+                const u = Api.getCurrentUser(); setUser(u);
                 if(u) syncProfile(u.email);
-                // Se não tiver user, watchedList começa vazia (RAM only)
             }, []);
 
             const syncProfile = async (email) => {
-                // Carrega tudo da API
                 const data = await Api.getProfile(email);
                 if(data.username) Api.updateLocalUser(data.username);
                 setUser(Api.getCurrentUser());
-                // Sobrescreve a lista local com a do banco (Fonte da Verdade)
                 setWatchedList(data.watched || []);
+                setReviewsList(data.reviews || []);
             };
 
             const handleLogout = () => { 
-                Api.signOut(); 
-                setUser(null); 
-                setShowProfile(false); 
-                setWatchedList([]); // Limpa histórico da tela ao sair
+                Api.signOut(); setUser(null); setShowProfile(false); setWatchedList([]); setReviewsList([]);
             };
             const refreshUser = () => { const u = Api.getCurrentUser(); setUser(u); if(u) syncProfile(u.email); };
 
@@ -417,12 +456,8 @@
                 if (ids.length === 0) ids = Object.keys(fullCatalog); 
                 const randomId = ids[Math.floor(Math.random() * ids.length)];
                 prepareMovie(randomId);
-                
-                // Atualiza estado em memória
                 const newList = [...watchedList, randomId];
                 setWatchedList(newList);
-                
-                // Se tiver user, salva no banco. Se não, perde ao fechar aba.
                 if(user) Api.saveMovie(user.email, randomId);
             };
             
@@ -436,7 +471,7 @@
             };
             
             const handleMovieEnd = () => { setShowRating(true); };
-            const handleCloseRating = () => { setShowRating(false); setPhase('home'); setCurrentMovie(null); };
+            const handleCloseRating = () => { setShowRating(false); setPhase('home'); setCurrentMovie(null); refreshUser(); };
             const handleReplayFromHistory = (movieId) => { prepareMovie(movieId); setShowProfile(false); };
             const handleReset = () => { setPhase('home'); setCurrentMovie(null); setShowRating(false); };
 
@@ -474,6 +509,7 @@
                         <UserProfile 
                             user={user} 
                             watchedList={watchedList} 
+                            reviewsList={reviewsList}
                             catalog={fullCatalog} 
                             onClose={() => setShowProfile(false)} 
                             onLogout={handleLogout}

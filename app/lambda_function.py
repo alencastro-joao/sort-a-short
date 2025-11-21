@@ -57,21 +57,42 @@ def lambda_handler(event, context):
     # --- ROTA 1: RATING ---
     if path == '/api/rating':
         if method == 'POST':
-            user_email = body.get('email'); movie_id = body.get('movie_id'); rating = body.get('rating')
-            if not user_email or not movie_id or rating is None: return {"statusCode": 400, "body": "Erro dados"}
+            user_email = body.get('email')
+            movie_id = body.get('movie_id')
+            rating = body.get('rating')
+            review = body.get('review', '')
+            
+            if not user_email or not movie_id or rating is None: 
+                return {"statusCode": 400, "body": "Erro dados"}
+
             try:
+                timestamp = datetime.now().isoformat()
+                
+                # 1. Salva para o cálculo da média do filme (Público)
                 table.put_item(Item={
                     'pk': f"RATING#{movie_id}", 'sk': f"USER#{user_email}",
-                    'rating': Decimal(str(rating)), 'timestamp': datetime.now().isoformat()
+                    'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp
                 })
-                return {"statusCode": 200, "body": json.dumps({"new_average": calculate_average_rating(movie_id)})}
+
+                # 2. [NOVO] Salva no histórico pessoal do usuário (Privado)
+                # Adiciona à lista 'reviews' dentro do perfil do usuário
+                review_obj = {
+                    'movie_id': movie_id,
+                    'rating': Decimal(str(rating)),
+                    'review': review,
+                    'timestamp': timestamp
+                }
+                
+                table.update_item(
+                    Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'},
+                    UpdateExpression="SET reviews = list_append(if_not_exists(reviews, :empty), :r)",
+                    ExpressionAttributeValues={':r': [review_obj], ':empty': []}
+                )
+
+                return {"statusCode": 200, "body": json.dumps({"status": "ok"})}
             except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-        if method == 'GET':
-            movie_id = event.get('queryStringParameters', {}).get('movie_id')
-            return {"statusCode": 200, "body": json.dumps({"average_rating": calculate_average_rating(movie_id)})}
-
-    # --- ROTA 2: AUTH & USER ---
+    # --- ROTA 2: AUTH ---
     if path == '/api/auth/signup' and method == 'POST':
         try:
             cognito.sign_up(ClientId=COGNITO_CLIENT_ID, Username=body.get('email'), Password=body.get('password'), UserAttributes=[{'Name':'email','Value':body.get('email')}])
@@ -90,22 +111,22 @@ def lambda_handler(event, context):
             return { "statusCode": 200, "body": json.dumps({"token": resp['AuthenticationResult']['AccessToken'], "email": body.get('email')}) }
         except ClientError as e: return {"statusCode": 400, "body": str(e)}
 
-    # --- ROTA 2.4: HISTÓRICO E PERFIL (GET/POST) ---
+    # --- ROTA 3: PERFIL E HISTÓRICO ---
     if path == '/api/history':
         if method == 'GET':
             user_email = event.get('queryStringParameters', {}).get('email')
             if not user_email: return {"statusCode": 400, "body": "Email required"}
             try:
-                # Busca Perfil completo (Historico + Username)
                 resp = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'})
                 item = resp.get('Item', {})
                 return {"statusCode": 200, "body": json.dumps({
                     "watched": item.get('watched', []),
+                    "reviews": item.get('reviews', []), # [NOVO] Retorna avaliações
                     "username": item.get('username', None)
                 }, cls=DecimalEncoder)}
             except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-        if method == 'POST': # Salvar filme assistido
+        if method == 'POST':
             try:
                 table.update_item(
                     Key={'pk': f"USER#{body.get('email')}", 'sk': 'PROFILE'},
@@ -115,59 +136,32 @@ def lambda_handler(event, context):
                 return {"statusCode": 200, "body": "Saved"}
             except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-    # --- ROTA 2.5: ALTERAR USERNAME (NOVA) ---
+    # --- ROTA 4: USERNAME ---
     if path == '/api/username' and method == 'POST':
-        email = body.get('email')
-        new_username = body.get('username', '').strip().lower()
-        
-        # Validação básica (apenas letras, numeros e underline)
-        if not re.match("^[a-z0-9_]{3,15}$", new_username):
-            return {"statusCode": 400, "body": "Nome invalido (use 3-15 letras/numeros)"}
-
+        email = body.get('email'); new_username = body.get('username', '').strip().lower()
+        if not re.match("^[a-z0-9_]{3,15}$", new_username): return {"statusCode": 400, "body": "Nome invalido"}
         try:
-            # 1. Verificar qual era o nome antigo (para deletar a reserva)
             user_resp = table.get_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'})
             old_username = user_resp.get('Item', {}).get('username')
-
-            # 2. Tentar RESERVAR o novo nome (Garante unicidade via ConditionExpression)
-            # Se o PK 'USERNAME#novo' já existir, isso vai falhar.
-            table.put_item(
-                Item={'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED', 'email': email},
-                ConditionExpression='attribute_not_exists(pk)'
-            )
-
-            # 3. Se conseguiu reservar, atualiza o perfil do usuário
-            table.update_item(
-                Key={'pk': f"USER#{email}", 'sk': 'PROFILE'},
-                UpdateExpression="SET username = :u",
-                ExpressionAttributeValues={':u': new_username}
-            )
-
-            # 4. Limpeza: Se tinha nome antigo, libera a reserva dele
+            table.put_item(Item={'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED', 'email': email}, ConditionExpression='attribute_not_exists(pk)')
+            table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET username = :u", ExpressionAttributeValues={':u': new_username})
             if old_username and old_username != new_username:
-                try:
-                    table.delete_item(Key={'pk': f"USERNAME#{old_username}", 'sk': 'RESERVED'})
-                except: pass # Não bloqueante
-
+                try: table.delete_item(Key={'pk': f"USERNAME#{old_username}", 'sk': 'RESERVED'})
+                except: pass
             return {"statusCode": 200, "body": json.dumps({"status": "success", "username": new_username})}
+        except ClientError: return {"statusCode": 409, "body": "Nome ja existe"}
+        except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-        except ClientError as e:
-            if e.response['Error']['Code'] == 'ConditionalCheckFailedException':
-                return {"statusCode": 409, "body": "Nome de usuario ja existe."}
-            return {"statusCode": 500, "body": str(e)}
-
-    # --- ROTA 3: SPA / SEO ---
+    # --- FRONTEND ---
     html = get_file_content('index.html')
     if not html: return {"statusCode": 500, "body": "Index lost"}
     
     movie_id = event.get('queryStringParameters', {}).get('movie')
     if len(path.strip('/')) > 1 and not path.startswith('/api/'): movie_id = path.strip('/')
-
     meta = { "t": "Sort a Short", "d": "Curadoria de animacao.", "i": "" }
     if movie_id:
         cat = get_catalogo()
-        if movie_id in cat:
-            meta = { "t": f"{cat[movie_id]['titulo']}", "d": f"{cat[movie_id]['ano']}", "i": "" }
+        if movie_id in cat: meta = { "t": cat[movie_id]['titulo'], "d": cat[movie_id]['ano'], "i": "" }
 
     final_html = html.replace("{{META_TITLE}}", meta["t"]).replace("{{META_DESC}}", meta["d"]).replace("{{META_IMAGE}}", meta["i"])
     return { "statusCode": 200, "headers": {"Content-Type": "text/html"}, "body": final_html }
