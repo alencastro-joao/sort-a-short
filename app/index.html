@@ -20,7 +20,6 @@
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: #fff; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* Scrollbar Customizada (Estilo Industrial) */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #000; border-left: 1px solid #333; }
         ::-webkit-scrollbar-thumb { background: #fff; }
@@ -43,7 +42,6 @@
         .card-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; display: block; font-style: italic; }
         .card-desc { line-height: 1.6; color: #eee; margin-bottom: 40px; border-left: 3px solid #fff; padding-left: 20px; background: rgba(255,255,255,0.05); padding: 15px; }
         
-        /* BOTÃO FIXO: Removido o letter-spacing no hover para não mudar de tamanho */
         .btn-main { background: #fff; color: #000; border: none; padding: 18px 40px; font-family: 'Space Mono'; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; width: 100%; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
         .btn-main:hover { background: #ccc; box-shadow: 0 0 25px rgba(255,255,255,0.6); }
         
@@ -60,9 +58,7 @@
         .user-info { color: var(--highlight); font-size: 0.8rem; padding: 8px 0; text-shadow: 0 0 10px var(--highlight); font-weight: bold; cursor: pointer; text-decoration: underline; letter-spacing: 1px; }
         
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
-        
         .auth-box { background: #050505; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(255,255,255,0.05); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
-        
         .profile-box { width: 800px; max-width: 100%; text-align: left; display: flex; flexDirection: column; }
 
         .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; background: #000; border: 1px solid #444; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.3s; }
@@ -70,11 +66,11 @@
         
         .auth-link { color: #aaa; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
         .auth-error { color: var(--highlight); font-size: 0.8rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; }
+        .auth-success { color: #0f0; font-size: 0.8rem; margin-bottom: 15px; border: 1px solid #0f0; padding: 10px; }
         
         .sorting-anim { font-size: 2rem; font-weight: bold; text-align: center; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); background: rgba(0,0,0,0.8); padding: 40px; border: 1px solid #fff; max-width: 90%; }
         
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
-        /* Item do Perfil agora tem cursor pointer e interação */
         .profile-movie-item { background: rgba(255,255,255,0.03); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
         .profile-movie-item:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
         .profile-movie-item::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(--highlight); opacity: 0; transition: 0.2s; }
@@ -90,24 +86,19 @@
     <script type="text/babel">
         const BUCKET_URL = ""; 
 
-        // --- AUTH SERVICE LIGHT ---
-        const AuthService = {
+        // --- AUTH & API SERVICE ---
+        const Api = {
             signUp: async (email, password) => {
                 const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
-                const data = await res.json();
-                if (res.status !== 200) throw new Error(data.body || "Erro cadastro");
-                return data;
+                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
             },
             confirmSignUp: async (email, code) => {
                 const res = await fetch('/api/auth/confirm', { method: 'POST', body: JSON.stringify({ email, code }) });
-                const data = await res.json();
-                if (res.status !== 200) throw new Error(data.body || "Erro confirmação");
-                return data;
+                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
             },
             signIn: async (email, password) => {
                 const res = await fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ email, password }) });
-                const data = await res.json();
-                if (res.status !== 200) throw new Error(data.body || "Erro login");
+                const data = await res.json(); if(res.status!==200) throw new Error(data.body);
                 localStorage.setItem("sortashort_session", JSON.stringify(data));
                 return data;
             },
@@ -115,27 +106,35 @@
             getCurrentUser: () => {
                 const sess = localStorage.getItem("sortashort_session");
                 return sess ? JSON.parse(sess) : null;
-            }
-        };
-
-        // --- API HISTÓRICO ---
-        const ApiService = {
-            saveMovie: async (email, movieId) => {
-                try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } 
-                catch (e) { console.error(e); }
             },
-            getHistory: async (email) => {
+            // Atualiza o objeto de sessão local com o novo username
+            updateLocalUser: (newUsername) => {
+                const sess = Api.getCurrentUser();
+                if(sess) {
+                    sess.username = newUsername;
+                    localStorage.setItem("sortashort_session", JSON.stringify(sess));
+                }
+            },
+            saveMovie: async (email, movieId) => {
+                try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } catch (e) {}
+            },
+            getProfile: async (email) => {
                 try {
                     const res = await fetch(`/api/history?email=${email}`);
                     const data = await res.json();
-                    return data.watched || [];
-                } catch (e) { return []; }
+                    return data; // Retorna {watched: [], username: ""}
+                } catch (e) { return { watched: [], username: null }; }
+            },
+            saveUsername: async (email, username) => {
+                const res = await fetch('/api/username', { method: 'POST', body: JSON.stringify({ email, username }) });
+                const data = await res.json();
+                if(res.status !== 200) throw new Error(data.body);
+                return data;
             }
         };
 
         // --- COMPONENTES ---
         
-        // 1. Modal de Login
         const LoginModal = ({ onClose, onLoginSuccess }) => {
             const [mode, setMode] = React.useState('signin');
             const [email, setEmail] = React.useState('');
@@ -147,9 +146,9 @@
             const handleSubmit = async () => {
                 setMsg(''); setLoading(true);
                 try {
-                    if (mode === 'signin') { await AuthService.signIn(email, pass); onLoginSuccess(); onClose(); } 
-                    else if (mode === 'signup') { await AuthService.signUp(email, pass); setMode('confirm'); setMsg("Código enviado!"); } 
-                    else if (mode === 'confirm') { await AuthService.confirmSignUp(email, code); setMode('signin'); setMsg("Confirmado! Entre."); }
+                    if (mode === 'signin') { await Api.signIn(email, pass); onLoginSuccess(); onClose(); } 
+                    else if (mode === 'signup') { await Api.signUp(email, pass); setMode('confirm'); setMsg("Código enviado!"); } 
+                    else if (mode === 'confirm') { await Api.confirmSignUp(email, code); setMode('signin'); setMsg("Confirmado! Entre."); }
                 } catch (err) { setMsg(err.message); }
                 setLoading(false);
             };
@@ -171,12 +170,27 @@
             );
         };
 
-        // 2. Perfil do Usuário (Interativo)
-        const UserProfile = ({ user, watchedList, catalog, onClose, onLogout, onSelectMovie }) => {
-            const watchedMovies = watchedList
-                .map(id => catalog ? { id, ...catalog[id] } : null)
-                .filter(movie => movie !== null)
-                .reverse(); 
+        const UserProfile = ({ user, watchedList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
+            const [editing, setEditing] = React.useState(false);
+            const [tempName, setTempName] = React.useState(user.username || "");
+            const [msg, setMsg] = React.useState(null);
+            const [loading, setLoading] = React.useState(false);
+
+            const watchedMovies = watchedList.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse(); 
+
+            const handleSaveName = async () => {
+                if(!tempName.trim()) return;
+                setLoading(true); setMsg(null);
+                try {
+                    await Api.saveUsername(user.email, tempName);
+                    Api.updateLocalUser(tempName);
+                    onUpdateUser(); // Atualiza estado global
+                    setEditing(false);
+                } catch (e) {
+                    setMsg({ type: 'error', text: e.message });
+                }
+                setLoading(false);
+            };
 
             return (
                 <div className="auth-modal">
@@ -184,9 +198,27 @@
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 30, borderBottom: '1px solid #333', paddingBottom: 20 }}>
                             <div>
                                 <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fff', letterSpacing: '2px' }}>PERFIL DE COMANDO</h2>
-                                <span style={{ color: '#f00', fontFamily: 'monospace', fontSize: '0.9rem', fontWeight: 'bold', textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
-                                    CMD://{user.email}
-                                </span>
+                                
+                                {/* BLOCO DE NOME DE USUARIO EDITAVEL */}
+                                <div style={{ marginTop: 10 }}>
+                                    {!editing ? (
+                                        <div style={{display:'flex', alignItems:'center', gap: 10}}>
+                                            <span style={{ color: '#f00', fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 'bold', textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
+                                                {user.username ? user.username.toUpperCase() : user.email}
+                                            </span>
+                                            <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
+                                        </div>
+                                    ) : (
+                                        <div style={{display:'flex', gap: 10, alignItems:'center'}}>
+                                            <span style={{color:'#f00', fontFamily:'monospace'}}></span>
+                                            <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} 
+                                                value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
+                                            <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
+                                            <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 10px'}}>X</button>
+                                        </div>
+                                    )}
+                                    {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginTop: 10, fontSize: '0.7rem', padding: 5}}>{msg.text}</div>}
+                                </div>
                             </div>
                             <button className="btn-login" onClick={onClose} style={{border: '1px solid #f00', color: '#f00', fontSize: '1rem', padding: '5px 15px'}}>✕ FECHAR</button>
                         </div>
@@ -204,15 +236,13 @@
 
                             <div style={{ flex: '3 1 300px' }}>
                                 <h3 style={{ marginTop: 0, fontSize: '0.9rem', color: '#fff', marginBottom: 10, borderLeft: '3px solid #f00', paddingLeft: 10 }}>
-                                    HISTÓRICO DE VISUALIZAÇÃO (CLIQUE PARA ASSISTIR)
+                                    HISTÓRICO 
                                 </h3>
-                                
                                 {watchedMovies.length === 0 && (
                                     <div style={{ fontStyle: 'italic', color: '#666', padding: 20, border: '1px dashed #333' }}>
-                                        Nenhum registro encontrado. Assista algo!
+                                        Nenhum registro encontrado.
                                     </div>
                                 )}
-
                                 <div className="profile-grid">
                                     {watchedMovies.map((movie, index) => (
                                         <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
@@ -229,7 +259,6 @@
             );
         };
 
-        // 3. Player Dash
         const DashPlayer = ({ url, isPlaying, startAt, enableControls }) => {
             const videoRef = React.useRef(null);
             React.useEffect(() => {
@@ -239,13 +268,10 @@
                 if (startAt > 0) player.seek(startAt);
                 return () => player.destroy();
             }, [url]);
-            React.useEffect(() => {
-                if (videoRef.current) isPlaying ? videoRef.current.play() : videoRef.current.pause();
-            }, [isPlaying]);
+            React.useEffect(() => { if (videoRef.current) isPlaying ? videoRef.current.play() : videoRef.current.pause(); }, [isPlaying]);
             return <video ref={videoRef} controls={enableControls} controlsList="nodownload" />;
         };
 
-        // --- APP PRINCIPAL ---
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
             const [fullCatalog, setFullCatalog] = React.useState(null);
@@ -255,31 +281,33 @@
             
             const [showLogin, setShowLogin] = React.useState(false);
             const [showProfile, setShowProfile] = React.useState(false); 
-            
             const [watchedList, setWatchedList] = React.useState([]);
 
             React.useEffect(() => {
                 fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
-                
-                const local = JSON.parse(localStorage.getItem("sortashort_v4"));
-                if (local && local.watched) setWatchedList(local.watched);
-                
-                const u = AuthService.getCurrentUser();
+                const u = Api.getCurrentUser();
                 setUser(u);
-                if(u) syncHistory(u.email);
+                if(u) syncProfile(u.email);
             }, []);
 
-            const syncHistory = async (email) => {
-                const cloud = await ApiService.getHistory(email);
+            const syncProfile = async (email) => {
+                // Agora busca perfil completo (historico + username)
+                const data = await Api.getProfile(email);
+                
+                // Atualiza User Local com Username do Banco (se existir)
+                if(data.username) Api.updateLocalUser(data.username);
+                const updatedUser = Api.getCurrentUser();
+                setUser(updatedUser);
+
+                // Atualiza Lista
                 setWatchedList(prev => {
-                    const merged = [...new Set([...prev, ...cloud])];
-                    localStorage.setItem("sortashort_v4", JSON.stringify({ watched: merged }));
+                    const merged = [...new Set([...prev, ...data.watched])];
                     return merged;
                 });
             };
 
-            const handleLogout = () => { AuthService.signOut(); setUser(null); setShowProfile(false); };
-            const refreshUser = () => { const u = AuthService.getCurrentUser(); setUser(u); if(u) syncHistory(u.email); };
+            const handleLogout = () => { Api.signOut(); setUser(null); setShowProfile(false); };
+            const refreshUser = () => { const u = Api.getCurrentUser(); setUser(u); if(u) syncProfile(u.email); };
 
             const startSort = () => {
                 if (!fullCatalog) return;
@@ -301,11 +329,9 @@
                 
                 const newList = [...watchedList, randomId];
                 setWatchedList(newList);
-                localStorage.setItem("sortashort_v4", JSON.stringify({ watched: newList }));
-                if(user) ApiService.saveMovie(user.email, randomId);
+                if(user) Api.saveMovie(user.email, randomId);
             };
             
-            // Nova função para abrir filme específico (usada no Sorteio e no Histórico)
             const prepareMovie = (movieId) => {
                  if (!fullCatalog || !fullCatalog[movieId]) return;
                  const movieData = fullCatalog[movieId];
@@ -314,11 +340,7 @@
                  setPhase('popup');
             };
             
-            const handleReplayFromHistory = (movieId) => {
-                prepareMovie(movieId);
-                setShowProfile(false);
-            };
-
+            const handleReplayFromHistory = (movieId) => { prepareMovie(movieId); setShowProfile(false); };
             const handleReset = () => { setPhase('home'); setCurrentMovie(null); };
 
             let videoClass = "video-background";
@@ -334,7 +356,7 @@
                     <div className="user-bar">
                         {user ? (
                             <div className="user-info" onClick={() => setShowProfile(true)}>
-                                CMD://{user.email.split('@')[0]}
+                                {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
                             </div>
                         ) : (
                             <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN / CADASTRO</button>
@@ -351,6 +373,7 @@
                             onClose={() => setShowProfile(false)} 
                             onLogout={handleLogout}
                             onSelectMovie={handleReplayFromHistory} 
+                            onUpdateUser={refreshUser}
                         />
                     )}
 
