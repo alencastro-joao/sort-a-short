@@ -13,12 +13,18 @@ FILE_NAME = "shorts.json"
 TABLE_NAME = "sort-a-short-db"
 COGNITO_CLIENT_ID = "3i2m7sfkp66qa9uhfvvb7g6d9c" 
 
-# --- HEADERS ANTI-CACHE (NOVO) ---
+# --- HEADERS ---
 NO_CACHE_HEADERS = {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache, no-store, must-revalidate",
     "Pragma": "no-cache",
     "Expires": "0"
+}
+
+# Headers para Javascript (Cache curto para desenvolvimento)
+JS_HEADERS = {
+    "Content-Type": "application/javascript",
+    "Cache-Control": "max-age=0, no-cache, no-store, must-revalidate"
 }
 
 s3 = boto3.client('s3')
@@ -32,8 +38,10 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(obj)
 
 def get_file_content(filename):
-    if os.path.exists(filename):
-        with open(filename, 'r', encoding='utf-8') as f: return f.read()
+    # Remove barras iniciais para evitar erros de caminho
+    clean_name = filename.lstrip('/')
+    if os.path.exists(clean_name):
+        with open(clean_name, 'r', encoding='utf-8') as f: return f.read()
     return None
 
 def get_catalogo():
@@ -54,6 +62,18 @@ def lambda_handler(event, context):
 
     print(f"DEBUG: {method} {path}")
 
+    # --- ROTA 0: SERVIR ARQUIVOS JS (CORREÇÃO DO ERRO) ---
+    if path.endswith('.js'):
+        content = get_file_content(path)
+        if content:
+            return {
+                "statusCode": 200,
+                "headers": JS_HEADERS,
+                "body": content
+            }
+        else:
+            return {"statusCode": 404, "body": f"File not found: {path}"}
+
     # --- ROTA 1: RATING ---
     if path == '/api/rating':
         if method == 'POST':
@@ -65,12 +85,10 @@ def lambda_handler(event, context):
 
             try:
                 timestamp = datetime.now().isoformat()
-                # 1. Média Geral
                 table.put_item(Item={
                     'pk': f"RATING#{movie_id}", 'sk': f"USER#{user_email}",
                     'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp
                 })
-                # 2. Histórico Pessoal
                 review_obj = {'movie_id': movie_id, 'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp}
                 table.update_item(
                     Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'},
@@ -144,12 +162,13 @@ def lambda_handler(event, context):
         except ClientError: return {"statusCode": 409, "body": "Nome ja existe", "headers": NO_CACHE_HEADERS}
         except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-    # --- FRONTEND ---
+    # --- FRONTEND (FALLBACK) ---
     html = get_file_content('index.html')
     if not html: return {"statusCode": 500, "body": "Index lost"}
     
     movie_id = event.get('queryStringParameters', {}).get('movie')
-    if len(path.strip('/')) > 1 and not path.startswith('/api/'): movie_id = path.strip('/')
+    if len(path.strip('/')) > 1 and not path.startswith('/api/') and not path.endswith('.js'): movie_id = path.strip('/')
+    
     meta = { "t": "Sort a Short", "d": "Curadoria de animacao.", "i": "" }
     if movie_id:
         cat = get_catalogo()
@@ -157,7 +176,6 @@ def lambda_handler(event, context):
 
     final_html = html.replace("{{META_TITLE}}", meta["t"]).replace("{{META_DESC}}", meta["d"]).replace("{{META_IMAGE}}", meta["i"])
     
-    # Headers para HTML (permite cache moderado, mas a API JSON não)
     return { 
         "statusCode": 200, 
         "headers": {"Content-Type": "text/html; charset=utf-8"}, 

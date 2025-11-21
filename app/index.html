@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- CORES E VARIÁVEIS --- */
+        /* --- ESTILOS GERAIS (Matte Red / Noir) --- */
         :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; }
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
@@ -26,41 +26,33 @@
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--highlight); }
 
-        /* BACKGROUND */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.8s ease; }
         .video-background.dimmed { filter: brightness(0.2) blur(10px) grayscale(100%); transform: scale(1.05); }
         .video-background.active { z-index: 50; filter: brightness(1) blur(0) grayscale(0%); transform: scale(1); }
         video { width: 100%; height: 100%; object-fit: contain; outline: none; }
         
-        /* LAYOUT */
         .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
         .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 1px solid #444; display: inline-block; color: #fff; }
         
-        /* CARDS & MODAIS */
         .movie-card { background: var(--glass); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.5s ease-out; }
         .card-title { font-size: 2rem; margin: 0 0 10px 0; line-height: 1.1; color: #fff; text-transform: uppercase; letter-spacing: -1px; }
         .card-meta { color: #888; font-size: 0.8rem; margin-bottom: 20px; display: block; font-style: italic; }
         .card-desc { line-height: 1.7; color: #ccc; margin-bottom: 40px; border-left: 3px solid var(--highlight); padding-left: 20px; font-size: 0.9rem; }
         
+        /* Modais */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(0px); padding: 20px; }
-        
-        /* Box Padrão */
         .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; position: relative; }
         
-        /* Box Perfil */
+        /* Perfil Box (Layout Corrigido) */
         .profile-box { 
-            width: 800px; 
-            max-width: 100%; 
-            text-align: left; 
-            display: flex; 
-            flex-direction: column;
-            justify-content: flex-start; 
-            padding: 40px; 
+            width: 800px; max-width: 100%; text-align: left; 
+            display: flex !important; flex-direction: column !important; 
+            justify-content: flex-start !important; padding: 40px; 
         }
 
-        /* BOTÕES GERAIS */
-        .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: background-color 0.2s, color 0.2s; width: 100%; }
+        /* Botões */
+        .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; width: 100%; }
         .btn-main:hover { background: #ccc; color: #000; }
         
         .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
@@ -72,46 +64,43 @@
         .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
         .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
         
-        /* BOTÃO FECHAR (BOX) */
+        /* Botão Fechar (X Box) */
         .btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 10; flex-shrink: 0; }
         .btn-close-absolute { position: absolute; top: 15px; left: 15px; }
         .btn-close-box:hover { border-color: var(--highlight); color: var(--highlight); background: #111; }
 
-        /* USER BAR */
+        /* User Bar */
         .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; align-items: center; }
         .btn-login { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.75rem; transition: 0.2s; }
         .btn-login:hover { background: var(--highlight); color: #fff; }
         .user-info { color: var(--highlight); font-size: 0.8rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.2s; text-decoration: underline; }
         .user-info:hover { color: #fff; }
         
-        /* INPUTS & FORMS */
+        /* Form Elements */
         .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.2s; font-size: 0.9rem; }
         .auth-input:focus { border-color: var(--highlight); background: #000; }
         .auth-link { color: #666; font-size: 0.75rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; transition: 0.2s; }
         .auth-link:hover { color: var(--highlight); }
         .auth-error { color: var(--highlight); font-size: 0.75rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; background: rgba(50,0,0,0.1); }
+        .auth-success { color: #4caf50; font-size: 0.75rem; margin-bottom: 15px; border: 1px solid #4caf50; padding: 10px; }
         
-        /* LISTAGEM DE FILMES */
+        /* Profile Elements */
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
         .profile-movie-item { background: rgba(255,255,255,0.02); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
         .profile-movie-item:hover { background: rgba(255,255,255,0.05); border-color: #fff; }
         .profile-movie-item:hover::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--highlight); }
 
-        /* AVALIAÇÃO */
+        /* Rating & Tabs */
         .rating-stars { display: flex; justify-content: center; gap: 10px; margin: 20px 0; cursor: pointer; }
         .star-icon { font-size: 2rem; color: #222; transition: 0.2s; }
         .star-icon:hover, .star-icon.active { color: var(--highlight); } 
         .rating-textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; padding: 10px; font-size: 0.8rem; resize: vertical; min-height: 80px; margin-bottom: 20px; outline: none; transition: 0.2s; }
         .rating-textarea:focus { border-color: var(--highlight); }
         .sorting-anim { font-size: 1.5rem; font-weight: normal; text-align: center; color: #fff; letter-spacing: 3px; background: #000; padding: 20px 40px; border-top: 1px solid #333; border-bottom: 1px solid #333; }
-
-        /* Abas */
         .tab-header { display: flex; gap: 20px; margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
         .tab-btn { background: none; border: none; color: #666; font-family: 'Space Mono'; font-size: 0.8rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; padding: 0; }
         .tab-btn:hover { color: #fff; }
         .tab-btn.active { color: var(--highlight); font-weight: bold; }
-
-        /* Stats Box */
         .stat-box { background: #050505; padding: 20px; border: 1px solid #222; margin-bottom: 10px; }
         .stat-label { color: #555; font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
         .stat-value { font-size: 2.5rem; font-weight: bold; color: #fff; line-height: 1; }
@@ -125,110 +114,13 @@
 
     <div id="root"></div>
 
-    <script type="text/babel">
+    <script type="text/babel" src="api.js"></script>       <script type="text/babel" src="LoginModal.js"></script> <script type="text/babel">
         const BUCKET_URL = ""; 
 
-        // --- API SERVICE ---
-        const Api = {
-            signUp: async (email, password) => {
-                const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
-                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
-            },
-            confirmSignUp: async (email, code) => {
-                const res = await fetch('/api/auth/confirm', { method: 'POST', body: JSON.stringify({ email, code }) });
-                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
-            },
-            signIn: async (email, password) => {
-                const res = await fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ email, password }) });
-                const data = await res.json(); if(res.status!==200) throw new Error(data.body);
-                localStorage.setItem("sortashort_session", JSON.stringify(data));
-                return data;
-            },
-            signOut: () => { localStorage.removeItem("sortashort_session"); },
-            getCurrentUser: () => {
-                const sess = localStorage.getItem("sortashort_session");
-                return sess ? JSON.parse(sess) : null;
-            },
-            updateLocalUser: (newUsername) => {
-                const sess = Api.getCurrentUser();
-                if(sess) { sess.username = newUsername; localStorage.setItem("sortashort_session", JSON.stringify(sess)); }
-            },
-            saveMovie: async (email, movieId) => {
-                try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } catch (e) {}
-            },
-            getProfile: async (email) => {
-                try {
-                    // Anti-cache para garantir sincronização PC/Celular
-                    const res = await fetch(`/api/history?email=${email}&_t=${Date.now()}`);
-                    const data = await res.json(); return data;
-                } catch (e) { return { watched: [], reviews: [], username: null }; }
-            },
-            saveUsername: async (email, username) => {
-                const res = await fetch('/api/username', { method: 'POST', body: JSON.stringify({ email, username }) });
-                const data = await res.json(); if(res.status !== 200) throw new Error(data.body); return data;
-            },
-            saveRating: async (email, movieId, rating, review) => {
-                const res = await fetch('/api/rating', {
-                     method: 'POST', body: JSON.stringify({ email, movie_id: movieId, rating, review })
-                });
-                return res.json();
-            }
-        };
+        // --- OBS: A VARIAVEL "Api" AGORA VEM DO ARQUIVO api.js ---
 
-        // --- COMPONENTES ---
+        // --- OUTROS COMPONENTES (UserProfile, RatingCard, DashPlayer, App) ---
         
-        const LoginModal = ({ onClose, onLoginSuccess }) => {
-            const [mode, setMode] = React.useState('signin');
-            const [email, setEmail] = React.useState('');
-            const [pass, setPass] = React.useState('');
-            const [confirmPass, setConfirmPass] = React.useState(''); // Novo Estado
-            const [code, setCode] = React.useState('');
-            const [msg, setMsg] = React.useState('');
-            const [loading, setLoading] = React.useState(false);
-
-            const handleSubmit = async () => {
-                setMsg(''); 
-                
-                // Validação de Senha no Cadastro
-                if (mode === 'signup' && pass !== confirmPass) {
-                    setMsg("As senhas não conferem!");
-                    return;
-                }
-
-                setLoading(true);
-                try {
-                    if (mode === 'signin') { await Api.signIn(email, pass); onLoginSuccess(); onClose(); } 
-                    else if (mode === 'signup') { await Api.signUp(email, pass); setMode('confirm'); setMsg("Código enviado!"); } 
-                    else if (mode === 'confirm') { await Api.confirmSignUp(email, code); setMode('signin'); setMsg("Confirmado! Entre."); }
-                } catch (err) { setMsg(err.message); }
-                setLoading(false);
-            };
-
-            return (
-                <div className="auth-modal">
-                    <div className="auth-box">
-                        <button className="btn-close-box btn-close-absolute" onClick={onClose}>✕</button>
-                        <h2 style={{marginTop: 15, marginBottom: 20, color: '#fff', fontSize:'1.2rem', letterSpacing: 2}}>
-                            {mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'CADASTRO' : 'CONFIRMAR'}
-                        </h2>
-                        {msg && <div className="auth-error">{msg}</div>}
-                        <input className="auth-input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
-                        {mode !== 'confirm' && <input className="auth-input" type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} />}
-                        
-                        {/* Campo de Confirmar Senha (Só no cadastro) */}
-                        {mode === 'signup' && (
-                            <input className="auth-input" type="password" placeholder="Confirmar Senha" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} />
-                        )}
-
-                        {mode === 'confirm' && <input className="auth-input" placeholder="Código do Email" value={code} onChange={e => setCode(e.target.value)} />}
-                        <button className="btn-main" onClick={handleSubmit} disabled={loading}>{loading ? '...' : 'ENVIAR'}</button>
-                        {mode === 'signin' && <span className="auth-link" onClick={() => setMode('signup')}>Criar Conta</span>}
-                        {mode === 'signup' && <span className="auth-link" onClick={() => setMode('signin')}>Voltar Login</span>}
-                    </div>
-                </div>
-            );
-        };
-
         const UserProfile = ({ user, watchedList, reviewsList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
             const [editing, setEditing] = React.useState(false);
             const [tempName, setTempName] = React.useState(user.username || "");
@@ -409,7 +301,9 @@
 
             React.useEffect(() => {
                 fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
-                const u = Api.getCurrentUser(); setUser(u);
+                
+                const u = Api.getCurrentUser(); 
+                setUser(u);
                 if(u) syncProfile(u.email);
             }, []);
 
@@ -487,7 +381,7 @@
                         )}
                     </div>
 
-                    {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
+                    {showLogin && <window.LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
                     
                     {showProfile && user && (
                         <UserProfile 
