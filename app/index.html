@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* CORES SÓLIDAS - SEM NEON */
+        /* --- CORES E VARIÁVEIS --- */
         :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; }
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
@@ -26,75 +26,115 @@
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--highlight); }
 
+        /* BACKGROUND */
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.8s ease; }
         .video-background.dimmed { filter: brightness(0.2) blur(10px) grayscale(100%); transform: scale(1.05); }
         .video-background.active { z-index: 50; filter: brightness(1) blur(0) grayscale(0%); transform: scale(1); }
         video { width: 100%; height: 100%; object-fit: contain; outline: none; }
         
+        /* LAYOUT */
         .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
         
         .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 1px solid #444; display: inline-block; color: #fff; }
         
-        /* Cards Sólidos */
+        /* CARDS & MODAIS */
         .movie-card { background: var(--glass); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.5s ease-out; }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        
         .card-title { font-size: 2rem; margin: 0 0 10px 0; line-height: 1.1; color: #fff; text-transform: uppercase; letter-spacing: -1px; }
         .card-meta { color: #888; font-size: 0.8rem; margin-bottom: 20px; display: block; font-style: italic; }
         .card-desc { line-height: 1.7; color: #ccc; margin-bottom: 40px; border-left: 3px solid var(--highlight); padding-left: 20px; font-size: 0.9rem; }
         
-        /* Botões Estáticos (Sem mudar tamanho) */
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(0px); padding: 20px; }
+        
+        /* Box Padrão */
+        .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; position: relative; }
+        
+        /* Box Perfil - CORREÇÃO DE LAYOUT */
+        .profile-box { 
+            width: 800px; 
+            max-width: 100%; 
+            text-align: left; 
+            display: flex; 
+            flex-direction: column; /* Garante que empilha verticalmente */
+            justify-content: flex-start; /* Garante que começa do topo */
+            padding: 40px; 
+        }
+
+        /* BOTÕES GERAIS */
         .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: background-color 0.2s, color 0.2s; width: 100%; }
-        .btn-main:hover { background: #ccc; color: #000; /* Sem letter-spacing extra */ }
+        .btn-main:hover { background: #ccc; color: #000; }
         
         .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
         .btn-sort:hover { background: rgba(255,255,255,0.1); }
         
         .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
         .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
+
+        /* BOTÃO SECUNDÁRIO (SAIR) */
+        .btn-secondary {
+            padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333;
+            cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase;
+        }
+        .btn-secondary:hover {
+            background: var(--highlight); color: #fff; border-color: var(--highlight);
+        }
         
+        /* BOTÃO FECHAR (BOX) */
+        .btn-close-box {
+            width: 35px;
+            height: 35px;
+            background: #000;
+            border: 1px solid #333;
+            color: #888;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-family: 'Space Mono';
+            font-size: 1.2rem;
+            transition: 0.2s;
+            z-index: 10;
+            flex-shrink: 0; /* Não deixa o botão esmagar */
+        }
+        /* Classe auxiliar para quando ele precisa ser absolute (Login/Rating) */
+        .btn-close-absolute { position: absolute; top: 15px; left: 15px; }
+        
+        .btn-close-box:hover {
+            border-color: var(--highlight);
+            color: var(--highlight);
+            background: #111;
+        }
+
+        /* USER BAR */
         .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; align-items: center; }
         .btn-login { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.75rem; transition: 0.2s; }
         .btn-login:hover { background: var(--highlight); color: #fff; }
-        
-        /* User Info Sólido */
         .user-info { color: var(--highlight); font-size: 0.8rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.2s; text-decoration: underline; }
         .user-info:hover { color: #fff; }
         
-        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(0px); padding: 20px; }
-        .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .profile-box { width: 800px; max-width: 100%; text-align: left; display: flex; flexDirection: column; }
-
+        /* INPUTS & FORMS */
         .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.2s; font-size: 0.9rem; }
         .auth-input:focus { border-color: var(--highlight); background: #000; }
-        
         .auth-link { color: #666; font-size: 0.75rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; transition: 0.2s; }
         .auth-link:hover { color: var(--highlight); }
-
-        .btn-close { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 5px 12px; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
-        .btn-close:hover { background: var(--highlight); color: #fff; }
-        
         .auth-error { color: var(--highlight); font-size: 0.75rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; background: rgba(50,0,0,0.1); }
-        .auth-success { color: #fff; font-size: 0.75rem; margin-bottom: 15px; border: 1px solid #fff; padding: 10px; }
         
-        .sorting-anim { font-size: 1.5rem; font-weight: normal; text-align: center; color: #fff; letter-spacing: 3px; background: #000; padding: 20px 40px; border-top: 1px solid #333; border-bottom: 1px solid #333; }
-        
+        /* LISTAGEM DE FILMES */
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
         .profile-movie-item { background: rgba(255,255,255,0.02); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
         .profile-movie-item:hover { background: rgba(255,255,255,0.05); border-color: #fff; }
         .profile-movie-item:hover::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--highlight); }
 
-        /* Estrelas - Cor Sólida, Sem Brilho */
+        /* AVALIAÇÃO */
         .rating-stars { display: flex; justify-content: center; gap: 10px; margin: 20px 0; cursor: pointer; }
         .star-icon { font-size: 2rem; color: #222; transition: 0.2s; }
         .star-icon:hover, .star-icon.active { color: var(--highlight); } 
-        
         .rating-textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; padding: 10px; font-size: 0.8rem; resize: vertical; min-height: 80px; margin-bottom: 20px; outline: none; transition: 0.2s; }
         .rating-textarea:focus { border-color: var(--highlight); }
+        .sorting-anim { font-size: 1.5rem; font-weight: normal; text-align: center; color: #fff; letter-spacing: 3px; background: #000; padding: 20px 40px; border-top: 1px solid #333; border-bottom: 1px solid #333; }
 
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.5rem; } .movie-card { padding: 30px; } }
     </style>
 </head>
@@ -174,15 +214,19 @@
             return (
                 <div className="auth-modal">
                     <div className="auth-box">
-                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20}}>
-                            <h2 style={{margin:0, color: '#fff', fontSize:'1.2rem', letterSpacing: 2}}>{mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'CADASTRO' : 'CONFIRMAR'}</h2>
-                            <button className="btn-close" onClick={onClose}>✕</button>
-                        </div>
+                        <button className="btn-close-box btn-close-absolute" onClick={onClose}>✕</button>
+                        
+                        <h2 style={{marginTop: 15, marginBottom: 20, color: '#fff', fontSize:'1.2rem', letterSpacing: 2}}>
+                            {mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'CADASTRO' : 'CONFIRMAR'}
+                        </h2>
+                        
                         {msg && <div className="auth-error">{msg}</div>}
                         <input className="auth-input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
                         {mode !== 'confirm' && <input className="auth-input" type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} />}
                         {mode === 'confirm' && <input className="auth-input" placeholder="Código do Email" value={code} onChange={e => setCode(e.target.value)} />}
+                        
                         <button className="btn-main" onClick={handleSubmit} disabled={loading}>{loading ? '...' : 'ENVIAR'}</button>
+                        
                         {mode === 'signin' && <span className="auth-link" onClick={() => setMode('signup')}>Criar Conta</span>}
                         {mode === 'signup' && <span className="auth-link" onClick={() => setMode('signin')}>Voltar Login</span>}
                     </div>
@@ -190,6 +234,7 @@
             );
         };
 
+        // UserProfile - ESTRUTURA CORRIGIDA
         const UserProfile = ({ user, watchedList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
             const [editing, setEditing] = React.useState(false);
             const [tempName, setTempName] = React.useState(user.username || "");
@@ -211,42 +256,49 @@
             return (
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 30, borderBottom: '1px solid #222', paddingBottom: 20 }}>
-                            <div>
-                                <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>PERFIL DE COMANDO</h2>
-                                <div style={{ marginTop: 10 }}>
-                                    {!editing ? (
-                                        <div style={{display:'flex', alignItems:'center', gap: 10}}>
-                                            <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
-                                                {user.username ? user.username.toUpperCase() : user.email}
-                                            </span>
-                                            <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
-                                        </div>
-                                    ) : (
-                                        <div style={{display:'flex', gap: 10, alignItems:'center'}}>
-                                            <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} 
-                                                value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
-                                            <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
-                                            <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 10px'}}>X</button>
-                                        </div>
-                                    )}
-                                    {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginTop: 10, fontSize: '0.7rem', padding: 5}}>{msg.text}</div>}
-                                </div>
+                        
+                        {/* --- PARTE 1: CABEÇALHO (TOPO ABSOLUTO) --- */}
+                        <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #222', paddingBottom: 20, marginBottom: 20, width: '100%' }}>
+                            {/* Botão X */}
+                            <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button>
+                            
+                            {/* Título e Nome (Lado a Lado) */}
+                            <div style={{flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 15}}>
+                                <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>PERFIL</h2>
+                                
+                                {!editing ? (
+                                    <div style={{display:'flex', alignItems:'center', gap: 10}}>
+                                        <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
+                                            {user.username ? user.username.toUpperCase() : user.email}
+                                        </span>
+                                        <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
+                                    </div>
+                                ) : (
+                                    <div style={{display:'flex', gap: 10, alignItems:'center'}}>
+                                        <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} 
+                                            value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
+                                        <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
+                                        <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 10px'}}>X</button>
+                                    </div>
+                                )}
                             </div>
-                            <button className="btn-close" onClick={onClose}>✕ FECHAR</button>
                         </div>
+                        {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginBottom: 20}}>{msg.text}</div>}
 
-                        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
+                        {/* --- PARTE 2: CORPO (EMBAIXO DO HEADER) --- */}
+                        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', width: '100%' }}>
+                            
+                            {/* Coluna Esquerda: Stats + Sair */}
                             <div style={{ flex: '1 1 200px' }}>
                                 <div style={{ background: '#050505', padding: 20, border: '1px solid #222', marginBottom: 20 }}>
                                     <div style={{ color: '#555', fontSize: '0.7rem', marginBottom: 5, textTransform: 'uppercase' }}>Vistos</div>
                                     <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>{watchedList.length}</div>
                                 </div>
-                                <button className="btn-main" onClick={onLogout} style={{ padding: '12px', fontSize: '0.8rem', background: '#000', color: '#666', border: '1px solid #333' }}>
-                                    SAIR
-                                </button>
+                                <button className="btn-secondary" onClick={onLogout}>SAIR</button>
                             </div>
-                            <div style={{ flex: '3 1 300px' }}>
+
+                            {/* Coluna Direita: Histórico ocupando o resto */}
+                            <div style={{ flex: '2 1 300px' }}>
                                 <h3 style={{ marginTop: 0, fontSize: '0.8rem', color: '#cc0000', marginBottom: 15, textTransform: 'uppercase', letterSpacing: 1 }}>Histórico</h3>
                                 {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
                                 <div className="profile-grid">
@@ -264,15 +316,14 @@
             );
         };
 
-        // 3. Card de Avaliação Corrigido (Salva Estrela + Envia API)
         const RatingCard = ({ movie, user, onClose }) => {
             const [hoverStar, setHoverStar] = React.useState(0);
-            const [selectedStar, setSelectedStar] = React.useState(0); // Estado da estrela clicada
+            const [selectedStar, setSelectedStar] = React.useState(0); 
             const [review, setReview] = React.useState("");
             const [loading, setLoading] = React.useState(false);
 
             const handleSend = async () => {
-                if (selectedStar === 0 && !review) { onClose(); return; } // Se vazio, só fecha
+                if (selectedStar === 0 && !review) { onClose(); return; } 
                 setLoading(true);
                 try {
                     if(user) {
@@ -284,8 +335,10 @@
 
             return (
                 <div className="auth-modal" style={{background:'rgba(0,0,0,0.8)'}}>
-                    <div className="movie-card" style={{textAlign:'center', padding: 40, maxWidth: 450, animation: 'slideUp 0.5s'}}>
-                        <h3 style={{margin:0, fontSize:'0.8rem', color:'#888', letterSpacing: 2}}>SESSÃO FINALIZADA</h3>
+                    <div className="movie-card" style={{textAlign:'center', padding: 40, maxWidth: 450, animation: 'slideUp 0.5s', position: 'relative'}}>
+                        <button className="btn-close-box btn-close-absolute" onClick={onClose}>✕</button>
+
+                        <h3 style={{margin:0, fontSize:'0.8rem', color:'#888', letterSpacing: 2, marginTop: 15}}>SESSÃO FINALIZADA</h3>
                         <h2 style={{margin:'10px 0 0 0', fontSize:'1.8rem', color:'#fff'}}>{movie.titulo}</h2>
                         
                         <div className="rating-stars">
@@ -307,18 +360,14 @@
                             onChange={(e) => setReview(e.target.value)}
                         />
                         
-                        <div style={{display:'flex', gap: 10}}>
-                            <button className="btn-main" onClick={handleSend} disabled={loading}>
-                                {loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}
-                            </button>
-                            <button className="btn-main" onClick={onClose} style={{background:'transparent', border:'1px solid #333', color:'#666', width:'auto'}}>PULAR</button>
-                        </div>
+                        <button className="btn-main" onClick={handleSend} disabled={loading}>
+                            {loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}
+                        </button>
                     </div>
                 </div>
             );
         };
 
-        // 4. Player
         const DashPlayer = ({ url, isPlaying, startAt, enableControls, onEnded }) => {
             const videoRef = React.useRef(null);
             React.useEffect(() => {
@@ -335,7 +384,6 @@
             return <video ref={videoRef} controls={enableControls} controlsList="nodownload" style={{cursor: enableControls ? 'auto' : 'none'}} />;
         };
 
-        // --- APP ---
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
             const [fullCatalog, setFullCatalog] = React.useState(null);
