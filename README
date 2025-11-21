@@ -1,0 +1,33 @@
+# 🎬 Sort a Short
+
+**Sort a Short** é uma plataforma de streaming experimental dedicada à curadoria e exibição aleatória de curtas-metragens de animação clássicos e cults.
+
+O diferencial do projeto reside na sua arquitetura **Serverless** e **Buildless**, focada em baixo custo, alta performance de entrega (CDN) e otimização para SEO, sem abrir mão da interatividade de uma Single Page Application (SPA).
+
+## 🏗️ Arquitetura
+
+O projeto utiliza o padrão **"Thin Server"** onde uma função Lambda atua como controlador web leve.
+
+* **Frontend:** React 18 (via CDN) + Babel Standalone. Sem `npm run build` ou Webpack. O código é compilado em tempo de execução no navegador.
+* **Backend:** AWS Lambda (Python 3.12). Intercepta as requisições, injeta Meta Tags dinâmicas para SEO (Open Graph) e serve o HTML base.
+* **Storage & Streaming:** AWS S3 armazena os vídeos processados (DASH/MPEG-DASH) e metadados (`shorts.json`).
+* **CDN:** AWS CloudFront distribui o conteúdo globalmente com baixa latência.
+* **Database (Em Progresso):** AWS DynamoDB (Single Table Design) para avaliações e histórico de usuários.
+* **Auth (Em Progresso):** AWS Cognito para gestão de identidade.
+
+## 🚀 Tecnologias
+
+* **Linguagens:** Python (Boto3), JavaScript (ES6+).
+* **Cloud (AWS):** Lambda, S3, CloudFront, DynamoDB, Cognito.
+* **Player:** Dash.js para streaming adaptativo.
+* **Ferramentas:** FFmpeg (para processamento de vídeo local).
+
+## 📂 Estrutura do Projeto
+
+```text
+/
+├── index.html           # Frontend (React App + CSS)
+├── lambda_function.py   # Backend (Roteamento + API + SEO Injection)
+├── auth.js              # (Legado) Lógica de autenticação client-side
+├── uploader/            # Scripts locais para processamento de vídeo (FFmpeg)
+└── .gitignore           # Regras de exclusão do Git
