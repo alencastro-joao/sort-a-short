@@ -35,7 +35,6 @@
         /* LAYOUT */
         .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
-        
         .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 1px solid #444; display: inline-block; color: #fff; }
         
         /* CARDS & MODAIS */
@@ -49,14 +48,14 @@
         /* Box Padrão */
         .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; position: relative; }
         
-        /* Box Perfil (CORRIGIDO) */
+        /* Box Perfil */
         .profile-box { 
             width: 800px; 
             max-width: 100%; 
             text-align: left; 
             display: flex; 
-            flex-direction: column; /* Correção aqui */
-            justify-content: flex-start; /* Garante topo */
+            flex-direction: column;
+            justify-content: flex-start; 
             padding: 40px; 
         }
 
@@ -70,39 +69,13 @@
         .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
         .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
 
-        /* BOTÃO SECUNDÁRIO (SAIR) */
-        .btn-secondary {
-            padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333;
-            cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase;
-        }
-        .btn-secondary:hover {
-            background: var(--highlight); color: #fff; border-color: var(--highlight);
-        }
+        .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
+        .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
         
         /* BOTÃO FECHAR (BOX) */
-        .btn-close-box {
-            width: 35px;
-            height: 35px;
-            background: #000;
-            border: 1px solid #333;
-            color: #888;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-family: 'Space Mono';
-            font-size: 1.2rem;
-            transition: 0.2s;
-            z-index: 10;
-            flex-shrink: 0;
-        }
+        .btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 10; flex-shrink: 0; }
         .btn-close-absolute { position: absolute; top: 15px; left: 15px; }
-        
-        .btn-close-box:hover {
-            border-color: var(--highlight);
-            color: var(--highlight);
-            background: #111;
-        }
+        .btn-close-box:hover { border-color: var(--highlight); color: var(--highlight); background: #111; }
 
         /* USER BAR */
         .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; align-items: center; }
@@ -185,7 +158,8 @@
             },
             getProfile: async (email) => {
                 try {
-                    const res = await fetch(`/api/history?email=${email}`);
+                    // Anti-cache para garantir sincronização PC/Celular
+                    const res = await fetch(`/api/history?email=${email}&_t=${Date.now()}`);
                     const data = await res.json(); return data;
                 } catch (e) { return { watched: [], reviews: [], username: null }; }
             },
@@ -207,12 +181,21 @@
             const [mode, setMode] = React.useState('signin');
             const [email, setEmail] = React.useState('');
             const [pass, setPass] = React.useState('');
+            const [confirmPass, setConfirmPass] = React.useState(''); // Novo Estado
             const [code, setCode] = React.useState('');
             const [msg, setMsg] = React.useState('');
             const [loading, setLoading] = React.useState(false);
 
             const handleSubmit = async () => {
-                setMsg(''); setLoading(true);
+                setMsg(''); 
+                
+                // Validação de Senha no Cadastro
+                if (mode === 'signup' && pass !== confirmPass) {
+                    setMsg("As senhas não conferem!");
+                    return;
+                }
+
+                setLoading(true);
                 try {
                     if (mode === 'signin') { await Api.signIn(email, pass); onLoginSuccess(); onClose(); } 
                     else if (mode === 'signup') { await Api.signUp(email, pass); setMode('confirm'); setMsg("Código enviado!"); } 
@@ -231,6 +214,12 @@
                         {msg && <div className="auth-error">{msg}</div>}
                         <input className="auth-input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
                         {mode !== 'confirm' && <input className="auth-input" type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} />}
+                        
+                        {/* Campo de Confirmar Senha (Só no cadastro) */}
+                        {mode === 'signup' && (
+                            <input className="auth-input" type="password" placeholder="Confirmar Senha" value={confirmPass} onChange={e => setConfirmPass(e.target.value)} />
+                        )}
+
                         {mode === 'confirm' && <input className="auth-input" placeholder="Código do Email" value={code} onChange={e => setCode(e.target.value)} />}
                         <button className="btn-main" onClick={handleSubmit} disabled={loading}>{loading ? '...' : 'ENVIAR'}</button>
                         {mode === 'signin' && <span className="auth-link" onClick={() => setMode('signup')}>Criar Conta</span>}
@@ -267,8 +256,6 @@
             return (
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
-                        
-                        {/* CABEÇALHO CORRIGIDO */}
                         <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #222', paddingBottom: 20, marginBottom: 20, width: '100%' }}>
                             <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button>
                             <div style={{flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 15}}>
@@ -282,8 +269,7 @@
                                     </div>
                                 ) : (
                                     <div style={{display:'flex', gap: 10, alignItems:'center'}}>
-                                        <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} 
-                                            value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
+                                        <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
                                         <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
                                         <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 10px'}}>X</button>
                                     </div>
@@ -292,8 +278,7 @@
                         </div>
                         {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginBottom: 20}}>{msg.text}</div>}
 
-                        {/* CORPO DIVIDIDO */}
-                        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', width: '100%' }}>
+                        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', width: '100%', flex: 1, minHeight: 0 }}>
                             <div style={{ flex: '1 1 200px', display:'flex', flexDirection:'column' }}>
                                 <div style={{display:'flex', gap: 10}}>
                                     <div className="stat-box" style={{flex:1}}>
@@ -308,40 +293,42 @@
                                 <button className="btn-secondary" onClick={onLogout} style={{marginTop: 10}}>SAIR</button>
                             </div>
 
-                            <div style={{ flex: '2 1 300px' }}>
+                            <div style={{ flex: '2 1 300px', display:'flex', flexDirection:'column', minHeight: 0 }}>
                                 <div className="tab-header">
                                     <button className={`tab-btn ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>HISTÓRICO</button>
                                     <button className={`tab-btn ${tab === 'reviews' ? 'active' : ''}`} onClick={() => setTab('reviews')}>AVALIAÇÕES</button>
                                 </div>
 
-                                {tab === 'history' && (
-                                    <>
-                                        {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
-                                        <div className="profile-grid">
-                                            {watchedMovies.map((movie, index) => (
-                                                <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
-                                                    <div style={{ fontSize: '0.65rem', color: '#666' }}>{movie.ano}</div>
-                                                    <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#ddd' }}>{movie.titulo}</div>
+                                <div style={{overflowY: 'auto', flex: 1, paddingRight: 10}}>
+                                    {tab === 'history' && (
+                                        <>
+                                            {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
+                                            <div className="profile-grid">
+                                                {watchedMovies.map((movie, index) => (
+                                                    <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
+                                                        <div style={{ fontSize: '0.65rem', color: '#666' }}>{movie.ano}</div>
+                                                        <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#ddd' }}>{movie.titulo}</div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </>
+                                    )}
+
+                                    {tab === 'reviews' && (
+                                        <>
+                                            {userReviews.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Nenhuma avaliação.</div>}
+                                            {userReviews.map((r, idx) => (
+                                                <div key={idx} style={{ background: '#080808', padding: 15, border: '1px solid #222', marginBottom: 10 }}>
+                                                    <div style={{display:'flex', justifyContent:'space-between'}}>
+                                                        <span style={{fontWeight:'bold', color: '#fff'}}>{r.title}</span>
+                                                        <span style={{color: 'var(--highlight)'}}>★ {r.rating}</span>
+                                                    </div>
+                                                    {r.review && <div style={{color:'#888', fontSize:'0.8rem', marginTop: 5, borderLeft: '2px solid #333', paddingLeft: 10}}>"{r.review}"</div>}
                                                 </div>
                                             ))}
-                                        </div>
-                                    </>
-                                )}
-
-                                {tab === 'reviews' && (
-                                    <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-                                        {userReviews.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Nenhuma avaliação.</div>}
-                                        {userReviews.map((r, idx) => (
-                                            <div key={idx} style={{ background: '#080808', padding: 15, border: '1px solid #222', marginBottom: 10 }}>
-                                                <div style={{display:'flex', justifyContent:'space-between'}}>
-                                                    <span style={{fontWeight:'bold', color: '#fff'}}>{r.title}</span>
-                                                    <span style={{color: 'var(--highlight)'}}>★ {r.rating}</span>
-                                                </div>
-                                                {r.review && <div style={{color:'#888', fontSize:'0.8rem', marginTop: 5, borderLeft: '2px solid #333', paddingLeft: 10}}>"{r.review}"</div>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
+                                        </>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -428,15 +415,12 @@
 
             const syncProfile = async (email) => {
                 const data = await Api.getProfile(email);
-                if(data.username) Api.updateLocalUser(data.username);
-                setUser(Api.getCurrentUser());
+                if(data.username) { Api.updateLocalUser(data.username); setUser(prev => ({ ...prev, username: data.username })); }
                 setWatchedList(data.watched || []);
                 setReviewsList(data.reviews || []);
             };
 
-            const handleLogout = () => { 
-                Api.signOut(); setUser(null); setShowProfile(false); setWatchedList([]); setReviewsList([]);
-            };
+            const handleLogout = () => { Api.signOut(); setUser(null); setShowProfile(false); setWatchedList([]); setReviewsList([]); };
             const refreshUser = () => { const u = Api.getCurrentUser(); setUser(u); if(u) syncProfile(u.email); };
 
             const startSort = () => {
