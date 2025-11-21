@@ -13,8 +13,8 @@ Thumbs.db
 package/
 
 # videos 
-uploader/input/*
-uploader/temp_dash/*
+*mp4
+uploader/temp_dash
 
 # ffmpeg 
-uploader/ffmpeg/bin/*
+uploader/ffmpeg/bin
