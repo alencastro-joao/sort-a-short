@@ -16,67 +16,86 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg-color: #000; --accent: #fff; --highlight: #f00; --glass: rgba(20, 20, 20, 0.95); --border: rgba(255, 255, 255, 0.3); }
+        /* CORES SÓLIDAS - SEM NEON */
+        :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; }
         * { box-sizing: border-box; }
-        body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: #fff; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; border-left: 1px solid #333; }
-        ::-webkit-scrollbar-thumb { background: #fff; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
         ::-webkit-scrollbar-thumb:hover { background: var(--highlight); }
 
-        .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.5s ease; }
-        .video-background.dimmed { filter: brightness(0.3) blur(8px); transform: scale(1.02); }
-        .video-background.active { z-index: 50; filter: brightness(1) blur(0); transform: scale(1); }
+        .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.8s ease; }
+        .video-background.dimmed { filter: brightness(0.2) blur(10px) grayscale(100%); transform: scale(1.05); }
+        .video-background.active { z-index: 50; filter: brightness(1) blur(0) grayscale(0%); transform: scale(1); }
         video { width: 100%; height: 100%; object-fit: contain; outline: none; }
         
         .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
         
-        .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 2px solid #fff; display: inline-block; text-shadow: 0 0 30px rgba(255,255,255,0.2); }
+        .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 1px solid #444; display: inline-block; color: #fff; }
         
-        .movie-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 30px 80px rgba(0,0,0,1); animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
-        @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        /* Cards Sólidos */
+        .movie-card { background: var(--glass); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.5s ease-out; }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         
-        .card-title { font-size: 2.5rem; margin: 0 0 10px 0; line-height: 1.1; color: #fff; text-transform: uppercase; }
-        .card-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; display: block; font-style: italic; }
-        .card-desc { line-height: 1.6; color: #eee; margin-bottom: 40px; border-left: 3px solid #fff; padding-left: 20px; background: rgba(255,255,255,0.05); padding: 15px; }
+        .card-title { font-size: 2rem; margin: 0 0 10px 0; line-height: 1.1; color: #fff; text-transform: uppercase; letter-spacing: -1px; }
+        .card-meta { color: #888; font-size: 0.8rem; margin-bottom: 20px; display: block; font-style: italic; }
+        .card-desc { line-height: 1.7; color: #ccc; margin-bottom: 40px; border-left: 3px solid var(--highlight); padding-left: 20px; font-size: 0.9rem; }
         
-        .btn-main { background: #fff; color: #000; border: none; padding: 18px 40px; font-family: 'Space Mono'; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; width: 100%; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        .btn-main:hover { background: #ccc; box-shadow: 0 0 25px rgba(255,255,255,0.6); }
+        /* Botões Estáticos (Sem mudar tamanho) */
+        .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: background-color 0.2s, color 0.2s; width: 100%; }
+        .btn-main:hover { background: #ccc; color: #000; /* Sem letter-spacing extra */ }
         
-        .btn-sort { background: transparent; color: #fff; border: 2px solid #fff; padding: 20px 60px; font-size: 1.2rem; margin-top: 20px; box-shadow: none; }
-        .btn-sort:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
+        .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
+        .btn-sort:hover { background: rgba(255,255,255,0.1); }
         
-        .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; background: rgba(0,0,0,0.8); color: #fff; border: 1px solid rgba(255,255,255,0.3); padding: 10px 20px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.3s; backdrop-filter: blur(5px); }
-        .btn-back-corner:hover { background: #fff; color: #000; }
+        .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
+        .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
         
-        .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; }
-        .btn-login { background: transparent; border: 1px solid #fff; color: #fff; padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.8rem; backdrop-filter: blur(5px); transition: 0.3s; }
-        .btn-login:hover { background: #fff; color: #000; }
+        .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; align-items: center; }
+        .btn-login { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.75rem; transition: 0.2s; }
+        .btn-login:hover { background: var(--highlight); color: #fff; }
         
-        .user-info { color: var(--highlight); font-size: 0.8rem; padding: 8px 0; text-shadow: 0 0 10px var(--highlight); font-weight: bold; cursor: pointer; text-decoration: underline; letter-spacing: 1px; }
+        /* User Info Sólido */
+        .user-info { color: var(--highlight); font-size: 0.8rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.2s; text-decoration: underline; }
+        .user-info:hover { color: #fff; }
         
-        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
-        .auth-box { background: #050505; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(255,255,255,0.05); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(0px); padding: 20px; }
+        .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .profile-box { width: 800px; max-width: 100%; text-align: left; display: flex; flexDirection: column; }
 
-        .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; background: #000; border: 1px solid #444; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.3s; }
-        .auth-input:focus { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.2s; font-size: 0.9rem; }
+        .auth-input:focus { border-color: var(--highlight); background: #000; }
         
-        .auth-link { color: #aaa; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
-        .auth-error { color: var(--highlight); font-size: 0.8rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; }
-        .auth-success { color: #0f0; font-size: 0.8rem; margin-bottom: 15px; border: 1px solid #0f0; padding: 10px; }
+        .auth-link { color: #666; font-size: 0.75rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; transition: 0.2s; }
+        .auth-link:hover { color: var(--highlight); }
+
+        .btn-close { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 5px 12px; font-size: 0.9rem; cursor: pointer; transition: 0.2s; }
+        .btn-close:hover { background: var(--highlight); color: #fff; }
         
-        .sorting-anim { font-size: 2rem; font-weight: bold; text-align: center; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); background: rgba(0,0,0,0.8); padding: 40px; border: 1px solid #fff; max-width: 90%; }
+        .auth-error { color: var(--highlight); font-size: 0.75rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; background: rgba(50,0,0,0.1); }
+        .auth-success { color: #fff; font-size: 0.75rem; margin-bottom: 15px; border: 1px solid #fff; padding: 10px; }
+        
+        .sorting-anim { font-size: 1.5rem; font-weight: normal; text-align: center; color: #fff; letter-spacing: 3px; background: #000; padding: 20px 40px; border-top: 1px solid #333; border-bottom: 1px solid #333; }
         
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
-        .profile-movie-item { background: rgba(255,255,255,0.03); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
-        .profile-movie-item:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
-        .profile-movie-item::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(--highlight); opacity: 0; transition: 0.2s; }
-        .profile-movie-item:hover::before { opacity: 1; }
+        .profile-movie-item { background: rgba(255,255,255,0.02); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
+        .profile-movie-item:hover { background: rgba(255,255,255,0.05); border-color: #fff; }
+        .profile-movie-item:hover::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--highlight); }
 
-        @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.8rem; } .movie-card { padding: 30px; } .sorting-anim { font-size: 1.5rem; } .auth-box, .profile-box { width: 100%; padding: 20px; height: 100%; max-height: 100vh; border: none; } .btn-back-corner { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; } }
+        /* Estrelas - Cor Sólida, Sem Brilho */
+        .rating-stars { display: flex; justify-content: center; gap: 10px; margin: 20px 0; cursor: pointer; }
+        .star-icon { font-size: 2rem; color: #222; transition: 0.2s; }
+        .star-icon:hover, .star-icon.active { color: var(--highlight); } 
+        
+        .rating-textarea { width: 100%; background: #000; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; padding: 10px; font-size: 0.8rem; resize: vertical; min-height: 80px; margin-bottom: 20px; outline: none; transition: 0.2s; }
+        .rating-textarea:focus { border-color: var(--highlight); }
+
+        @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.5rem; } .movie-card { padding: 30px; } }
     </style>
 </head>
 <body>
@@ -86,7 +105,7 @@
     <script type="text/babel">
         const BUCKET_URL = ""; 
 
-        // --- AUTH & API SERVICE ---
+        // --- API ---
         const Api = {
             signUp: async (email, password) => {
                 const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
@@ -107,13 +126,9 @@
                 const sess = localStorage.getItem("sortashort_session");
                 return sess ? JSON.parse(sess) : null;
             },
-            // Atualiza o objeto de sessão local com o novo username
             updateLocalUser: (newUsername) => {
                 const sess = Api.getCurrentUser();
-                if(sess) {
-                    sess.username = newUsername;
-                    localStorage.setItem("sortashort_session", JSON.stringify(sess));
-                }
+                if(sess) { sess.username = newUsername; localStorage.setItem("sortashort_session", JSON.stringify(sess)); }
             },
             saveMovie: async (email, movieId) => {
                 try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } catch (e) {}
@@ -121,15 +136,18 @@
             getProfile: async (email) => {
                 try {
                     const res = await fetch(`/api/history?email=${email}`);
-                    const data = await res.json();
-                    return data; // Retorna {watched: [], username: ""}
+                    const data = await res.json(); return data;
                 } catch (e) { return { watched: [], username: null }; }
             },
             saveUsername: async (email, username) => {
                 const res = await fetch('/api/username', { method: 'POST', body: JSON.stringify({ email, username }) });
-                const data = await res.json();
-                if(res.status !== 200) throw new Error(data.body);
-                return data;
+                const data = await res.json(); if(res.status !== 200) throw new Error(data.body); return data;
+            },
+            saveRating: async (email, movieId, rating, review) => {
+                const res = await fetch('/api/rating', {
+                     method: 'POST', body: JSON.stringify({ email, movie_id: movieId, rating, review })
+                });
+                return res.json();
             }
         };
 
@@ -156,7 +174,10 @@
             return (
                 <div className="auth-modal">
                     <div className="auth-box">
-                        <h2 style={{marginTop:0, color: '#fff'}}>{mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'CADASTRO' : 'CONFIRMAR'}</h2>
+                        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom: 20}}>
+                            <h2 style={{margin:0, color: '#fff', fontSize:'1.2rem', letterSpacing: 2}}>{mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'CADASTRO' : 'CONFIRMAR'}</h2>
+                            <button className="btn-close" onClick={onClose}>✕</button>
+                        </div>
                         {msg && <div className="auth-error">{msg}</div>}
                         <input className="auth-input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} />
                         {mode !== 'confirm' && <input className="auth-input" type="password" placeholder="Senha" value={pass} onChange={e => setPass(e.target.value)} />}
@@ -164,7 +185,6 @@
                         <button className="btn-main" onClick={handleSubmit} disabled={loading}>{loading ? '...' : 'ENVIAR'}</button>
                         {mode === 'signin' && <span className="auth-link" onClick={() => setMode('signup')}>Criar Conta</span>}
                         {mode === 'signup' && <span className="auth-link" onClick={() => setMode('signin')}>Voltar Login</span>}
-                        <span className="auth-link" onClick={onClose} style={{marginTop: 30}}>Cancelar</span>
                     </div>
                 </div>
             );
@@ -175,7 +195,6 @@
             const [tempName, setTempName] = React.useState(user.username || "");
             const [msg, setMsg] = React.useState(null);
             const [loading, setLoading] = React.useState(false);
-
             const watchedMovies = watchedList.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse(); 
 
             const handleSaveName = async () => {
@@ -184,33 +203,27 @@
                 try {
                     await Api.saveUsername(user.email, tempName);
                     Api.updateLocalUser(tempName);
-                    onUpdateUser(); // Atualiza estado global
-                    setEditing(false);
-                } catch (e) {
-                    setMsg({ type: 'error', text: e.message });
-                }
+                    onUpdateUser(); setEditing(false);
+                } catch (e) { setMsg({ type: 'error', text: e.message }); }
                 setLoading(false);
             };
 
             return (
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 30, borderBottom: '1px solid #333', paddingBottom: 20 }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 30, borderBottom: '1px solid #222', paddingBottom: 20 }}>
                             <div>
-                                <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fff', letterSpacing: '2px' }}>PERFIL DE COMANDO</h2>
-                                
-                                {/* BLOCO DE NOME DE USUARIO EDITAVEL */}
+                                <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>PERFIL DE COMANDO</h2>
                                 <div style={{ marginTop: 10 }}>
                                     {!editing ? (
                                         <div style={{display:'flex', alignItems:'center', gap: 10}}>
-                                            <span style={{ color: '#f00', fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 'bold', textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
+                                            <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
                                                 {user.username ? user.username.toUpperCase() : user.email}
                                             </span>
                                             <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
                                         </div>
                                     ) : (
                                         <div style={{display:'flex', gap: 10, alignItems:'center'}}>
-                                            <span style={{color:'#f00', fontFamily:'monospace'}}></span>
                                             <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} 
                                                 value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
                                             <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
@@ -220,35 +233,27 @@
                                     {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginTop: 10, fontSize: '0.7rem', padding: 5}}>{msg.text}</div>}
                                 </div>
                             </div>
-                            <button className="btn-login" onClick={onClose} style={{border: '1px solid #f00', color: '#f00', fontSize: '1rem', padding: '5px 15px'}}>✕ FECHAR</button>
+                            <button className="btn-close" onClick={onClose}>✕ FECHAR</button>
                         </div>
 
                         <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
                             <div style={{ flex: '1 1 200px' }}>
-                                <div style={{ background: '#0a0a0a', padding: 20, border: '1px solid #333', marginBottom: 20 }}>
-                                    <div style={{ color: '#666', fontSize: '0.7rem', marginBottom: 5, textTransform: 'uppercase' }}>Filmes Assistidos</div>
-                                    <div style={{ fontSize: '3.5rem', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>{watchedList.length}</div>
+                                <div style={{ background: '#050505', padding: 20, border: '1px solid #222', marginBottom: 20 }}>
+                                    <div style={{ color: '#555', fontSize: '0.7rem', marginBottom: 5, textTransform: 'uppercase' }}>Vistos</div>
+                                    <div style={{ fontSize: '2.5rem', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>{watchedList.length}</div>
                                 </div>
-                                <button className="btn-main" onClick={onLogout} style={{ padding: '15px', fontSize: '0.8rem', background: '#111', color: '#aaa', border: '1px solid #333' }}>
-                                    ENCERRAR SESSÃO
+                                <button className="btn-main" onClick={onLogout} style={{ padding: '12px', fontSize: '0.8rem', background: '#000', color: '#666', border: '1px solid #333' }}>
+                                    SAIR
                                 </button>
                             </div>
-
                             <div style={{ flex: '3 1 300px' }}>
-                                <h3 style={{ marginTop: 0, fontSize: '0.9rem', color: '#fff', marginBottom: 10, borderLeft: '3px solid #f00', paddingLeft: 10 }}>
-                                    HISTÓRICO 
-                                </h3>
-                                {watchedMovies.length === 0 && (
-                                    <div style={{ fontStyle: 'italic', color: '#666', padding: 20, border: '1px dashed #333' }}>
-                                        Nenhum registro encontrado.
-                                    </div>
-                                )}
+                                <h3 style={{ marginTop: 0, fontSize: '0.8rem', color: '#cc0000', marginBottom: 15, textTransform: 'uppercase', letterSpacing: 1 }}>Histórico</h3>
+                                {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
                                 <div className="profile-grid">
                                     {watchedMovies.map((movie, index) => (
                                         <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
-                                            <div style={{ fontSize: '0.7rem', color: '#666' }}>{movie.ano}</div>
-                                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#eee' }}>{movie.titulo}</div>
-                                            <div style={{ fontSize: '0.7rem', color: '#444', marginTop: 5 }}>{movie.diretor}</div>
+                                            <div style={{ fontSize: '0.65rem', color: '#666' }}>{movie.ano}</div>
+                                            <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#ddd' }}>{movie.titulo}</div>
                                         </div>
                                     ))}
                                 </div>
@@ -259,19 +264,78 @@
             );
         };
 
-        const DashPlayer = ({ url, isPlaying, startAt, enableControls }) => {
+        // 3. Card de Avaliação Corrigido (Salva Estrela + Envia API)
+        const RatingCard = ({ movie, user, onClose }) => {
+            const [hoverStar, setHoverStar] = React.useState(0);
+            const [selectedStar, setSelectedStar] = React.useState(0); // Estado da estrela clicada
+            const [review, setReview] = React.useState("");
+            const [loading, setLoading] = React.useState(false);
+
+            const handleSend = async () => {
+                if (selectedStar === 0 && !review) { onClose(); return; } // Se vazio, só fecha
+                setLoading(true);
+                try {
+                    if(user) {
+                        await Api.saveRating(user.email, movie.id, selectedStar, review);
+                    }
+                    onClose();
+                } catch(e) { console.error(e); setLoading(false); }
+            };
+
+            return (
+                <div className="auth-modal" style={{background:'rgba(0,0,0,0.8)'}}>
+                    <div className="movie-card" style={{textAlign:'center', padding: 40, maxWidth: 450, animation: 'slideUp 0.5s'}}>
+                        <h3 style={{margin:0, fontSize:'0.8rem', color:'#888', letterSpacing: 2}}>SESSÃO FINALIZADA</h3>
+                        <h2 style={{margin:'10px 0 0 0', fontSize:'1.8rem', color:'#fff'}}>{movie.titulo}</h2>
+                        
+                        <div className="rating-stars">
+                            {[1,2,3,4,5].map(star => (
+                                <span key={star} 
+                                      className={`star-icon ${(hoverStar || selectedStar) >= star ? 'active' : ''}`}
+                                      onMouseEnter={() => setHoverStar(star)}
+                                      onMouseLeave={() => setHoverStar(0)}
+                                      onClick={() => setSelectedStar(star)}>
+                                    ★
+                                </span>
+                            ))}
+                        </div>
+
+                        <textarea 
+                            className="rating-textarea" 
+                            placeholder="O que você achou? (Opcional)" 
+                            value={review}
+                            onChange={(e) => setReview(e.target.value)}
+                        />
+                        
+                        <div style={{display:'flex', gap: 10}}>
+                            <button className="btn-main" onClick={handleSend} disabled={loading}>
+                                {loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}
+                            </button>
+                            <button className="btn-main" onClick={onClose} style={{background:'transparent', border:'1px solid #333', color:'#666', width:'auto'}}>PULAR</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // 4. Player
+        const DashPlayer = ({ url, isPlaying, startAt, enableControls, onEnded }) => {
             const videoRef = React.useRef(null);
             React.useEffect(() => {
                 if (!url || !videoRef.current) return;
                 const player = dashjs.MediaPlayer().create();
                 player.initialize(videoRef.current, url, false);
                 if (startAt > 0) player.seek(startAt);
-                return () => player.destroy();
+                const vid = videoRef.current;
+                const handleEnd = () => { if(onEnded) onEnded(); };
+                vid.addEventListener('ended', handleEnd);
+                return () => { vid.removeEventListener('ended', handleEnd); player.destroy(); };
             }, [url]);
             React.useEffect(() => { if (videoRef.current) isPlaying ? videoRef.current.play() : videoRef.current.pause(); }, [isPlaying]);
-            return <video ref={videoRef} controls={enableControls} controlsList="nodownload" />;
+            return <video ref={videoRef} controls={enableControls} controlsList="nodownload" style={{cursor: enableControls ? 'auto' : 'none'}} />;
         };
 
+        // --- APP ---
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
             const [fullCatalog, setFullCatalog] = React.useState(null);
@@ -281,29 +345,21 @@
             
             const [showLogin, setShowLogin] = React.useState(false);
             const [showProfile, setShowProfile] = React.useState(false); 
+            const [showRating, setShowRating] = React.useState(false); 
+            
             const [watchedList, setWatchedList] = React.useState([]);
 
             React.useEffect(() => {
                 fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
-                const u = Api.getCurrentUser();
-                setUser(u);
+                const u = Api.getCurrentUser(); setUser(u);
                 if(u) syncProfile(u.email);
             }, []);
 
             const syncProfile = async (email) => {
-                // Agora busca perfil completo (historico + username)
                 const data = await Api.getProfile(email);
-                
-                // Atualiza User Local com Username do Banco (se existir)
                 if(data.username) Api.updateLocalUser(data.username);
-                const updatedUser = Api.getCurrentUser();
-                setUser(updatedUser);
-
-                // Atualiza Lista
-                setWatchedList(prev => {
-                    const merged = [...new Set([...prev, ...data.watched])];
-                    return merged;
-                });
+                setUser(Api.getCurrentUser());
+                setWatchedList(prev => [...new Set([...prev, ...data.watched])]);
             };
 
             const handleLogout = () => { Api.signOut(); setUser(null); setShowProfile(false); };
@@ -326,7 +382,6 @@
                 if (ids.length === 0) ids = Object.keys(fullCatalog); 
                 const randomId = ids[Math.floor(Math.random() * ids.length)];
                 prepareMovie(randomId);
-                
                 const newList = [...watchedList, randomId];
                 setWatchedList(newList);
                 if(user) Api.saveMovie(user.email, randomId);
@@ -338,19 +393,30 @@
                  const slug = movieId.toLowerCase().replace(/ /g, "_");
                  setCurrentMovie({ id: movieId, ...movieData, videoUrl: `${BUCKET_URL}/videos/${slug}/playlist.mpd` });
                  setPhase('popup');
+                 setShowRating(false);
             };
             
+            const handleMovieEnd = () => { setShowRating(true); };
+            const handleCloseRating = () => { setShowRating(false); setPhase('home'); setCurrentMovie(null); };
             const handleReplayFromHistory = (movieId) => { prepareMovie(movieId); setShowProfile(false); };
-            const handleReset = () => { setPhase('home'); setCurrentMovie(null); };
+            const handleReset = () => { setPhase('home'); setCurrentMovie(null); setShowRating(false); };
 
             let videoClass = "video-background";
-            if (phase === 'popup') videoClass += " dimmed";
-            if (phase === 'playing') videoClass += " active";
+            if (phase === 'popup' || showRating) videoClass += " dimmed"; 
+            if (phase === 'playing' && !showRating) videoClass += " active";
 
             return (
                 <>
                     <div className={videoClass}>
-                        {currentMovie && <DashPlayer url={currentMovie.videoUrl} isPlaying={phase === 'playing'} startAt={currentMovie.capaSeconds || 0} enableControls={phase === 'playing'} />}
+                        {currentMovie && (
+                            <DashPlayer 
+                                url={currentMovie.videoUrl} 
+                                isPlaying={phase === 'playing' && !showRating} 
+                                startAt={currentMovie.capaSeconds || 0} 
+                                enableControls={phase === 'playing'}
+                                onEnded={handleMovieEnd} 
+                            />
+                        )}
                     </div>
                     
                     <div className="user-bar">
@@ -359,7 +425,7 @@
                                 {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
                             </div>
                         ) : (
-                            <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN / CADASTRO</button>
+                            <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN</button>
                         )}
                     </div>
 
@@ -376,27 +442,28 @@
                             onUpdateUser={refreshUser}
                         />
                     )}
+                    
+                    {showRating && currentMovie && <RatingCard movie={currentMovie} user={user} onClose={handleCloseRating} />}
 
-                    {phase !== 'home' && <button className="btn-back-corner" onClick={handleReset}>&lt; MENU</button>}
+                    {phase !== 'home' && !showRating && <button className="btn-back-corner" onClick={handleReset}>MENU</button>}
                     
                     <div className="ui-layer">
                         {phase === 'home' && (
                             <div className="sort-container">
                                 <div className="big-title">SORT A SHORT</div><br/>
                                 <button className="btn-main btn-sort" onClick={startSort} disabled={!fullCatalog}>
-                                    {fullCatalog ? "SORTEAR FILME" : "CARREGANDO..."}
+                                    {fullCatalog ? "SORTEAR" : "..."}
                                 </button>
-                                <div style={{marginTop: 20, color: '#666', fontSize: '0.8rem'}}>FILMES: {fullCatalog ? Object.keys(fullCatalog).length : 0}</div>
                             </div>
                         )}
                         {phase === 'sorting' && <div className="sorting-anim">{sortText}</div>}
-                        {phase === 'popup' && currentMovie && (
+                        {phase === 'popup' && currentMovie && !showRating && (
                             <div className="movie-card">
-                                <div style={{fontSize: '0.8rem', color: '#f00', marginBottom: 10, letterSpacing: 2}}>● FILME SELECIONADO</div>
+                                <div style={{fontSize: '0.7rem', color: '#cc0000', marginBottom: 15, letterSpacing: 2, fontWeight:'bold'}}>● SELEÇÃO</div>
                                 <h2 className="card-title">{currentMovie.titulo}</h2>
-                                <span className="card-meta">{currentMovie.ano} // DIR. {currentMovie.diretor}</span>
+                                <span className="card-meta">{currentMovie.ano} — {currentMovie.diretor}</span>
                                 <div className="card-desc">{currentMovie.descricao || "..."}</div>
-                                <button className="btn-main" onClick={() => setPhase('playing')}>► ASSISTIR AGORA</button>
+                                <button className="btn-main" onClick={() => setPhase('playing')}>ASSISTIR</button>
                             </div>
                         )}
                     </div>
