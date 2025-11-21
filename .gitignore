@@ -11,3 +11,10 @@ Thumbs.db
 # AWS / Deploy
 *.zip
 package/
+
+# videos 
+uploader/input/*
+uploader/temp_dash/*
+
+# ffmpeg 
+uploader/ffmpeg/bin/*
