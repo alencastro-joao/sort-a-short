@@ -16,15 +16,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg-color: #000; --accent: #fff; --glass: rgba(20, 20, 20, 0.90); --border: rgba(255, 255, 255, 0.3); }
+        :root { --bg-color: #000; --accent: #fff; --highlight: #f00; --glass: rgba(20, 20, 20, 0.95); --border: rgba(255, 255, 255, 0.3); }
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: #fff; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         
-        /* Scrollbar Customizada para o Perfil */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        /* Scrollbar Customizada (Estilo Industrial) */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #000; border-left: 1px solid #333; }
+        ::-webkit-scrollbar-thumb { background: #fff; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--highlight); }
 
         .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.5s ease; }
         .video-background.dimmed { filter: brightness(0.3) blur(8px); transform: scale(1.02); }
@@ -34,7 +34,7 @@
         .ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: flex; justify-content: center; align-items: center; pointer-events: none; }
         .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
         
-        .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 2px solid #fff; display: inline-block; text-shadow: 0 0 20px rgba(255,255,255,0.4); }
+        .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 2px solid #fff; display: inline-block; text-shadow: 0 0 30px rgba(255,255,255,0.2); }
         
         .movie-card { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 30px 80px rgba(0,0,0,1); animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
         @keyframes slideUp { from { transform: translateY(100px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -43,8 +43,9 @@
         .card-meta { color: #aaa; font-size: 0.9rem; margin-bottom: 20px; display: block; font-style: italic; }
         .card-desc { line-height: 1.6; color: #eee; margin-bottom: 40px; border-left: 3px solid #fff; padding-left: 20px; background: rgba(255,255,255,0.05); padding: 15px; }
         
+        /* BOTÃO FIXO: Removido o letter-spacing no hover para não mudar de tamanho */
         .btn-main { background: #fff; color: #000; border: none; padding: 18px 40px; font-family: 'Space Mono'; font-weight: bold; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; width: 100%; box-shadow: 0 0 15px rgba(255,255,255,0.3); }
-        .btn-main:hover { background: #ddd; letter-spacing: 4px; box-shadow: 0 0 25px rgba(255,255,255,0.6); }
+        .btn-main:hover { background: #ccc; box-shadow: 0 0 25px rgba(255,255,255,0.6); }
         
         .btn-sort { background: transparent; color: #fff; border: 2px solid #fff; padding: 20px 60px; font-size: 1.2rem; margin-top: 20px; box-shadow: none; }
         .btn-sort:hover { background: #fff; color: #000; box-shadow: 0 0 20px #fff; }
@@ -55,23 +56,31 @@
         .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; }
         .btn-login { background: transparent; border: 1px solid #fff; color: #fff; padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.8rem; backdrop-filter: blur(5px); transition: 0.3s; }
         .btn-login:hover { background: #fff; color: #000; }
-        .user-info { color: #0f0; font-size: 0.8rem; padding: 8px 0; text-shadow: 0 0 10px #0f0; font-weight: bold; cursor: pointer; text-decoration: underline; }
         
-        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .auth-box { background: #111; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(255,255,255,0.1); animation: slideUp 0.3s ease-out; }
-        .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; background: #000; border: 1px solid #444; color: #fff; font-family: 'Space Mono'; outline: none; }
-        .auth-input:focus { border-color: #fff; }
+        .user-info { color: var(--highlight); font-size: 0.8rem; padding: 8px 0; text-shadow: 0 0 10px var(--highlight); font-weight: bold; cursor: pointer; text-decoration: underline; letter-spacing: 1px; }
+        
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(5px); padding: 20px; }
+        
+        .auth-box { background: #050505; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 50px rgba(255,255,255,0.05); animation: slideUp 0.3s ease-out; max-height: 90vh; overflow-y: auto; }
+        
+        .profile-box { width: 800px; max-width: 100%; text-align: left; display: flex; flexDirection: column; }
+
+        .auth-input { width: 100%; padding: 15px; margin-bottom: 15px; background: #000; border: 1px solid #444; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.3s; }
+        .auth-input:focus { border-color: #fff; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        
         .auth-link { color: #aaa; font-size: 0.8rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; }
-        .auth-error { color: #f00; font-size: 0.8rem; margin-bottom: 15px; border: 1px solid #f00; padding: 10px; }
+        .auth-error { color: var(--highlight); font-size: 0.8rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; }
         
         .sorting-anim { font-size: 2rem; font-weight: bold; text-align: center; color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.5); background: rgba(0,0,0,0.8); padding: 40px; border: 1px solid #fff; max-width: 90%; }
         
-        /* Estilos Específicos do Perfil */
-        .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; text-align: left; }
-        .profile-movie-item { background: rgba(255,255,255,0.05); padding: 10px; border: 1px solid #333; transition: 0.2s; }
-        .profile-movie-item:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
-        
-        @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.8rem; } .movie-card { padding: 30px; } .sorting-anim { font-size: 1.5rem; } .auth-box { width: 90%; padding: 20px; } }
+        .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
+        /* Item do Perfil agora tem cursor pointer e interação */
+        .profile-movie-item { background: rgba(255,255,255,0.03); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
+        .profile-movie-item:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
+        .profile-movie-item::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(--highlight); opacity: 0; transition: 0.2s; }
+        .profile-movie-item:hover::before { opacity: 1; }
+
+        @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.8rem; } .movie-card { padding: 30px; } .sorting-anim { font-size: 1.5rem; } .auth-box, .profile-box { width: 100%; padding: 20px; height: 100%; max-height: 100vh; border: none; } .btn-back-corner { top: auto; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; text-align: center; } }
     </style>
 </head>
 <body>
@@ -81,38 +90,28 @@
     <script type="text/babel">
         const BUCKET_URL = ""; 
 
-        // --- AUTH SERVICE LIGHT (FALA COM A LAMBDA) ---
+        // --- AUTH SERVICE LIGHT ---
         const AuthService = {
             signUp: async (email, password) => {
-                const res = await fetch('/api/auth/signup', {
-                    method: 'POST', body: JSON.stringify({ email, password })
-                });
+                const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
                 const data = await res.json();
                 if (res.status !== 200) throw new Error(data.body || "Erro cadastro");
                 return data;
             },
             confirmSignUp: async (email, code) => {
-                const res = await fetch('/api/auth/confirm', {
-                    method: 'POST', body: JSON.stringify({ email, code })
-                });
+                const res = await fetch('/api/auth/confirm', { method: 'POST', body: JSON.stringify({ email, code }) });
                 const data = await res.json();
                 if (res.status !== 200) throw new Error(data.body || "Erro confirmação");
                 return data;
             },
             signIn: async (email, password) => {
-                const res = await fetch('/api/auth/signin', {
-                    method: 'POST', body: JSON.stringify({ email, password })
-                });
+                const res = await fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ email, password }) });
                 const data = await res.json();
                 if (res.status !== 200) throw new Error(data.body || "Erro login");
-                
-                // Salva sessão local (Token + Email)
                 localStorage.setItem("sortashort_session", JSON.stringify(data));
                 return data;
             },
-            signOut: () => {
-                localStorage.removeItem("sortashort_session");
-            },
+            signOut: () => { localStorage.removeItem("sortashort_session"); },
             getCurrentUser: () => {
                 const sess = localStorage.getItem("sortashort_session");
                 return sess ? JSON.parse(sess) : null;
@@ -122,11 +121,8 @@
         // --- API HISTÓRICO ---
         const ApiService = {
             saveMovie: async (email, movieId) => {
-                try {
-                    await fetch('/api/history', {
-                        method: 'POST', body: JSON.stringify({ email, movie_id: movieId })
-                    });
-                } catch (e) { console.error(e); }
+                try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } 
+                catch (e) { console.error(e); }
             },
             getHistory: async (email) => {
                 try {
@@ -139,7 +135,7 @@
 
         // --- COMPONENTES ---
         
-        // 1. Modal de Login/Cadastro
+        // 1. Modal de Login
         const LoginModal = ({ onClose, onLoginSuccess }) => {
             const [mode, setMode] = React.useState('signin');
             const [email, setEmail] = React.useState('');
@@ -151,19 +147,10 @@
             const handleSubmit = async () => {
                 setMsg(''); setLoading(true);
                 try {
-                    if (mode === 'signin') {
-                        await AuthService.signIn(email, pass);
-                        onLoginSuccess(); onClose();
-                    } else if (mode === 'signup') {
-                        await AuthService.signUp(email, pass);
-                        setMode('confirm'); setMsg("Código enviado!");
-                    } else if (mode === 'confirm') {
-                        await AuthService.confirmSignUp(email, code);
-                        setMode('signin'); setMsg("Confirmado! Entre.");
-                    }
-                } catch (err) {
-                    setMsg(err.message);
-                }
+                    if (mode === 'signin') { await AuthService.signIn(email, pass); onLoginSuccess(); onClose(); } 
+                    else if (mode === 'signup') { await AuthService.signUp(email, pass); setMode('confirm'); setMsg("Código enviado!"); } 
+                    else if (mode === 'confirm') { await AuthService.confirmSignUp(email, code); setMode('signin'); setMsg("Confirmado! Entre."); }
+                } catch (err) { setMsg(err.message); }
                 setLoading(false);
             };
 
@@ -184,59 +171,56 @@
             );
         };
 
-        // 2. Componente de Perfil do Usuário (NOVO)
-        const UserProfile = ({ user, watchedList, catalog, onClose, onLogout }) => {
-            // Cruza os IDs do histórico com os dados reais do catálogo
+        // 2. Perfil do Usuário (Interativo)
+        const UserProfile = ({ user, watchedList, catalog, onClose, onLogout, onSelectMovie }) => {
             const watchedMovies = watchedList
-                .map(id => catalog ? catalog[id] : null)
+                .map(id => catalog ? { id, ...catalog[id] } : null)
                 .filter(movie => movie !== null)
-                .reverse(); // Mostra os últimos primeiro
+                .reverse(); 
 
             return (
                 <div className="auth-modal">
-                    <div className="auth-box" style={{ width: '800px', maxWidth: '95%', textAlign: 'left', height: 'auto', maxHeight: '90vh', display: 'flex', flexDirection: 'column' }}>
-                        {/* Cabeçalho do Perfil */}
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid #333', paddingBottom: 20 }}>
+                    <div className="auth-box profile-box">
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 30, borderBottom: '1px solid #333', paddingBottom: 20 }}>
                             <div>
-                                <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fff' }}>PERFIL DE COMANDO</h2>
-                                <span style={{ color: '#0f0', fontFamily: 'monospace', fontSize: '0.9rem' }}>USER: {user.email}</span>
+                                <h2 style={{ margin: 0, fontSize: '1.5rem', color: '#fff', letterSpacing: '2px' }}>PERFIL DE COMANDO</h2>
+                                <span style={{ color: '#f00', fontFamily: 'monospace', fontSize: '0.9rem', fontWeight: 'bold', textShadow: '0 0 5px rgba(255,0,0,0.5)' }}>
+                                    CMD://{user.email}
+                                </span>
                             </div>
-                            <button className="btn-login" onClick={onClose} style={{border: 'none', fontSize: '1.2rem'}}>✕</button>
+                            <button className="btn-login" onClick={onClose} style={{border: '1px solid #f00', color: '#f00', fontSize: '1rem', padding: '5px 15px'}}>✕ FECHAR</button>
                         </div>
 
-                        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', flex: 1, overflow: 'hidden' }}>
-                            {/* Coluna Esquerda: Stats e Ações */}
-                            <div style={{ flex: '1 1 200px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-                                <div style={{ background: '#000', padding: 20, border: '1px solid #333' }}>
-                                    <div style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: 5 }}>FILMES ASSISTIDOS</div>
-                                    <div style={{ fontSize: '3rem', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>{watchedList.length}</div>
+                        <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap' }}>
+                            <div style={{ flex: '1 1 200px' }}>
+                                <div style={{ background: '#0a0a0a', padding: 20, border: '1px solid #333', marginBottom: 20 }}>
+                                    <div style={{ color: '#666', fontSize: '0.7rem', marginBottom: 5, textTransform: 'uppercase' }}>Filmes Assistidos</div>
+                                    <div style={{ fontSize: '3.5rem', fontWeight: 'bold', color: '#fff', lineHeight: 1 }}>{watchedList.length}</div>
                                 </div>
-                                <div style={{flex: 1}}></div>
-                                <button className="btn-main" onClick={onLogout} style={{ padding: '15px', fontSize: '0.9rem', background: '#222', color: '#fff', border: '1px solid #555' }}>
+                                <button className="btn-main" onClick={onLogout} style={{ padding: '15px', fontSize: '0.8rem', background: '#111', color: '#aaa', border: '1px solid #333' }}>
                                     ENCERRAR SESSÃO
                                 </button>
                             </div>
 
-                            {/* Coluna Direita: Grid de Histórico */}
-                            <div style={{ flex: '2 1 300px', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-                                <h3 style={{ marginTop: 0, fontSize: '1rem', color: '#aaa', marginBottom: 15 }}>HISTÓRICO DE VISUALIZAÇÃO</h3>
+                            <div style={{ flex: '3 1 300px' }}>
+                                <h3 style={{ marginTop: 0, fontSize: '0.9rem', color: '#fff', marginBottom: 10, borderLeft: '3px solid #f00', paddingLeft: 10 }}>
+                                    HISTÓRICO DE VISUALIZAÇÃO (CLIQUE PARA ASSISTIR)
+                                </h3>
                                 
-                                <div style={{ overflowY: 'auto', paddingRight: 10, flex: 1 }}>
-                                    {watchedMovies.length === 0 && (
-                                        <div style={{ fontStyle: 'italic', color: '#666', padding: 20, border: '1px dashed #333' }}>
-                                            Nenhum registro encontrado. Assista algo!
-                                        </div>
-                                    )}
-
-                                    <div className="profile-grid">
-                                        {watchedMovies.map((movie, index) => (
-                                            <div key={index} className="profile-movie-item">
-                                                <div style={{ fontSize: '0.7rem', color: '#aaa' }}>{movie.ano}</div>
-                                                <div style={{ fontSize: '0.85rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2 }}>{movie.titulo}</div>
-                                                <div style={{ fontSize: '0.7rem', color: '#666', marginTop: 5 }}>DIR. {movie.diretor}</div>
-                                            </div>
-                                        ))}
+                                {watchedMovies.length === 0 && (
+                                    <div style={{ fontStyle: 'italic', color: '#666', padding: 20, border: '1px dashed #333' }}>
+                                        Nenhum registro encontrado. Assista algo!
                                     </div>
+                                )}
+
+                                <div className="profile-grid">
+                                    {watchedMovies.map((movie, index) => (
+                                        <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
+                                            <div style={{ fontSize: '0.7rem', color: '#666' }}>{movie.ano}</div>
+                                            <div style={{ fontSize: '0.9rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#eee' }}>{movie.titulo}</div>
+                                            <div style={{ fontSize: '0.7rem', color: '#444', marginTop: 5 }}>{movie.diretor}</div>
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -269,9 +253,8 @@
             const [sortText, setSortText] = React.useState("");
             const [user, setUser] = React.useState(null);
             
-            // Modais
             const [showLogin, setShowLogin] = React.useState(false);
-            const [showProfile, setShowProfile] = React.useState(false); // Novo estado do perfil
+            const [showProfile, setShowProfile] = React.useState(false); 
             
             const [watchedList, setWatchedList] = React.useState([]);
 
@@ -295,16 +278,8 @@
                 });
             };
 
-            const handleLogout = () => { 
-                AuthService.signOut(); 
-                setUser(null); 
-                setShowProfile(false); // Fecha perfil ao sair
-            };
-            
-            const refreshUser = () => { 
-                const u = AuthService.getCurrentUser(); 
-                setUser(u); if(u) syncHistory(u.email); 
-            };
+            const handleLogout = () => { AuthService.signOut(); setUser(null); setShowProfile(false); };
+            const refreshUser = () => { const u = AuthService.getCurrentUser(); setUser(u); if(u) syncHistory(u.email); };
 
             const startSort = () => {
                 if (!fullCatalog) return;
@@ -322,16 +297,26 @@
                 let ids = Object.keys(fullCatalog).filter(id => !watchedList.includes(id));
                 if (ids.length === 0) ids = Object.keys(fullCatalog); 
                 const randomId = ids[Math.floor(Math.random() * ids.length)];
-                const movieData = fullCatalog[randomId];
-                const slug = randomId.toLowerCase().replace(/ /g, "_");
-                setCurrentMovie({ id: randomId, ...movieData, videoUrl: `${BUCKET_URL}/videos/${slug}/playlist.mpd` });
+                prepareMovie(randomId);
                 
                 const newList = [...watchedList, randomId];
                 setWatchedList(newList);
                 localStorage.setItem("sortashort_v4", JSON.stringify({ watched: newList }));
                 if(user) ApiService.saveMovie(user.email, randomId);
-                
-                setPhase('popup');
+            };
+            
+            // Nova função para abrir filme específico (usada no Sorteio e no Histórico)
+            const prepareMovie = (movieId) => {
+                 if (!fullCatalog || !fullCatalog[movieId]) return;
+                 const movieData = fullCatalog[movieId];
+                 const slug = movieId.toLowerCase().replace(/ /g, "_");
+                 setCurrentMovie({ id: movieId, ...movieData, videoUrl: `${BUCKET_URL}/videos/${slug}/playlist.mpd` });
+                 setPhase('popup');
+            };
+            
+            const handleReplayFromHistory = (movieId) => {
+                prepareMovie(movieId);
+                setShowProfile(false);
             };
 
             const handleReset = () => { setPhase('home'); setCurrentMovie(null); };
@@ -346,7 +331,6 @@
                         {currentMovie && <DashPlayer url={currentMovie.videoUrl} isPlaying={phase === 'playing'} startAt={currentMovie.capaSeconds || 0} enableControls={phase === 'playing'} />}
                     </div>
                     
-                    {/* Barra de Usuário Atualizada */}
                     <div className="user-bar">
                         {user ? (
                             <div className="user-info" onClick={() => setShowProfile(true)}>
@@ -357,7 +341,6 @@
                         )}
                     </div>
 
-                    {/* Renderização Condicional dos Modais */}
                     {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
                     
                     {showProfile && user && (
@@ -366,7 +349,8 @@
                             watchedList={watchedList} 
                             catalog={fullCatalog} 
                             onClose={() => setShowProfile(false)} 
-                            onLogout={handleLogout} 
+                            onLogout={handleLogout}
+                            onSelectMovie={handleReplayFromHistory} 
                         />
                     )}
 
