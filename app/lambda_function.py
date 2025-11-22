@@ -2,10 +2,11 @@ import boto3
 import json
 import os
 import re
+import base64
 from datetime import datetime
 from decimal import Decimal
 from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr # <--- IMPORTANTE: Attr adicionado
 
 # --- CONFIGURAÇÃO ---
 BUCKET_NAME = "sort-a-short" 
@@ -13,18 +14,12 @@ FILE_NAME = "shorts.json"
 TABLE_NAME = "sort-a-short-db"
 COGNITO_CLIENT_ID = "3i2m7sfkp66qa9uhfvvb7g6d9c" 
 
-# --- HEADERS ---
+# --- HEADERS ANTI-CACHE ---
 NO_CACHE_HEADERS = {
     "Content-Type": "application/json",
     "Cache-Control": "no-cache, no-store, must-revalidate",
     "Pragma": "no-cache",
     "Expires": "0"
-}
-
-# Headers para Javascript (Cache curto para desenvolvimento)
-JS_HEADERS = {
-    "Content-Type": "application/javascript",
-    "Cache-Control": "max-age=0, no-cache, no-store, must-revalidate"
 }
 
 s3 = boto3.client('s3')
@@ -38,10 +33,8 @@ class DecimalEncoder(json.JSONEncoder):
         return super(DecimalEncoder, self).default(obj)
 
 def get_file_content(filename):
-    # Remove barras iniciais para evitar erros de caminho
-    clean_name = filename.lstrip('/')
-    if os.path.exists(clean_name):
-        with open(clean_name, 'r', encoding='utf-8') as f: return f.read()
+    if os.path.exists(filename):
+        with open(filename, 'r', encoding='utf-8') as f: return f.read()
     return None
 
 def get_catalogo():
@@ -62,17 +55,17 @@ def lambda_handler(event, context):
 
     print(f"DEBUG: {method} {path}")
 
-    # --- ROTA 0: SERVIR ARQUIVOS JS (CORREÇÃO DO ERRO) ---
-    if path.endswith('.js'):
-        content = get_file_content(path)
-        if content:
-            return {
-                "statusCode": 200,
-                "headers": JS_HEADERS,
-                "body": content
-            }
-        else:
-            return {"statusCode": 404, "body": f"File not found: {path}"}
+    # --- ROTA 0: ICONE ---
+    if path == '/icon.png':
+        try:
+            with open('icon.png', 'rb') as f:
+                return {
+                    "statusCode": 200,
+                    "headers": { "Content-Type": "image/png", "Cache-Control": "public, max-age=86400" },
+                    "body": base64.b64encode(f.read()).decode('utf-8'),
+                    "isBase64Encoded": True
+                }
+        except: return {"statusCode": 404, "body": "Icone nao encontrado"}
 
     # --- ROTA 1: RATING ---
     if path == '/api/rating':
@@ -117,7 +110,7 @@ def lambda_handler(event, context):
             return { "statusCode": 200, "body": json.dumps({"token": resp['AuthenticationResult']['AccessToken'], "email": body.get('email')}), "headers": NO_CACHE_HEADERS }
         except ClientError as e: return {"statusCode": 400, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-    # --- ROTA 3: PERFIL E HISTÓRICO ---
+    # --- ROTA 3: PERFIL ---
     if path == '/api/history':
         if method == 'GET':
             user_email = event.get('queryStringParameters', {}).get('email')
@@ -146,7 +139,7 @@ def lambda_handler(event, context):
                 return {"statusCode": 200, "body": "Saved", "headers": NO_CACHE_HEADERS}
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-    # --- ROTA 4: USERNAME ---
+    # --- ROTA 4: USERNAME (RESERVA) ---
     if path == '/api/username' and method == 'POST':
         email = body.get('email'); new_username = body.get('username', '').strip().lower()
         if not re.match("^[a-z0-9_]{3,15}$", new_username): return {"statusCode": 400, "body": "Nome invalido", "headers": NO_CACHE_HEADERS}
@@ -162,22 +155,37 @@ def lambda_handler(event, context):
         except ClientError: return {"statusCode": 409, "body": "Nome ja existe", "headers": NO_CACHE_HEADERS}
         except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-    # --- FRONTEND (FALLBACK) ---
+    # --- ROTA 5: PESQUISA DE USUÁRIOS (NOVA) ---
+    if path == '/api/users/search' and method == 'GET':
+        query = event.get('queryStringParameters', {}).get('q', '').strip().lower()
+        if not query or len(query) < 2: return {"statusCode": 200, "body": json.dumps([]), "headers": NO_CACHE_HEADERS}
+        
+        try:
+            # Scan na tabela buscando Usernames que contenham o texto (pk começa com USERNAME#)
+            # Nota: Scan é "caro" em tabelas gigantes, mas ok para uso pessoal
+            response = table.scan(
+                FilterExpression=Attr('pk').begins_with('USERNAME#') & Attr('pk').contains(query) & Attr('sk').eq('RESERVED')
+            )
+            
+            # Formata o resultado removendo o prefixo USERNAME#
+            results = []
+            for item in response.get('Items', []):
+                clean_name = item['pk'].replace('USERNAME#', '')
+                results.append({ "username": clean_name, "email": item.get('email') })
+            
+            return {"statusCode": 200, "body": json.dumps(results), "headers": NO_CACHE_HEADERS}
+        except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
+
+    # --- FRONTEND ---
     html = get_file_content('index.html')
     if not html: return {"statusCode": 500, "body": "Index lost"}
     
     movie_id = event.get('queryStringParameters', {}).get('movie')
-    if len(path.strip('/')) > 1 and not path.startswith('/api/') and not path.endswith('.js'): movie_id = path.strip('/')
-    
+    if len(path.strip('/')) > 1 and not path.startswith('/api/'): movie_id = path.strip('/')
     meta = { "t": "Sort a Short", "d": "Curadoria de animacao.", "i": "" }
     if movie_id:
         cat = get_catalogo()
         if movie_id in cat: meta = { "t": cat[movie_id]['titulo'], "d": cat[movie_id]['ano'], "i": "" }
 
     final_html = html.replace("{{META_TITLE}}", meta["t"]).replace("{{META_DESC}}", meta["d"]).replace("{{META_IMAGE}}", meta["i"])
-    
-    return { 
-        "statusCode": 200, 
-        "headers": {"Content-Type": "text/html; charset=utf-8"}, 
-        "body": final_html 
-    }
+    return { "statusCode": 200, "headers": {"Content-Type": "text/html; charset=utf-8"}, "body": final_html }

@@ -8,6 +8,8 @@
     <meta name="description" content="{{META_DESC}}">
     <meta property="og:image" content="{{META_IMAGE}}" />
 
+    <link rel="icon" href="/icon.png" type="image/png">
+
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -16,11 +18,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        /* --- ESTILOS GERAIS (Matte Red / Noir) --- */
         :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; }
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
-        
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #000; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
@@ -35,62 +35,53 @@
         .sort-container { text-align: center; pointer-events: auto; z-index: 20; }
         .big-title { font-size: 3.5rem; margin-bottom: 20px; letter-spacing: 8px; text-transform: uppercase; border-bottom: 1px solid #444; display: inline-block; color: #fff; }
         
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(0px); padding: 20px; }
+        .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; position: relative; }
+        .profile-box { width: 800px; max-width: 100%; text-align: left; display: flex; flex-direction: column; justify-content: flex-start; padding: 40px; }
         .movie-card { background: var(--glass); border: 1px solid var(--border); padding: 50px; max-width: 600px; width: 90%; text-align: left; pointer-events: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.5s ease-out; }
+        
         .card-title { font-size: 2rem; margin: 0 0 10px 0; line-height: 1.1; color: #fff; text-transform: uppercase; letter-spacing: -1px; }
         .card-meta { color: #888; font-size: 0.8rem; margin-bottom: 20px; display: block; font-style: italic; }
         .card-desc { line-height: 1.7; color: #ccc; margin-bottom: 40px; border-left: 3px solid var(--highlight); padding-left: 20px; font-size: 0.9rem; }
         
-        /* Modais */
-        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 200; display: flex; justify-content: center; align-items: center; backdrop-filter: blur(0px); padding: 20px; }
-        .auth-box { background: #0a0a0a; border: 1px solid #333; padding: 40px; width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); animation: fadeIn 0.3s ease; max-height: 90vh; overflow-y: auto; position: relative; }
-        
-        /* Perfil Box (Layout Corrigido) */
-        .profile-box { 
-            width: 800px; max-width: 100%; text-align: left; 
-            display: flex !important; flex-direction: column !important; 
-            justify-content: flex-start !important; padding: 40px; 
-        }
-
-        /* Botões */
-        .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; width: 100%; }
+        .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: background-color 0.2s, color 0.2s; width: 100%; }
         .btn-main:hover { background: #ccc; color: #000; }
-        
         .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
         .btn-sort:hover { background: rgba(255,255,255,0.1); }
-        
         .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
         .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
-
         .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
         .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
-        
-        /* Botão Fechar (X Box) */
         .btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 10; flex-shrink: 0; }
         .btn-close-absolute { position: absolute; top: 15px; left: 15px; }
         .btn-close-box:hover { border-color: var(--highlight); color: var(--highlight); background: #111; }
 
-        /* User Bar */
         .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; align-items: center; }
         .btn-login { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.75rem; transition: 0.2s; }
         .btn-login:hover { background: var(--highlight); color: #fff; }
         .user-info { color: var(--highlight); font-size: 0.8rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.2s; text-decoration: underline; }
         .user-info:hover { color: #fff; }
         
-        /* Form Elements */
         .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.2s; font-size: 0.9rem; }
         .auth-input:focus { border-color: var(--highlight); background: #000; }
         .auth-link { color: #666; font-size: 0.75rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; transition: 0.2s; }
         .auth-link:hover { color: var(--highlight); }
         .auth-error { color: var(--highlight); font-size: 0.75rem; margin-bottom: 15px; border: 1px solid var(--highlight); padding: 10px; background: rgba(50,0,0,0.1); }
-        .auth-success { color: #4caf50; font-size: 0.75rem; margin-bottom: 15px; border: 1px solid #4caf50; padding: 10px; }
         
-        /* Profile Elements */
+        .input-wrapper { position: relative; width: 100%; }
+        .btn-toggle-pass { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #666; cursor: pointer; font-size: 0.65rem; padding: 5px; font-family: 'Space Mono', monospace; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; transition: color 0.2s; }
+        .btn-toggle-pass:hover { color: var(--highlight); }
+        .password-reqs { text-align: left; font-size: 0.7rem; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 4px; }
+        .req-item { display: block; margin-bottom: 2px; color: #666; transition: 0.2s; }
+        .req-item.valid { color: #4caf50; } 
+        .req-item::before { content: '• '; }
+        .req-item.valid::before { content: '✓ '; }
+
         .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
         .profile-movie-item { background: rgba(255,255,255,0.02); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; }
         .profile-movie-item:hover { background: rgba(255,255,255,0.05); border-color: #fff; }
         .profile-movie-item:hover::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--highlight); }
 
-        /* Rating & Tabs */
         .rating-stars { display: flex; justify-content: center; gap: 10px; margin: 20px 0; cursor: pointer; }
         .star-icon { font-size: 2rem; color: #222; transition: 0.2s; }
         .star-icon:hover, .star-icon.active { color: var(--highlight); } 
@@ -104,6 +95,12 @@
         .stat-box { background: #050505; padding: 20px; border: 1px solid #222; margin-bottom: 10px; }
         .stat-label { color: #555; font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
         .stat-value { font-size: 2.5rem; font-weight: bold; color: #fff; line-height: 1; }
+        
+        /* ESTILOS DE PESQUISA */
+        .search-result-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #333; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
+        .search-result-item:hover { border-color: var(--highlight); background: #1a1a1a; }
+        .search-btn-action { background: #222; color: #fff; border: none; padding: 5px 10px; font-size: 0.7rem; cursor: pointer; }
+        .search-empty { color: #666; text-align: center; margin-top: 20px; font-style: italic; }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -111,16 +108,139 @@
     </style>
 </head>
 <body>
-
     <div id="root"></div>
-
-    <script type="text/babel" src="api.js"></script>       <script type="text/babel" src="LoginModal.js"></script> <script type="text/babel">
+    <script type="text/babel">
         const BUCKET_URL = ""; 
 
-        // --- OBS: A VARIAVEL "Api" AGORA VEM DO ARQUIVO api.js ---
+        const Api = {
+            signUp: async (email, password) => {
+                const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
+                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
+            },
+            confirmSignUp: async (email, code) => {
+                const res = await fetch('/api/auth/confirm', { method: 'POST', body: JSON.stringify({ email, code }) });
+                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
+            },
+            signIn: async (email, password) => {
+                const res = await fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ email, password }) });
+                const data = await res.json(); if(res.status!==200) throw new Error(data.body);
+                localStorage.setItem("sortashort_session", JSON.stringify(data));
+                return data;
+            },
+            signOut: () => { localStorage.removeItem("sortashort_session"); },
+            getCurrentUser: () => {
+                const sess = localStorage.getItem("sortashort_session");
+                return sess ? JSON.parse(sess) : null;
+            },
+            updateLocalUser: (newUsername) => {
+                const sess = Api.getCurrentUser();
+                if(sess) { sess.username = newUsername; localStorage.setItem("sortashort_session", JSON.stringify(sess)); }
+            },
+            saveMovie: async (email, movieId) => {
+                try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } catch (e) {}
+            },
+            getProfile: async (email) => {
+                try {
+                    const res = await fetch(`/api/history?email=${email}&_t=${Date.now()}`);
+                    const data = await res.json(); return data;
+                } catch (e) { return { watched: [], reviews: [], username: null }; }
+            },
+            saveUsername: async (email, username) => {
+                const res = await fetch('/api/username', { method: 'POST', body: JSON.stringify({ email, username }) });
+                const data = await res.json(); if(res.status !== 200) throw new Error(data.body); return data;
+            },
+            saveRating: async (email, movieId, rating, review) => {
+                const res = await fetch('/api/rating', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId, rating, review }) });
+                return res.json();
+            },
+            // NOVA FUNÇÃO DE PESQUISA
+            searchUsers: async (query) => {
+                try {
+                    const res = await fetch(`/api/users/search?q=${query}`);
+                    return await res.json();
+                } catch (e) { return []; }
+            }
+        };
 
-        // --- OUTROS COMPONENTES (UserProfile, RatingCard, DashPlayer, App) ---
-        
+        const LoginModal = ({ onClose, onLoginSuccess }) => {
+            const [mode, setMode] = React.useState('signin'); 
+            const [email, setEmail] = React.useState('');
+            const [pass, setPass] = React.useState('');
+            const [confirmPass, setConfirmPass] = React.useState('');
+            const [code, setCode] = React.useState('');
+            const [showPass, setShowPass] = React.useState(false);
+            const [msg, setMsg] = React.useState('');
+            const [loading, setLoading] = React.useState(false);
+
+            const reqs = {
+                length: pass.length >= 8, number: /\d/.test(pass), upper: /[A-Z]/.test(pass), special: /[!@#$%^&*(),.?":{}|<>]/.test(pass)
+            };
+            const isPasswordValid = reqs.length && reqs.number && reqs.upper && reqs.special;
+            const translateError = (err) => {
+                const m = err.message || err.toString();
+                if (m.includes('UserNotFoundException')) return "Usuário não encontrado.";
+                if (m.includes('NotAuthorizedException')) return "Email ou senha incorretos.";
+                if (m.includes('UsernameExistsException')) return "Este email já está cadastrado.";
+                if (m.includes('InvalidPasswordException')) return "Senha fraca. Siga os requisitos.";
+                if (m.includes('CodeMismatchException')) return "Código inválido.";
+                if (m.includes('LimitExceededException')) return "Muitas tentativas. Tente mais tarde.";
+                return "Erro ao processar. Tente novamente.";
+            };
+            const handleKeyDown = (e) => { if (e.key === 'Enter') handleSubmit(); };
+            const handleSubmit = async () => {
+                setMsg('');
+                if (!email.includes('@')) { setMsg("Digite um email válido."); return; }
+                if (mode === 'signup') {
+                    if (!isPasswordValid) { setMsg("A senha não atende aos requisitos."); return; }
+                    if (pass !== confirmPass) { setMsg("As senhas não coincidem!"); return; }
+                }
+                if (mode === 'confirm' && code.length < 4) { setMsg("Digite o código."); return; }
+                setLoading(true);
+                try {
+                    if (mode === 'signin') { await Api.signIn(email, pass); onLoginSuccess(); onClose(); } 
+                    else if (mode === 'signup') { await Api.signUp(email, pass); setMode('confirm'); setMsg("Código enviado!"); } 
+                    else if (mode === 'confirm') { await Api.confirmSignUp(email, code); setMode('signin'); setMsg("Confirmado! Faça login."); setPass(''); }
+                } catch (err) { setMsg(translateError(err)); }
+                setLoading(false);
+            };
+            const renderPasswordInput = (placeholder, value, onChange) => (
+                <div className="input-wrapper">
+                    <input className="auth-input" type={showPass ? "text" : "password"} placeholder={placeholder} value={value} onChange={onChange} onKeyDown={handleKeyDown} />
+                    <button className="btn-toggle-pass" onClick={() => setShowPass(!showPass)} tabIndex="-1">{showPass ? 'OCULTAR' : 'EXIBIR'}</button>
+                </div>
+            );
+            return (
+                <div className="auth-modal">
+                    <div className="auth-box">
+                        <button className="btn-close-box btn-close-absolute" onClick={onClose}>✕</button>
+                        <h2 style={{marginTop: 15, marginBottom: 20, color: '#fff', fontSize:'1.2rem', letterSpacing: 2}}>
+                            {mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'NOVA CONTA' : 'CONFIRMAR'}
+                        </h2>
+                        {msg && <div className="auth-error">{msg}</div>}
+                        <input className="auth-input" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} onKeyDown={handleKeyDown} autoFocus />
+                        {mode !== 'confirm' && renderPasswordInput("Senha", pass, e => setPass(e.target.value))}
+                        {mode === 'signup' && (
+                            <div className="password-reqs">
+                                <span className={`req-item ${reqs.length ? 'valid' : ''}`}>Mínimo 8 caracteres</span>
+                                <span className={`req-item ${reqs.number ? 'valid' : ''}`}>Pelo menos 1 número</span>
+                                <span className={`req-item ${reqs.upper ? 'valid' : ''}`}>Letra maiúscula</span>
+                                <span className={`req-item ${reqs.special ? 'valid' : ''}`}>Caractere especial</span>
+                            </div>
+                        )}
+                        {mode === 'signup' && renderPasswordInput("Confirmar Senha", confirmPass, e => setConfirmPass(e.target.value))}
+                        {mode === 'confirm' && <input className="auth-input" placeholder="Código" value={code} onChange={e => setCode(e.target.value)} onKeyDown={handleKeyDown} />}
+                        <button className="btn-main" onClick={handleSubmit} disabled={loading}>{loading ? '...' : (mode === 'confirm' ? 'VALIDAR' : 'ENVIAR')}</button>
+                        <div style={{marginTop: 15}}>
+                            {mode === 'signin' && <span className="auth-link" onClick={() => {setMode('signup'); setMsg('')}}>Não tem conta? Cadastre-se</span>}
+                            {mode === 'signup' && <span className="auth-link" onClick={() => {setMode('signin'); setMsg('')}}>Já tem conta? Entrar</span>}
+                            {mode === 'confirm' && <span className="auth-link" onClick={() => {setMode('signup'); setMsg('')}}>Voltar</span>}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- COMPONENTE DE PERFIL E PESQUISA ---
         const UserProfile = ({ user, watchedList, reviewsList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
             const [editing, setEditing] = React.useState(false);
             const [tempName, setTempName] = React.useState(user.username || "");
@@ -128,8 +248,19 @@
             const [loading, setLoading] = React.useState(false);
             const [tab, setTab] = React.useState('history');
 
-            const watchedMovies = watchedList.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse();
-            const userReviews = (reviewsList || []).map(r => {
+            // Estados para Pesquisa e Visualização de Outros Perfis
+            const [viewingProfile, setViewingProfile] = React.useState(null); // Se não for null, estamos vendo outro user
+            const [searchQuery, setSearchQuery] = React.useState("");
+            const [searchResults, setSearchResults] = React.useState([]);
+            const [searching, setSearching] = React.useState(false);
+
+            // Decide quais dados mostrar: Meus ou do Visitante
+            const activeUser = viewingProfile || { username: user.username, email: user.email };
+            const activeWatched = viewingProfile ? (viewingProfile.watched || []) : watchedList;
+            const activeReviews = viewingProfile ? (viewingProfile.reviews || []) : reviewsList;
+
+            const watchedMovies = activeWatched.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse();
+            const userReviews = activeReviews.map(r => {
                 const movie = catalog ? catalog[r.movie_id] : null;
                 return movie ? { ...r, title: movie.titulo } : null;
             }).filter(r => r !== null).reverse();
@@ -145,80 +276,147 @@
                 setLoading(false);
             };
 
+            const handleSearch = async () => {
+                if(searchQuery.length < 2) return;
+                setSearching(true);
+                const results = await Api.searchUsers(searchQuery);
+                setSearchResults(results);
+                setSearching(false);
+            };
+
+            const handleViewUser = async (otherUser) => {
+                setSearching(true);
+                const profile = await Api.getProfile(otherUser.email);
+                setViewingProfile({ 
+                    username: otherUser.username, 
+                    email: otherUser.email, 
+                    watched: profile.watched, 
+                    reviews: profile.reviews 
+                });
+                setTab('history'); // Reseta para a aba historico do visitante
+                setSearching(false);
+            };
+
+            const handleBackToMe = () => {
+                setViewingProfile(null);
+                setTab('search'); // Volta para a pesquisa
+            };
+
             return (
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
                         <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #222', paddingBottom: 20, marginBottom: 20, width: '100%' }}>
-                            <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button>
+                            {!viewingProfile ? (
+                                <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button>
+                            ) : (
+                                <button className="btn-close-box" style={{marginRight: 20}} onClick={handleBackToMe}>←</button>
+                            )}
+                            
                             <div style={{flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 15}}>
-                                <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>PERFIL</h2>
-                                {!editing ? (
-                                    <div style={{display:'flex', alignItems:'center', gap: 10}}>
-                                        <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
-                                            {user.username ? user.username.toUpperCase() : user.email}
-                                        </span>
-                                        <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
-                                    </div>
+                                {viewingProfile && <span style={{background:'#222', color:'#888', fontSize:'0.6rem', padding:'2px 5px'}}>VISITANDO</span>}
+                                <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>
+                                    {viewingProfile ? 'PERFIL PÚBLICO' : 'MEU PERFIL'}
+                                </h2>
+                                
+                                {/* Nome do Usuário (Editável apenas se for eu) */}
+                                {!viewingProfile ? (
+                                    !editing ? (
+                                        <div style={{display:'flex', alignItems:'center', gap: 10}}>
+                                            <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
+                                                {activeUser.username ? activeUser.username.toUpperCase() : activeUser.email}
+                                            </span>
+                                            <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
+                                        </div>
+                                    ) : (
+                                        <div style={{display:'flex', gap: 10, alignItems:'center'}}>
+                                            <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
+                                            <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
+                                            <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 10px'}}>X</button>
+                                        </div>
+                                    )
                                 ) : (
-                                    <div style={{display:'flex', gap: 10, alignItems:'center'}}>
-                                        <input className="auth-input" style={{margin:0, padding: '5px 10px', width: 150}} value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Novo nome..." />
-                                        <button onClick={handleSaveName} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 10px', fontWeight:'bold'}}>OK</button>
-                                        <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 10px'}}>X</button>
-                                    </div>
+                                    <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
+                                        {activeUser.username ? activeUser.username.toUpperCase() : "USUÁRIO"}
+                                    </span>
                                 )}
                             </div>
                         </div>
                         {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginBottom: 20}}>{msg.text}</div>}
 
                         <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', width: '100%', flex: 1, minHeight: 0 }}>
+                            {/* SIDEBAR (Stats) */}
                             <div style={{ flex: '1 1 200px', display:'flex', flexDirection:'column' }}>
                                 <div style={{display:'flex', gap: 10}}>
-                                    <div className="stat-box" style={{flex:1}}>
-                                        <div className="stat-label">Vistos</div>
-                                        <div className="stat-value">{watchedList.length}</div>
-                                    </div>
-                                    <div className="stat-box" style={{flex:1}}>
-                                        <div className="stat-label">Avaliados</div>
-                                        <div className="stat-value">{reviewsList ? reviewsList.length : 0}</div>
-                                    </div>
+                                    <div className="stat-box" style={{flex:1}}><div className="stat-label">Vistos</div><div className="stat-value">{activeWatched.length}</div></div>
+                                    <div className="stat-box" style={{flex:1}}><div className="stat-label">Avaliados</div><div className="stat-value">{activeReviews.length}</div></div>
                                 </div>
-                                <button className="btn-secondary" onClick={onLogout} style={{marginTop: 10}}>SAIR</button>
+                                {!viewingProfile && <button className="btn-secondary" onClick={onLogout} style={{marginTop: 10}}>SAIR</button>}
                             </div>
 
+                            {/* MAIN CONTENT (Abas) */}
                             <div style={{ flex: '2 1 300px', display:'flex', flexDirection:'column', minHeight: 0 }}>
                                 <div className="tab-header">
                                     <button className={`tab-btn ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>HISTÓRICO</button>
                                     <button className={`tab-btn ${tab === 'reviews' ? 'active' : ''}`} onClick={() => setTab('reviews')}>AVALIAÇÕES</button>
+                                    {!viewingProfile && <button className={`tab-btn ${tab === 'search' ? 'active' : ''}`} onClick={() => setTab('search')}>PESQUISAR</button>}
                                 </div>
 
                                 <div style={{overflowY: 'auto', flex: 1, paddingRight: 10}}>
+                                    
+                                    {/* ABA: HISTÓRICO */}
                                     {tab === 'history' && (
-                                        <>
-                                            {watchedMovies.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Vazio.</div>}
-                                            <div className="profile-grid">
-                                                {watchedMovies.map((movie, index) => (
-                                                    <div key={index} className="profile-movie-item" onClick={() => onSelectMovie(movie.id)}>
-                                                        <div style={{ fontSize: '0.65rem', color: '#666' }}>{movie.ano}</div>
-                                                        <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, lineHeight: 1.2, color: '#ddd' }}>{movie.titulo}</div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </>
+                                        <div className="profile-grid">
+                                            {watchedMovies.length === 0 && <div className="search-empty">Nenhum filme assistido.</div>}
+                                            {watchedMovies.map((m, i) => (
+                                                <div key={i} className="profile-movie-item" onClick={() => onSelectMovie(m.id)}>
+                                                    <div style={{ fontSize: '0.65rem', color: '#666' }}>{m.ano}</div>
+                                                    <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, color: '#ddd' }}>{m.titulo}</div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     )}
 
+                                    {/* ABA: AVALIAÇÕES */}
                                     {tab === 'reviews' && (
-                                        <>
-                                            {userReviews.length === 0 && <div style={{ fontStyle: 'italic', color: '#444' }}>Nenhuma avaliação.</div>}
+                                        <div>
+                                            {userReviews.length === 0 && <div className="search-empty">Nenhuma avaliação feita.</div>}
                                             {userReviews.map((r, idx) => (
                                                 <div key={idx} style={{ background: '#080808', padding: 15, border: '1px solid #222', marginBottom: 10 }}>
-                                                    <div style={{display:'flex', justifyContent:'space-between'}}>
-                                                        <span style={{fontWeight:'bold', color: '#fff'}}>{r.title}</span>
-                                                        <span style={{color: 'var(--highlight)'}}>★ {r.rating}</span>
-                                                    </div>
+                                                    <div style={{display:'flex', justifyContent:'space-between'}}><span style={{fontWeight:'bold', color: '#fff'}}>{r.title}</span><span style={{color: 'var(--highlight)'}}>★ {r.rating}</span></div>
                                                     {r.review && <div style={{color:'#888', fontSize:'0.8rem', marginTop: 5, borderLeft: '2px solid #333', paddingLeft: 10}}>"{r.review}"</div>}
                                                 </div>
                                             ))}
-                                        </>
+                                        </div>
+                                    )}
+
+                                    {/* ABA: PESQUISA (Somente no meu perfil) */}
+                                    {tab === 'search' && !viewingProfile && (
+                                        <div>
+                                            <div style={{display:'flex', gap: 10, marginBottom: 20}}>
+                                                <input 
+                                                    className="auth-input" 
+                                                    style={{marginBottom:0}} 
+                                                    placeholder="Buscar usuário..." 
+                                                    value={searchQuery} 
+                                                    onChange={e => setSearchQuery(e.target.value)}
+                                                    onKeyDown={e => e.key === 'Enter' && handleSearch()}
+                                                />
+                                                <button className="btn-main" style={{width:'auto'}} onClick={handleSearch}>{searching ? '...' : 'BUSCAR'}</button>
+                                            </div>
+
+                                            <div>
+                                                {searchResults.map((res, idx) => (
+                                                    <div key={idx} className="search-result-item" onClick={() => handleViewUser(res)}>
+                                                        <div>
+                                                            <div style={{fontWeight:'bold', color:'#fff'}}>{res.username.toUpperCase()}</div>
+                                                            <div style={{fontSize:'0.7rem', color:'#666'}}>Usuário</div>
+                                                        </div>
+                                                        <span className="search-btn-action">VER PERFIL →</span>
+                                                    </div>
+                                                ))}
+                                                {searchResults.length === 0 && !searching && searchQuery && <div className="search-empty">Nenhum usuário encontrado.</div>}
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
@@ -237,10 +435,7 @@
             const handleSend = async () => {
                 if (selectedStar === 0 && !review) { onClose(); return; } 
                 setLoading(true);
-                try {
-                    if(user) await Api.saveRating(user.email, movie.id, selectedStar, review);
-                    onClose();
-                } catch(e) { console.error(e); setLoading(false); }
+                try { if(user) await Api.saveRating(user.email, movie.id, selectedStar, review); onClose(); } catch(e) { setLoading(false); }
             };
 
             return (
@@ -251,19 +446,11 @@
                         <h2 style={{margin:'10px 0 0 0', fontSize:'1.8rem', color:'#fff'}}>{movie.titulo}</h2>
                         <div className="rating-stars">
                             {[1,2,3,4,5].map(star => (
-                                <span key={star} 
-                                      className={`star-icon ${(hoverStar || selectedStar) >= star ? 'active' : ''}`}
-                                      onMouseEnter={() => setHoverStar(star)}
-                                      onMouseLeave={() => setHoverStar(0)}
-                                      onClick={() => setSelectedStar(star)}>
-                                    ★
-                                </span>
+                                <span key={star} className={`star-icon ${(hoverStar || selectedStar) >= star ? 'active' : ''}`} onMouseEnter={() => setHoverStar(star)} onMouseLeave={() => setHoverStar(0)} onClick={() => setSelectedStar(star)}>★</span>
                             ))}
                         </div>
                         <textarea className="rating-textarea" placeholder="O que você achou? (Opcional)" value={review} onChange={(e) => setReview(e.target.value)} />
-                        <button className="btn-main" onClick={handleSend} disabled={loading}>
-                            {loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}
-                        </button>
+                        <button className="btn-main" onClick={handleSend} disabled={loading}>{loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}</button>
                     </div>
                 </div>
             );
@@ -291,27 +478,22 @@
             const [currentMovie, setCurrentMovie] = React.useState(null);
             const [sortText, setSortText] = React.useState("");
             const [user, setUser] = React.useState(null);
-            
             const [showLogin, setShowLogin] = React.useState(false);
             const [showProfile, setShowProfile] = React.useState(false); 
             const [showRating, setShowRating] = React.useState(false); 
-            
             const [watchedList, setWatchedList] = React.useState([]);
             const [reviewsList, setReviewsList] = React.useState([]);
 
             React.useEffect(() => {
                 fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
-                
-                const u = Api.getCurrentUser(); 
-                setUser(u);
+                const u = Api.getCurrentUser(); setUser(u);
                 if(u) syncProfile(u.email);
             }, []);
 
             const syncProfile = async (email) => {
                 const data = await Api.getProfile(email);
                 if(data.username) { Api.updateLocalUser(data.username); setUser(prev => ({ ...prev, username: data.username })); }
-                setWatchedList(data.watched || []);
-                setReviewsList(data.reviews || []);
+                setWatchedList(data.watched || []); setReviewsList(data.reviews || []);
             };
 
             const handleLogout = () => { Api.signOut(); setUser(null); setShowProfile(false); setWatchedList([]); setReviewsList([]); };
@@ -344,13 +526,11 @@
                  const movieData = fullCatalog[movieId];
                  const slug = movieId.toLowerCase().replace(/ /g, "_");
                  setCurrentMovie({ id: movieId, ...movieData, videoUrl: `${BUCKET_URL}/videos/${slug}/playlist.mpd` });
-                 setPhase('popup');
-                 setShowRating(false);
+                 setPhase('popup'); setShowRating(false);
             };
             
             const handleMovieEnd = () => { setShowRating(true); };
             const handleCloseRating = () => { setShowRating(false); setPhase('home'); setCurrentMovie(null); refreshUser(); };
-            const handleReplayFromHistory = (movieId) => { prepareMovie(movieId); setShowProfile(false); };
             const handleReset = () => { setPhase('home'); setCurrentMovie(null); setShowRating(false); };
 
             let videoClass = "video-background";
@@ -360,64 +540,22 @@
             return (
                 <>
                     <div className={videoClass}>
-                        {currentMovie && (
-                            <DashPlayer 
-                                url={currentMovie.videoUrl} 
-                                isPlaying={phase === 'playing' && !showRating} 
-                                startAt={currentMovie.capaSeconds || 0} 
-                                enableControls={phase === 'playing'}
-                                onEnded={handleMovieEnd} 
-                            />
-                        )}
+                        {currentMovie && <DashPlayer url={currentMovie.videoUrl} isPlaying={phase === 'playing' && !showRating} startAt={currentMovie.capaSeconds || 0} enableControls={phase === 'playing'} onEnded={handleMovieEnd} />}
                     </div>
-                    
                     <div className="user-bar">
-                        {user ? (
-                            <div className="user-info" onClick={() => setShowProfile(true)}>
-                                {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
-                            </div>
-                        ) : (
-                            <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN</button>
-                        )}
+                        {user ? <div className="user-info" onClick={() => setShowProfile(true)}>{user.username ? user.username.toUpperCase() : user.email.split('@')[0]}</div> : <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN</button>}
                     </div>
-
-                    {showLogin && <window.LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
-                    
-                    {showProfile && user && (
-                        <UserProfile 
-                            user={user} 
-                            watchedList={watchedList} 
-                            reviewsList={reviewsList}
-                            catalog={fullCatalog} 
-                            onClose={() => setShowProfile(false)} 
-                            onLogout={handleLogout}
-                            onSelectMovie={handleReplayFromHistory} 
-                            onUpdateUser={refreshUser}
-                        />
-                    )}
-                    
+                    {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
+                    {showProfile && user && <UserProfile user={user} watchedList={watchedList} reviewsList={reviewsList} catalog={fullCatalog} onClose={() => setShowProfile(false)} onLogout={handleLogout} onSelectMovie={(id) => { prepareMovie(id); setShowProfile(false); }} onUpdateUser={refreshUser} />}
                     {showRating && currentMovie && <RatingCard movie={currentMovie} user={user} onClose={handleCloseRating} />}
-
                     {phase !== 'home' && !showRating && <button className="btn-back-corner" onClick={handleReset}>MENU</button>}
-                    
                     <div className="ui-layer">
                         {phase === 'home' && (
-                            <div className="sort-container">
-                                <div className="big-title">SORT A SHORT</div><br/>
-                                <button className="btn-main btn-sort" onClick={startSort} disabled={!fullCatalog}>
-                                    {fullCatalog ? "SORTEAR" : "..."}
-                                </button>
-                            </div>
+                            <div className="sort-container"><div className="big-title">SORT A SHORT</div><br/><button className="btn-main btn-sort" onClick={startSort} disabled={!fullCatalog}>{fullCatalog ? "SORTEAR" : "..."}</button></div>
                         )}
                         {phase === 'sorting' && <div className="sorting-anim">{sortText}</div>}
                         {phase === 'popup' && currentMovie && !showRating && (
-                            <div className="movie-card">
-                                <div style={{fontSize: '0.7rem', color: '#cc0000', marginBottom: 15, letterSpacing: 2, fontWeight:'bold'}}>● SELEÇÃO</div>
-                                <h2 className="card-title">{currentMovie.titulo}</h2>
-                                <span className="card-meta">{currentMovie.ano} — {currentMovie.diretor}</span>
-                                <div className="card-desc">{currentMovie.descricao || "..."}</div>
-                                <button className="btn-main" onClick={() => setPhase('playing')}>ASSISTIR</button>
-                            </div>
+                            <div className="movie-card"><div style={{fontSize: '0.7rem', color: '#cc0000', marginBottom: 15, letterSpacing: 2, fontWeight:'bold'}}>● SELEÇÃO</div><h2 className="card-title">{currentMovie.titulo}</h2><span className="card-meta">{currentMovie.ano} — {currentMovie.diretor}</span><div className="card-desc">{currentMovie.descricao || "..."}</div><button className="btn-main" onClick={() => setPhase('playing')}>ASSISTIR</button></div>
                         )}
                     </div>
                 </>
