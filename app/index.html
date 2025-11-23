@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{META_TITLE}}</title>
+    <meta name="description" content="{{META_DESC}}">
+    <meta property="og:image" content="{{META_IMAGE}}" />
     <link rel="icon" href="/icon.png" type="image/png">
 
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
@@ -39,10 +42,8 @@
         .btn-main:hover { background: #ccc; color: #000; }
         .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
         .btn-sort:hover { background: rgba(255,255,255,0.1); }
-        
         .btn-back-corner { position: fixed; top: 70px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
         .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
-        
         .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
         .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
         .btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 10; flex-shrink: 0; }
@@ -174,87 +175,15 @@
 </head>
 <body>
     <div id="root"></div>
+
     <script type="text/babel" data-type="module">
+        // --- IMPORTAÇÕES DOS NOVOS MÓDULOS ---
         import FriendAction from './src/components/FriendAction.js';
         import AddFriends from './src/components/AddFriends.js';
+        import { Api } from './src/api.js';
+        import { BUCKET_URL, AVATAR_COUNT, AVATAR_COLORS, getAvatarUI } from './src/utils.js';
 
-        const BUCKET_URL = ""; 
-        const AVATAR_COUNT = 6; 
-        const AVATAR_COLORS = ['#d32f2f', '#7b1fa2', '#303f9f', '#0288d1', '#00796b', '#388e3c', '#fbc02d', '#f57c00', '#5d4037', '#455a64'];
-
-        const getAvatarUI = (avatarId, username, color, sizeClass) => {
-            const letter = username ? username.charAt(0).toUpperCase() : '?';
-            const bgColor = color || '#333';
-            if (!avatarId || avatarId === 0) {
-                return <div className={`avatar-base avatar-letter ${sizeClass}`} style={{background: bgColor}}>{letter}</div>;
-            }
-            return (
-                <img 
-                    src={`/avatars/${avatarId}.png`} 
-                    className={`avatar-base ${sizeClass}`} 
-                    onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='flex'; }} 
-                />
-            );
-        };
-
-        const Api = {
-            signUp: async (email, password) => {
-                const res = await fetch('/api/auth/signup', { method: 'POST', body: JSON.stringify({ email, password }) });
-                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
-            },
-            confirmSignUp: async (email, code) => {
-                const res = await fetch('/api/auth/confirm', { method: 'POST', body: JSON.stringify({ email, code }) });
-                const data = await res.json(); if(res.status!==200) throw new Error(data.body); return data;
-            },
-            signIn: async (email, password) => {
-                const res = await fetch('/api/auth/signin', { method: 'POST', body: JSON.stringify({ email, password }) });
-                const data = await res.json(); if(res.status!==200) throw new Error(data.body);
-                localStorage.setItem("sortashort_session", JSON.stringify(data));
-                return data;
-            },
-            signOut: () => { localStorage.removeItem("sortashort_session"); },
-            getCurrentUser: () => {
-                const sess = localStorage.getItem("sortashort_session");
-                return sess ? JSON.parse(sess) : null;
-            },
-            updateLocalUser: (newUsername, newAvatar, newColor) => {
-                const sess = Api.getCurrentUser();
-                if(sess) { 
-                    sess.username = newUsername; 
-                    if(newAvatar !== undefined) sess.avatar = newAvatar;
-                    if(newColor) sess.color = newColor;
-                    localStorage.setItem("sortashort_session", JSON.stringify(sess)); 
-                }
-            },
-            saveMovie: async (email, movieId) => {
-                const res = await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) });
-                if(res.status === 403) throw new Error("Sem energia");
-                return res.json();
-            },
-            getProfile: async (email) => {
-                try {
-                    const res = await fetch(`/api/history?email=${email}&_t=${Date.now()}`);
-                    const data = await res.json(); return data;
-                } catch (e) { return { watched: [], reviews: [], username: null, avatar: 0, color: '#333', energy: 3 }; }
-            },
-            saveProfile: async (email, username, avatar, color) => {
-                const res = await fetch('/api/profile', { method: 'POST', body: JSON.stringify({ email, username, avatar, color }) });
-                const data = await res.json(); if(res.status !== 200) throw new Error(data.body); return data;
-            },
-            saveRating: async (email, movieId, rating, review) => {
-                const res = await fetch('/api/rating', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId, rating, review }) });
-                return res.json();
-            },
-            searchUsers: async (query) => {
-                try {
-                    const res = await fetch(`/api/users/search?q=${query}`);
-                    return await res.json();
-                } catch (e) { return []; }
-            },
-            devRefill: async (email) => {
-                await fetch('/api/dev/refill', { method: 'POST', body: JSON.stringify({ email }) });
-            }
-        };
+        // --- COMPONENTES (Ainda aqui, aguardando Fases 2 e 3 da migração) ---
 
         const LoginModal = ({ onClose, onLoginSuccess }) => {
             const [mode, setMode] = React.useState('signin'); 
@@ -698,6 +627,65 @@
             );
         };
 
+        const RatingCard = ({ movie, user, onClose }) => {
+            const [hoverStar, setHoverStar] = React.useState(0);
+            const [selectedStar, setSelectedStar] = React.useState(0); 
+            const [review, setReview] = React.useState("");
+            const [loading, setLoading] = React.useState(false);
+
+            const handleSend = async () => {
+                if (selectedStar === 0 && !review) { onClose(); return; } 
+                setLoading(true);
+                try { if(user) await Api.saveRating(user.email, movie.id, selectedStar, review); onClose(); } catch(e) { setLoading(false); }
+            };
+
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                }
+            };
+
+            return (
+                <div className="auth-modal" style={{background:'rgba(0,0,0,0.8)'}}>
+                    <div className="movie-card" style={{textAlign:'center', padding: 40, maxWidth: 450, animation: 'slideUp 0.5s', position: 'relative'}}>
+                        <button className="btn-close-box btn-close-absolute" onClick={onClose}>✕</button>
+                        <h3 style={{margin:0, fontSize:'0.8rem', color:'#888', letterSpacing: 2, marginTop: 15}}>SESSÃO FINALIZADA</h3>
+                        <h2 style={{margin:'10px 0 0 0', fontSize:'1.8rem', color:'#fff'}}>{movie.titulo}</h2>
+                        <div className="rating-stars">
+                            {[1,2,3,4,5].map(star => (
+                                <span key={star} className={`star-icon ${(hoverStar || selectedStar) >= star ? 'active' : ''}`} onMouseEnter={() => setHoverStar(star)} onMouseLeave={() => setHoverStar(0)} onClick={() => setSelectedStar(star)}>★</span>
+                            ))}
+                        </div>
+                        <textarea 
+                            className="rating-textarea" 
+                            placeholder="O que você achou? (Opcional)" 
+                            value={review} 
+                            onChange={(e) => setReview(e.target.value)} 
+                            onKeyDown={handleKeyDown}
+                        />
+                        <button className="btn-main" onClick={handleSend} disabled={loading}>{loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}</button>
+                    </div>
+                </div>
+            );
+        };
+
+        const DashPlayer = ({ url, isPlaying, startAt, enableControls, onEnded }) => {
+            const videoRef = React.useRef(null);
+            React.useEffect(() => {
+                if (!url || !videoRef.current) return;
+                const player = dashjs.MediaPlayer().create();
+                player.initialize(videoRef.current, url, false);
+                if (startAt > 0) player.seek(startAt);
+                const vid = videoRef.current;
+                const handleEnd = () => { if(onEnded) onEnded(); };
+                vid.addEventListener('ended', handleEnd);
+                return () => { vid.removeEventListener('ended', handleEnd); player.destroy(); };
+            }, [url]);
+            React.useEffect(() => { if (videoRef.current) isPlaying ? videoRef.current.play() : videoRef.current.pause(); }, [isPlaying]);
+            return <video ref={videoRef} controls={enableControls} controlsList="nodownload" style={{cursor: enableControls ? 'auto' : 'none'}} />;
+        };
+
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
             const [fullCatalog, setFullCatalog] = React.useState(null);
@@ -709,6 +697,7 @@
             const [showProfile, setShowProfile] = React.useState(false); 
             const [showRating, setShowRating] = React.useState(false); 
             const [showLoginWarning, setShowLoginWarning] = React.useState(false); 
+            const [showAddFriends, setShowAddFriends] = React.useState(false);
             const [watchedList, setWatchedList] = React.useState([]);
             const [reviewsList, setReviewsList] = React.useState([]);
             const [energy, setEnergy] = React.useState(3);
@@ -812,6 +801,8 @@
                         </div>
                     )}
 
+                    {showAddFriends && <AddFriends userEmail={user.email} onClose={() => setShowAddFriends(false)} />}
+
                     {showLoginWarning && (
                         <div className="auth-modal">
                             <div className="auth-box" style={{textAlign:'center'}}>
@@ -853,6 +844,8 @@
             );
         };
 
+        // --- RENDERIZAÇÃO FINAL ---
+        // Usando React.createElement para garantir compatibilidade total
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(React.createElement(App));
     </script>
