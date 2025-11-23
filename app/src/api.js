@@ -166,8 +166,8 @@ export const Api = {
      * Adiciona um amigo à lista.
      */
     addFriend: async (userEmail, friendCode) => {
-         // Esta função será usada dentro do componente AddFriends.js futuramente
-         // Por enquanto o AddFriends.js faz o fetch direto, mas idealmente moveremos para cá.
+         // Esta função será usada dentro do componente FriendAdd.js futuramente
+         // Por enquanto o FriendAdd.js faz o fetch direto, mas idealmente moveremos para cá.
          // Vou deixar preparado:
          const res = await fetch('/api/friends/add', {
             method: 'POST',
