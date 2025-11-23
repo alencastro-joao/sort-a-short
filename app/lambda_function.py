@@ -6,7 +6,7 @@ import base64
 import mimetypes
 import time
 import traceback
-import random # <--- IMPORTANTE
+import random
 from datetime import datetime
 from decimal import Decimal
 from botocore.exceptions import ClientError
@@ -106,7 +106,9 @@ def lambda_handler(event, context):
                 if not user_email or not movie_id or rating is None: return {"statusCode": 400, "body": "Erro dados", "headers": NO_CACHE_HEADERS}
                 try:
                     timestamp = datetime.now().isoformat()
+                    # Salva na tabela geral de ratings
                     table.put_item(Item={'pk': f"RATING#{movie_id}", 'sk': f"USER#{user_email}", 'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp})
+                    # Salva dentro do perfil do usuário para facilitar o feed
                     review_obj = {'movie_id': movie_id, 'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp}
                     table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET reviews = list_append(if_not_exists(reviews, :empty), :r)", ExpressionAttributeValues={':r': [review_obj], ':empty': []})
                     return {"statusCode": 200, "body": json.dumps({"status": "ok"}), "headers": NO_CACHE_HEADERS}
@@ -137,19 +139,15 @@ def lambda_handler(event, context):
                 try:
                     resp = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'})
                     item = resp.get('Item', {})
-                    
-                    # GERA CÓDIGO DE AMIGO SE NÃO TIVER
                     friend_code = item.get('friend_code')
                     if not friend_code:
                         friend_code = str(random.randint(100000, 999999))
-                        try:
-                            table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET friend_code = :c", ExpressionAttributeValues={':c': friend_code})
+                        try: table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET friend_code = :c", ExpressionAttributeValues={':c': friend_code})
                         except: pass
                     
                     db_energy = item.get('energy', MAX_ENERGY)
                     db_ts = item.get('energy_ts', int(time.time()))
                     real_energy, real_ts = calculate_energy(db_energy, db_ts)
-                    
                     if real_energy != db_energy or real_ts != db_ts:
                         try: table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET energy = :e, energy_ts = :t", ExpressionAttributeValues={':e': real_energy, ':t': real_ts})
                         except: pass
@@ -183,7 +181,6 @@ def lambda_handler(event, context):
             try:
                 user_resp = table.get_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'})
                 old_username = user_resp.get('Item', {}).get('username')
-                
                 if old_username != new_username:
                     try:
                         table.put_item(Item={'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED', 'email': email, 'avatar': new_avatar, 'color': new_color}, ConditionExpression='attribute_not_exists(pk)')
@@ -195,7 +192,6 @@ def lambda_handler(event, context):
                     if new_username:
                         try: table.update_item(Key={'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED'}, UpdateExpression="SET avatar = :a, color = :c", ExpressionAttributeValues={':a': new_avatar, ':c': new_color})
                         except: pass
-
                 table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET username = :u, avatar = :a, color = :c", ExpressionAttributeValues={':u': new_username, ':a': new_avatar, ':c': new_color})
                 return {"statusCode": 200, "body": json.dumps({"status": "success", "username": new_username}), "headers": NO_CACHE_HEADERS}
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
@@ -216,34 +212,54 @@ def lambda_handler(event, context):
 
         # --- ROTA 6: ADICIONAR AMIGO ---
         if path == '/api/friends/add' and method == 'POST':
-            user_email = body.get('email')
-            friend_code = body.get('friend_code') # Agora espera Código, não email
-            friend_email_direct = body.get('friend_email') # Fallback para busca direta (botão)
-
+            user_email = body.get('email'); friend_code = body.get('friend_code'); friend_email_direct = body.get('friend_email')
             if not user_email: return {"statusCode": 400, "body": "Erro dados"}
-            
             target_email = friend_email_direct
-            
-            # Se veio código, procura o email do dono do código
             if not target_email and friend_code:
                 try:
-                    # Scan na tabela principal procurando friend_code
-                    # Nota: friend_code está no item PROFILE (sk='PROFILE')
                     resp = table.scan(FilterExpression=Attr('friend_code').eq(friend_code) & Attr('sk').eq('PROFILE'))
-                    if resp['Items']:
-                        # pk é USER#email@...
-                        target_email = resp['Items'][0]['pk'].replace('USER#', '')
+                    if resp['Items']: target_email = resp['Items'][0]['pk'].replace('USER#', '')
                 except: pass
-
-            if not target_email:
-                 return {"statusCode": 404, "body": "Usuario nao encontrado"}
-
+            if not target_email: return {"statusCode": 404, "body": "Usuario nao encontrado"}
             try:
                 table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET friends = list_append(if_not_exists(friends, :empty), :f)", ExpressionAttributeValues={':f': [target_email], ':empty': []})
                 return {"statusCode": 200, "body": json.dumps({"status": "added"}), "headers": NO_CACHE_HEADERS}
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-        # --- ROTA DEBUG ---
+        # --- ROTA 7: SOCIAL FEED (NOVO) ---
+        if path == '/api/social/feed' and method == 'GET':
+            user_email = event.get('queryStringParameters', {}).get('email')
+            if not user_email: return {"statusCode": 400, "body": "Email required"}
+            try:
+                # 1. Pega lista de amigos
+                user_resp = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'})
+                friends = user_resp.get('Item', {}).get('friends', [])
+                
+                # 2. Itera amigos para pegar reviews (Simplificado para MVP)
+                feed = []
+                for f_email in friends:
+                    try:
+                        f_prof = table.get_item(Key={'pk': f"USER#{f_email}", 'sk': 'PROFILE'}).get('Item', {})
+                        f_reviews = f_prof.get('reviews', [])
+                        f_username = f_prof.get('username', 'Usuário')
+                        f_avatar = int(f_prof.get('avatar', 0))
+                        f_color = f_prof.get('color', '#333')
+                        
+                        for r in f_reviews:
+                            r['username'] = f_username
+                            r['avatar'] = f_avatar
+                            r['color'] = f_color
+                            r['friend_email'] = f_email
+                            feed.append(r)
+                    except: pass
+                
+                # 3. Ordena por data (mais recente primeiro)
+                feed.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
+                
+                return {"statusCode": 200, "body": json.dumps(feed[:50], cls=DecimalEncoder), "headers": NO_CACHE_HEADERS}
+            except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
+
+        # --- DEBUG ---
         if path == '/api/dev/refill' and method == 'POST':
             email = body.get('email')
             try:
@@ -265,4 +281,4 @@ def lambda_handler(event, context):
 
     except Exception as crash_err:
         print(f"CRASH: {crash_err}")
-        return { "statusCode": 500, "headers": {"Content-Type": "text/plain"}, "body": f"ERRO CRITICO NO PYTHON: {str(crash_err)}\n\n{traceback.format_exc()}" }
+        return { "statusCode": 500, "headers": {"Content-Type": "text/plain"}, "body": f"ERRO CRITICO: {str(crash_err)}\n\n{traceback.format_exc()}" }

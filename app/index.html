@@ -178,7 +178,8 @@
     <script type="text/babel" data-type="module">
         // --- IMPORTAÇÕES DOS NOVOS MÓDULOS (ABSOLUTOS) ---
         import FriendAction from '/src/components/FriendAction.js';
-            import AddFriends from '/src/components/FriendAdd.js';
+        import AddFriends from '/src/components/FriendAdd.js';
+        import SocialFeed from '/src/components/SocialFeed.js'; // NOVO IMPORT
         import RewardStack from '/src/components/RewardStack.js';
         import DashPlayer from '/src/components/DashPlayer.js';
         import RatingCard from '/src/components/RatingCard.js';
@@ -190,7 +191,7 @@
         import { Api } from '/src/api.js';
         import { BUCKET_URL, AVATAR_COUNT, AVATAR_COLORS, getAvatarUI } from '/src/utils.js';
 
-        // --- COMPONENTES INTERNOS (Apenas App sobrou aqui) ---
+        // --- COMPONENTES INTERNOS ---
         
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
@@ -203,7 +204,7 @@
             const [showProfile, setShowProfile] = React.useState(false); 
             const [showRating, setShowRating] = React.useState(false); 
             const [showLoginWarning, setShowLoginWarning] = React.useState(false); 
-            const [showAddFriends, setShowAddFriends] = React.useState(false);
+            const [showSocial, setShowSocial] = React.useState(false); // NOVO ESTADO
             const [watchedList, setWatchedList] = React.useState([]);
             const [reviewsList, setReviewsList] = React.useState([]);
             const [energy, setEnergy] = React.useState(3);
@@ -297,7 +298,7 @@
                         <div className="user-bar">
                             {user ? (
                                 <React.Fragment>
-                                    <button className="btn-login" onClick={() => setShowAddFriends(true)} style={{border:'1px solid #666', color:'#ccc'}}>+ AMIGO</button>
+                                    <button className="btn-login" onClick={() => setShowSocial(true)} style={{border:'1px solid #666', color:'#ccc'}}>SOCIAL</button>
                                     <div className="user-info" onClick={() => setShowProfile(true)}>
                                         {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
                                     </div>
@@ -308,7 +309,7 @@
                         </div>
                     )}
 
-                    {showAddFriends && <AddFriends userEmail={user.email} onClose={() => setShowAddFriends(false)} />}
+                    {showSocial && <SocialFeed user={user} catalog={fullCatalog} onClose={() => setShowSocial(false)} />}
 
                     {showLoginWarning && (
                         <div className="auth-modal">
