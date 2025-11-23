@@ -15,7 +15,12 @@ load_dotenv()
 # ==============================================================================
 
 # Cole seu caminho do FFmpeg aqui se necessário, ou deixe apenas 'ffmpeg' se estiver no PATH
-FFMPEG_PATH = r"C:\Users\Alencastro\Desktop\Sort a Short\files\uploader\ffmpeg\bin\ffmpeg.exe" 
+# Por padrão tenta localizar o binário dentro da pasta `uploader/ffmpeg/bin/ffmpeg.exe` do projeto.
+DEFAULT_DIR = os.path.dirname(os.path.abspath(__file__))
+possible = os.path.join(DEFAULT_DIR, 'ffmpeg', 'bin', 'ffmpeg.exe')
+FFMPEG_PATH = possible if os.path.exists(possible) else 'ffmpeg'
+# Test mode: when TEST_RUN=1 only process the first file and use faster, lower-bitrate encode for quick validation
+TEST_RUN = os.getenv('TEST_RUN', '0') == '1'
 
 # Configurações AWS e Pastas
 BUCKET_NAME = os.getenv('AWS_BUCKET_NAME')
@@ -84,16 +89,26 @@ def convert_to_dash(input_path, output_dir):
     init_seg_name = "init-$RepresentationID$.m4s"
     media_seg_name = "chunk-$RepresentationID$-$Number$.m4s"
 
+    # Allow a faster, lower-quality encode for quick TEST_RUNs
+    if TEST_RUN:
+        video_bitrate = '500k'
+        preset = 'ultrafast'
+        seg_duration = '2'
+    else:
+        video_bitrate = '3000k'
+        preset = 'fast'
+        seg_duration = '4'
+
     command = [
         executable, '-y', 
         '-i', abs_input_path,
         '-map', '0:v', '-map', '0:a',
-        '-c:v', 'libx264', '-b:v', '3000k', '-preset', 'fast',
+        '-c:v', 'libx264', '-b:v', video_bitrate, '-preset', preset,
         '-c:a', 'aac', '-b:a', '128k',
         '-f', 'dash',
         '-use_template', '1',
         '-use_timeline', '1',
-        '-seg_duration', '4',
+        '-seg_duration', seg_duration,
         '-init_seg_name', init_seg_name,
         '-media_seg_name', media_seg_name,
         manifest_name

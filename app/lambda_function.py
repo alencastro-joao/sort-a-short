@@ -4,6 +4,7 @@ import os
 import re
 import base64
 import mimetypes
+import time
 from datetime import datetime
 from decimal import Decimal
 from botocore.exceptions import ClientError
@@ -14,6 +15,10 @@ BUCKET_NAME = "sort-a-short"
 FILE_NAME = "shorts.json"
 TABLE_NAME = "sort-a-short-db"
 COGNITO_CLIENT_ID = "3i2m7sfkp66qa9uhfvvb7g6d9c" 
+
+# CONFIGURAÇÃO DE ENERGIA
+MAX_ENERGY = 3
+RECHARGE_SECONDS = 6 * 60 * 60 # 6 Horas
 
 # --- HEADERS ANTI-CACHE ---
 NO_CACHE_HEADERS = {
@@ -43,6 +48,26 @@ def get_catalogo():
         response = s3.get_object(Bucket=BUCKET_NAME, Key=FILE_NAME)
         return json.loads(response['Body'].read().decode('utf-8'))
     except: return {}
+
+# --- LÓGICA DE ENERGIA ---
+def calculate_energy(current_val, last_ts):
+    now = int(time.time())
+    if last_ts is None: last_ts = now
+    last_ts = int(last_ts)
+    
+    elapsed = now - last_ts
+    gained = elapsed // RECHARGE_SECONDS
+    
+    new_energy = min(MAX_ENERGY, int(current_val) + gained)
+    
+    # Se ganhou energia, atualiza o timestamp para o momento da recarga (sem perder o resto da divisão)
+    # Se já está cheio, reseta o timestamp para agora
+    if new_energy >= MAX_ENERGY:
+        new_ts = now
+    else:
+        new_ts = last_ts + (gained * RECHARGE_SECONDS)
+        
+    return new_energy, new_ts
 
 def lambda_handler(event, context):
     raw_path = event.get('rawPath', '/')
@@ -110,14 +135,27 @@ def lambda_handler(event, context):
             return { "statusCode": 200, "body": json.dumps({"token": resp['AuthenticationResult']['AccessToken'], "email": body.get('email')}), "headers": NO_CACHE_HEADERS }
         except ClientError as e: return {"statusCode": 400, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-    # --- ROTA 3: PERFIL (Recuperar Dados) ---
+    # --- ROTA 3: PERFIL (GET / POST Watch) ---
     if path == '/api/history':
+        # GET: Retorna perfil e CALCULA a energia atual
         if method == 'GET':
             user_email = event.get('queryStringParameters', {}).get('email')
             if not user_email: return {"statusCode": 400, "body": "Email required", "headers": NO_CACHE_HEADERS}
             try:
                 resp = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'})
                 item = resp.get('Item', {})
+                
+                # Lógica de Energia
+                db_energy = item.get('energy', MAX_ENERGY)
+                db_ts = item.get('energy_ts', int(time.time()))
+                real_energy, real_ts = calculate_energy(db_energy, db_ts)
+                
+                # Se mudou, atualiza banco silenciosamente (lazy update)
+                if real_energy != db_energy or real_ts != db_ts:
+                    try:
+                        table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET energy = :e, energy_ts = :t", ExpressionAttributeValues={':e': real_energy, ':t': real_ts})
+                    except: pass
+
                 return {
                     "statusCode": 200, 
                     "body": json.dumps({
@@ -125,23 +163,55 @@ def lambda_handler(event, context):
                         "reviews": item.get('reviews', []),
                         "username": item.get('username', None),
                         "avatar": int(item.get('avatar', 0)),
-                        "color": item.get('color', '#333') # Retorna a cor do usuário
+                        "color": item.get('color', '#333'),
+                        "energy": int(real_energy),
+                        "energy_ts": int(real_ts)
                     }, cls=DecimalEncoder),
                     "headers": NO_CACHE_HEADERS
                 }
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
+
+        # POST: Salva filme e CONSOME energia
         if method == 'POST':
             try:
-                table.update_item(Key={'pk': f"USER#{body.get('email')}", 'sk': 'PROFILE'}, UpdateExpression="SET watched = list_append(if_not_exists(watched, :empty), :movie)", ExpressionAttributeValues={':movie': [body.get('movie_id')], ':empty': []})
-                return {"statusCode": 200, "body": "Saved", "headers": NO_CACHE_HEADERS}
+                email = body.get('email')
+                
+                # 1. Busca usuário para checar energia
+                resp = table.get_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'})
+                item = resp.get('Item', {})
+                
+                # 2. Recalcula energia atual
+                db_energy = item.get('energy', MAX_ENERGY)
+                db_ts = item.get('energy_ts', int(time.time()))
+                real_energy, real_ts = calculate_energy(db_energy, db_ts)
+                
+                # 3. Verifica se tem energia para assistir
+                if real_energy <= 0:
+                    return {"statusCode": 403, "body": json.dumps({"error": "Sem energia", "ts": real_ts}), "headers": NO_CACHE_HEADERS}
+                
+                # 4. Consome 1 de energia
+                new_energy = real_energy - 1
+                
+                # 5. Salva filme E nova energia
+                table.update_item(
+                    Key={'pk': f"USER#{email}", 'sk': 'PROFILE'},
+                    UpdateExpression="SET watched = list_append(if_not_exists(watched, :empty), :movie), energy = :e, energy_ts = :t",
+                    ExpressionAttributeValues={
+                        ':movie': [body.get('movie_id')], 
+                        ':empty': [],
+                        ':e': new_energy,
+                        ':t': real_ts
+                    }
+                )
+                return {"statusCode": 200, "body": json.dumps({"status": "saved", "energy": new_energy}), "headers": NO_CACHE_HEADERS}
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-    # --- ROTA 4: ATUALIZAR PERFIL (NOME + AVATAR + COR) ---
+    # --- ROTA 4: ATUALIZAR PERFIL ---
     if path == '/api/profile' and method == 'POST':
         email = body.get('email')
         new_username = body.get('username', '').strip().lower()
         new_avatar = int(body.get('avatar', 0))
-        new_color = body.get('color', '#333') # Recebe a cor do frontend
+        new_color = body.get('color', '#333')
 
         if not re.match("^[a-z0-9_]{3,15}$", new_username): return {"statusCode": 400, "body": "Nome invalido", "headers": NO_CACHE_HEADERS}
         try:
@@ -150,11 +220,7 @@ def lambda_handler(event, context):
             
             if old_username != new_username:
                 try:
-                    # Salva avatar e cor na tabela de reserva para a pesquisa funcionar bonito
-                    table.put_item(Item={
-                        'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED', 
-                        'email': email, 'avatar': new_avatar, 'color': new_color
-                    }, ConditionExpression='attribute_not_exists(pk)')
+                    table.put_item(Item={'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED', 'email': email, 'avatar': new_avatar, 'color': new_color}, ConditionExpression='attribute_not_exists(pk)')
                     if old_username:
                         try: table.delete_item(Key={'pk': f"USERNAME#{old_username}", 'sk': 'RESERVED'})
                         except: pass
@@ -164,12 +230,7 @@ def lambda_handler(event, context):
                     try: table.update_item(Key={'pk': f"USERNAME#{new_username}", 'sk': 'RESERVED'}, UpdateExpression="SET avatar = :a, color = :c", ExpressionAttributeValues={':a': new_avatar, ':c': new_color})
                     except: pass
 
-            # Atualiza perfil completo
-            table.update_item(
-                Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, 
-                UpdateExpression="SET username = :u, avatar = :a, color = :c", 
-                ExpressionAttributeValues={':u': new_username, ':a': new_avatar, ':c': new_color}
-            )
+            table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET username = :u, avatar = :a, color = :c", ExpressionAttributeValues={':u': new_username, ':a': new_avatar, ':c': new_color})
             return {"statusCode": 200, "body": json.dumps({"status": "success", "username": new_username}), "headers": NO_CACHE_HEADERS}
         except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
@@ -182,12 +243,8 @@ def lambda_handler(event, context):
             results = []
             for item in response.get('Items', []):
                 clean_name = item['pk'].replace('USERNAME#', '')
-                results.append({ 
-                    "username": clean_name, 
-                    "email": item.get('email'), 
-                    "avatar": int(item.get('avatar', 0)),
-                    "color": item.get('color', '#333')
-                })
+                avatar = int(item.get('avatar', 0))
+                results.append({ "username": clean_name, "email": item.get('email'), "avatar": avatar, "color": item.get('color', '#333') })
             return {"statusCode": 200, "body": json.dumps(results, cls=DecimalEncoder), "headers": NO_CACHE_HEADERS}
         except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 

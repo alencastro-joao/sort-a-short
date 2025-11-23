@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; }
+        :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; --success: #00e676; }
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         ::-webkit-scrollbar { width: 4px; }
@@ -41,20 +41,30 @@
         .btn-main:hover { background: #ccc; color: #000; }
         .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
         .btn-sort:hover { background: rgba(255,255,255,0.1); }
-        .btn-back-corner { position: fixed; top: 30px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
+        
+        .btn-back-corner { position: fixed; top: 70px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
         .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
+        
         .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
         .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
         .btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 10; flex-shrink: 0; }
         .btn-close-absolute { position: absolute; top: 15px; left: 15px; }
         .btn-close-box:hover { border-color: var(--highlight); color: var(--highlight); background: #111; }
 
-        .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 10px; pointer-events: auto; align-items: center; }
+        .btn-finish { position: fixed; top: 30px; right: 30px; z-index: 100; background: rgba(0,0,0,0.7); border: 1px solid #666; color: #fff; padding: 10px 20px; cursor: pointer; text-transform: uppercase; font-family: 'Space Mono'; font-size: 0.8rem; pointer-events: auto; transition: 0.2s; }
+        .btn-finish:hover { border-color: var(--highlight); color: var(--highlight); background: #000; }
+
+        .user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 15px; pointer-events: auto; align-items: center; }
         .btn-login { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.75rem; transition: 0.2s; }
         .btn-login:hover { background: var(--highlight); color: #fff; }
         .user-info { color: var(--highlight); font-size: 0.8rem; font-weight: bold; cursor: pointer; letter-spacing: 1px; transition: 0.2s; text-decoration: underline; display: flex; align-items: center; gap: 10px; }
         .user-info:hover { color: #fff; }
         
+        .energy-fixed { position: fixed; top: 30px; left: 30px; z-index: 100; display: flex; align-items: center; gap: 4px; pointer-events: none; }
+        .energy-bar { width: 10px; height: 18px; background: #222; border: 1px solid #444; transform: skewX(-15deg); transition: 0.3s; box-shadow: inset 0 0 2px #000; }
+        .energy-bar.active { background: var(--highlight); border-color: var(--highlight); box-shadow: 0 0 8px var(--highlight); }
+        .energy-timer { font-size: 0.7rem; color: #666; margin-left: 8px; font-family: monospace; text-shadow: 0 1px 2px #000; }
+
         .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.2s; font-size: 0.9rem; }
         .auth-input:focus { border-color: var(--highlight); background: #000; }
         .auth-link { color: #666; font-size: 0.75rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; transition: 0.2s; }
@@ -66,7 +76,7 @@
         .btn-toggle-pass:hover { color: var(--highlight); }
         .password-reqs { text-align: left; font-size: 0.7rem; margin-bottom: 15px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 4px; }
         .req-item { display: block; margin-bottom: 2px; color: #666; transition: 0.2s; }
-        .req-item.valid { color: #4caf50; } 
+        .req-item.valid { color: var(--success); } 
         .req-item::before { content: '• '; }
         .req-item.valid::before { content: '✓ '; }
 
@@ -94,7 +104,7 @@
         .search-btn-action { background: #222; color: #fff; border: none; padding: 5px 10px; font-size: 0.7rem; cursor: pointer; }
         .search-empty { color: #666; text-align: center; margin-top: 20px; font-style: italic; }
         
-        /* ESTILOS DE AVATAR */
+        /* --- ESTILOS DE AVATAR --- */
         .avatar-base { border-radius: 50%; object-fit: cover; border: 1px solid #333; flex-shrink: 0; }
         .user-avatar-mini { width: 40px; height: 40px; }
         .avatar-large { width: 95px; height: 95px; border: 2px solid #333; margin-right: 15px; font-size: 2.5rem; }
@@ -104,6 +114,52 @@
         .avatar-option.selected { border-color: var(--highlight); transform: scale(1.1); opacity: 1; box-shadow: 0 0 10px var(--highlight); }
         .avatar-letter { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-family: sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         .search-avatar { width: 35px; height: 35px; margin-right: 15px; font-size: 0.9rem; }
+
+        /* --- ESTILOS DE COLEÇÕES --- */
+        .collection-card { background: linear-gradient(45deg, #111, #0a0a0a); border: 1px solid #333; padding: 20px; margin-bottom: 15px; position: relative; overflow: hidden; transition: 0.3s; cursor: pointer; }
+        .collection-card:hover { border-color: #666; background: #161616; }
+        .collection-card.completed { border-color: var(--success); box-shadow: 0 0 15px rgba(0, 230, 118, 0.1); }
+        .col-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        .col-title { color: #fff; font-size: 1rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+        .col-desc { color: #666; font-size: 0.7rem; margin-top: 5px; }
+        .progress-track { background: #222; height: 6px; width: 100%; border-radius: 3px; overflow: hidden; margin-top: 10px; }
+        .progress-fill { height: 100%; background: var(--highlight); width: 0%; transition: width 0.5s ease; }
+        .collection-card.completed .progress-fill { background: var(--success); }
+        .col-status { font-size: 0.65rem; color: #888; margin-top: 8px; display: flex; justify-content: space-between; }
+        .col-status span.done { color: var(--success); font-weight: bold; }
+        .avatar-separator { width: 100%; color: #666; font-size: 0.65rem; margin: 15px 0 5px 0; border-bottom: 1px solid #333; padding-bottom: 5px; }
+
+        /* --- ESTILOS DE STACK --- */
+        .reward-stack { display: flex; align-items: center; }
+        .reward-item { position: relative; border-radius: 50%; border: 1px solid #333; overflow: hidden; background: #000; box-shadow: 2px 0 5px rgba(0,0,0,0.5); transition: 0.2s; }
+        .reward-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); }
+        .reward-item.unlocked img { filter: none; }
+        .reward-item.counter { display: flex; align-items: center; justify-content: center; background: #222; color: #fff; font-size: 0.6rem; font-weight: bold; border: 1px solid #444; }
+        .lock-overlay-mini { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: rgba(0,0,0,0.5); }
+        
+        .reward-stack.small .reward-item { width: 30px; height: 30px; margin-left: -8px; }
+        .reward-stack.small .reward-item:first-child { margin-left: 0; }
+        
+        .reward-stack.large .reward-item { width: 60px; height: 60px; margin-left: -15px; border-width: 2px; font-size: 1rem; }
+        .reward-stack.large .reward-item:first-child { margin-left: 0; }
+        .reward-stack.large .lock-overlay-mini { font-size: 1.2rem; }
+
+        /* --- DETALHE --- */
+        .col-detail-header { border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        .col-detail-title { font-size: 1.5rem; color: #fff; text-transform: uppercase; margin: 0; }
+        .col-detail-desc { color: #888; font-size: 0.8rem; margin-top: 5px; }
+        .col-movie-list { margin-bottom: 20px; }
+        .col-movie-item { padding: 12px; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center; color: #666; }
+        .col-movie-item.watched { color: #fff; }
+        .col-movie-item.watched::after { content: '✓'; color: var(--success); font-weight: bold; }
+        .col-rewards-sec { background: #111; padding: 15px; border: 1px solid #333; text-align: center; }
+        .col-rewards-title { font-size: 0.7rem; color: #666; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
+        .col-rewards-center { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+        
+        .col-level-block { margin-bottom: 15px; border-bottom: 1px solid #222; padding-bottom: 10px; }
+        .col-level-block:last-child { border-bottom: none; }
+        .level-status { font-size: 0.65rem; color: #555; margin-bottom: 5px; text-transform: uppercase; }
+        .level-status.done { color: var(--success); }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -162,13 +218,15 @@
                 }
             },
             saveMovie: async (email, movieId) => {
-                try { await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) }); } catch (e) {}
+                const res = await fetch('/api/history', { method: 'POST', body: JSON.stringify({ email, movie_id: movieId }) });
+                if(res.status === 403) throw new Error("Sem energia");
+                return res.json();
             },
             getProfile: async (email) => {
                 try {
                     const res = await fetch(`/api/history?email=${email}&_t=${Date.now()}`);
                     const data = await res.json(); return data;
-                } catch (e) { return { watched: [], reviews: [], username: null, avatar: 0, color: '#333' }; }
+                } catch (e) { return { watched: [], reviews: [], username: null, avatar: 0, color: '#333', energy: 3 }; }
             },
             saveProfile: async (email, username, avatar, color) => {
                 const res = await fetch('/api/profile', { method: 'POST', body: JSON.stringify({ email, username, avatar, color }) });
@@ -183,6 +241,9 @@
                     const res = await fetch(`/api/users/search?q=${query}`);
                     return await res.json();
                 } catch (e) { return []; }
+            },
+            devRefill: async (email) => {
+                await fetch('/api/dev/refill', { method: 'POST', body: JSON.stringify({ email }) });
             }
         };
 
@@ -264,33 +325,173 @@
             );
         };
 
-        const UserProfile = ({ user, watchedList, reviewsList, catalog, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
+        const RewardStack = ({ rewards, limit = 3, size = 'small', unlocked = false }) => {
+            const count = rewards ? rewards.length : 0;
+            if(count === 0) return null;
+            
+            const showCount = Math.min(count, limit);
+            const visibleRewards = rewards.slice(0, showCount);
+            const remaining = count - showCount;
+
+            return (
+                <div className={`reward-stack ${size}`}>
+                    {visibleRewards.map((rId, index) => (
+                        <div key={index} className={`reward-item ${unlocked ? 'unlocked' : ''}`} style={{zIndex: 10 - index}}>
+                            <img src={`/avatars/${rId}.png`} onError={e => e.target.src='/icon.png'} />
+                            {!unlocked && <div className="lock-overlay-mini">🔒</div>}
+                        </div>
+                    ))}
+                    {remaining > 0 && (
+                        <div className="reward-item counter" style={{zIndex: 0}}>
+                            +{remaining}
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const CollectionCard = ({ collection, watchedList, onClick }) => {
+            const allMovies = collection.allMovies || [];
+            const total = allMovies.length;
+            const watchedCount = allMovies.filter(id => watchedList.includes(id)).length;
+            
+            // Calcula alvo dinâmico
+            const levels = collection.levels || [];
+            let nextLevel = levels.find(lvl => lvl.required > watchedCount);
+            let currentTarget = nextLevel ? nextLevel.required : total;
+            
+            const progress = currentTarget > 0 ? (watchedCount / currentTarget) * 100 : 0;
+            const isComplete = total > 0 && watchedCount >= total;
+            
+            const firstLevel = levels.length > 0 ? levels[0] : null;
+            const rewards = firstLevel ? firstLevel.rewards : [];
+
+            return (
+                <div className={`collection-card ${isComplete ? 'completed' : ''}`} onClick={onClick}>
+                    <div className="col-header">
+                        <div>
+                            <h3 className="col-title">{collection.title}</h3>
+                            <div className="col-desc">{collection.desc}</div>
+                        </div>
+                        <RewardStack rewards={rewards} limit={3} size="small" unlocked={isComplete} />
+                    </div>
+                    <div className="progress-track">
+                        <div className="progress-fill" style={{width: `${isComplete ? 100 : progress}%`}}></div>
+                    </div>
+                    <div className="col-status">
+                        <span>{watchedCount} de {currentTarget} filmes</span>
+                        {isComplete ? <span className="done">COMPLETO</span> : <span>Ver detalhes →</span>}
+                    </div>
+                </div>
+            );
+        };
+
+        const CollectionDetail = ({ collection, watchedList, catalog, onBack }) => {
+            const allMovies = collection.allMovies || [];
+            const total = allMovies.length;
+            const watchedCount = allMovies.filter(id => watchedList.includes(id)).length;
+            const isComplete = total > 0 && watchedCount >= total;
+            
+            const levels = collection.levels || [];
+            // Calcula progresso para barra geral
+            let nextLevel = levels.find(lvl => lvl.required > watchedCount);
+            let currentTarget = nextLevel ? nextLevel.required : total;
+            const progress = currentTarget > 0 ? (watchedCount / currentTarget) * 100 : 0;
+
+            return (
+                <div style={{animation: 'fadeIn 0.3s'}}>
+                    <button onClick={onBack} style={{background:'none', border:'none', color:'#666', cursor:'pointer', marginBottom: 15, fontSize:'0.8rem'}}>← VOLTAR</button>
+                    <div className="col-detail-header">
+                        <h2 className="col-detail-title">{collection.title}</h2>
+                        <div className="col-detail-desc">{collection.desc}</div>
+                        <div className="progress-track" style={{marginTop: 15}}>
+                            <div className="progress-fill" style={{width: `${isComplete ? 100 : progress}%`, background: isComplete ? 'var(--success)' : 'var(--highlight)'}}></div>
+                        </div>
+                        <div style={{textAlign:'right', fontSize:'0.7rem', color: isComplete ? 'var(--success)' : '#666', marginTop: 5}}>
+                            {watchedCount}/{currentTarget} FILMES
+                        </div>
+                    </div>
+                    <div className="col-movie-list">
+                        {allMovies.map(movieId => {
+                            const movie = catalog[movieId] || { titulo: "Carregando..." };
+                            const isWatched = watchedList.includes(movieId);
+                            return (
+                                <div key={movieId} className={`col-movie-item ${isWatched ? 'watched' : ''}`}>
+                                    <span>{movie.titulo}</span>
+                                    {!isWatched && <span style={{fontSize:'0.6rem', border:'1px solid #333', padding:'2px 5px'}}>PENDENTE</span>}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="col-rewards-sec">
+                        <div className="col-rewards-title">RECOMPENSAS POR NÍVEL</div>
+                        {levels.map((lvl, idx) => {
+                            const lvlUnlocked = watchedCount >= lvl.required;
+                            return (
+                                <div key={idx} className="col-level-block">
+                                    <div className={`level-status ${lvlUnlocked ? 'done' : ''}`}>
+                                        {lvlUnlocked ? 'DESBLOQUEADO' : `NÍVEL ${idx+1} (Assista ${lvl.required})`}
+                                    </div>
+                                    <div className="col-rewards-center">
+                                        <RewardStack rewards={lvl.rewards} limit={99} size="large" unlocked={lvlUnlocked} />
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const UserProfile = ({ user, watchedList, reviewsList, catalog, collections, onClose, onLogout, onSelectMovie, onUpdateUser }) => {
             const [editing, setEditing] = React.useState(false);
             const [tempName, setTempName] = React.useState(user.username || "");
             const [tempAvatar, setTempAvatar] = React.useState(user.avatar || 0);
             const [msg, setMsg] = React.useState(null);
             const [loading, setLoading] = React.useState(false);
             const [tab, setTab] = React.useState('history');
-
+            const [viewingCollection, setViewingCollection] = React.useState(null); 
             const [viewingProfile, setViewingProfile] = React.useState(null); 
             const [searchQuery, setSearchQuery] = React.useState("");
             const [searchResults, setSearchResults] = React.useState([]);
             const [searching, setSearching] = React.useState(false);
 
             const activeUser = viewingProfile || { 
-                username: user.username, 
-                email: user.email, 
-                avatar: user.avatar || 0,
-                color: user.color || '#333'
+                username: user.username, email: user.email, avatar: user.avatar || 0, color: user.color || '#333'
             };
             const activeWatched = viewingProfile ? (viewingProfile.watched || []) : watchedList;
             const activeReviews = viewingProfile ? (viewingProfile.reviews || []) : reviewsList;
+
+            const myUnlockedAvatars = React.useMemo(() => {
+                if (viewingProfile) return [];
+                if (!collections) return [];
+                let unlocked = [];
+                Object.keys(collections).forEach(key => {
+                    const col = collections[key];
+                    const allMovies = col.allMovies || [];
+                    const watchedCount = allMovies.filter(id => watchedList.includes(id)).length;
+                    if (col.levels) {
+                        col.levels.forEach(lvl => {
+                            if (watchedCount >= lvl.required) unlocked = [...unlocked, ...lvl.rewards];
+                        });
+                    }
+                });
+                return unlocked;
+            }, [watchedList, collections, viewingProfile]);
 
             const watchedMovies = activeWatched.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse();
             const userReviews = activeReviews.map(r => {
                 const movie = catalog ? catalog[r.movie_id] : null;
                 return movie ? { ...r, title: movie.titulo } : null;
             }).filter(r => r !== null).reverse();
+
+            const collectionList = React.useMemo(() => {
+                if (!collections || !catalog) return [];
+                return Object.keys(collections).map(key => {
+                    const col = collections[key];
+                    return { ...col, id: key };
+                });
+            }, [collections, catalog]);
 
             const handleSaveProfile = async () => {
                 if(!tempName.trim()) return;
@@ -315,16 +516,18 @@
                 setSearching(false);
             };
 
+            const handleRefill = async () => {
+                setLoading(true);
+                await Api.devRefill(user.email);
+                onUpdateUser();
+                setLoading(false);
+            };
+
             const handleViewUser = async (otherUser) => {
                 setSearching(true);
                 const profile = await Api.getProfile(otherUser.email);
                 setViewingProfile({ 
-                    username: otherUser.username, 
-                    email: otherUser.email, 
-                    watched: profile.watched, 
-                    reviews: profile.reviews,
-                    avatar: profile.avatar || 0,
-                    color: profile.color || '#333'
+                    username: otherUser.username, email: otherUser.email, watched: profile.watched, reviews: profile.reviews, avatar: profile.avatar || 0, color: profile.color || '#333' 
                 });
                 setTab('history');
                 setSearching(false);
@@ -339,27 +542,16 @@
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
                         <div style={{ display: 'flex', alignItems: 'center', borderBottom: '1px solid #222', paddingBottom: 20, marginBottom: 20, width: '100%' }}>
-                            {!viewingProfile ? (
-                                <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button>
-                            ) : (
-                                <button className="btn-close-box" style={{marginRight: 20}} onClick={handleBackToMe}>←</button>
-                            )}
-                            
+                            {!viewingProfile ? <button className="btn-close-box" style={{marginRight: 20}} onClick={onClose}>✕</button> : <button className="btn-close-box" style={{marginRight: 20}} onClick={handleBackToMe}>←</button>}
                             <div style={{flex: 1, display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 15}}>
                                 {!editing && getAvatarUI(activeUser.avatar, activeUser.username, activeUser.color, 'avatar-large')}
-
                                 <div style={{flex: 1}}>
                                     {viewingProfile && <span style={{background:'#222', color:'#888', fontSize:'0.6rem', padding:'2px 5px', display:'block', width:'fit-content', marginBottom:5}}>VISITANDO</span>}
-                                    <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>
-                                        {viewingProfile ? 'PERFIL PÚBLICO' : 'MEU PERFIL'}
-                                    </h2>
-                                    
+                                    <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>{viewingProfile ? 'PERFIL PÚBLICO' : 'MEU PERFIL'}</h2>
                                     {!viewingProfile ? (
                                         !editing ? (
                                             <div style={{display:'flex', alignItems:'center', gap: 10}}>
-                                                <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
-                                                    {activeUser.username ? activeUser.username.toUpperCase() : activeUser.email}
-                                                </span>
+                                                <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>{activeUser.username ? activeUser.username.toUpperCase() : activeUser.email}</span>
                                                 <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
                                             </div>
                                         ) : (
@@ -367,20 +559,13 @@
                                                 <input className="auth-input" style={{margin:'0 0 10px 0', padding: '5px 10px'}} value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Nome..." />
                                                 <div style={{color:'#666', fontSize:'0.7rem', marginBottom: 5}}>ESCOLHA UM AVATAR:</div>
                                                 <div className="avatar-grid">
-                                                    <div 
-                                                        className={`avatar-base avatar-letter avatar-option ${tempAvatar === 0 ? 'selected' : ''}`}
-                                                        style={{background: user.color || '#333', fontSize: '1.5rem'}}
-                                                        onClick={() => setTempAvatar(0)}
-                                                    >
-                                                        {tempName ? tempName.charAt(0).toUpperCase() : '?'}
-                                                    </div>
+                                                    <div className={`avatar-base avatar-letter avatar-option ${tempAvatar === 0 ? 'selected' : ''}`} style={{background: user.color || '#333', fontSize: '1.5rem'}} onClick={() => setTempAvatar(0)}>{tempName ? tempName.charAt(0).toUpperCase() : '?'}</div>
                                                     {Array.from({length: AVATAR_COUNT}, (_, i) => i + 1).map(num => (
-                                                        <img 
-                                                            key={num} 
-                                                            src={`/avatars/${num}.png`} 
-                                                            className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} 
-                                                            onClick={() => setTempAvatar(num)}
-                                                        />
+                                                        <img key={num} src={`/avatars/${num}.png`} className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} onClick={() => setTempAvatar(num)} />
+                                                    ))}
+                                                    {myUnlockedAvatars.length > 0 && <div className="avatar-separator">DESBLOQUEADOS</div>}
+                                                    {myUnlockedAvatars.map(num => (
+                                                        <img key={num} src={`/avatars/${num}.png`} className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} style={{borderColor: 'var(--success)'}} onClick={() => setTempAvatar(num)} />
                                                     ))}
                                                 </div>
                                                 <div style={{display:'flex', gap: 10}}>
@@ -390,28 +575,29 @@
                                             </div>
                                         )
                                     ) : (
-                                        <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>
-                                            {activeUser.username ? activeUser.username.toUpperCase() : "USUÁRIO"}
-                                        </span>
+                                        <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>{activeUser.username ? activeUser.username.toUpperCase() : "USUÁRIO"}</span>
                                     )}
                                 </div>
                             </div>
                         </div>
                         {msg && <div className={msg.type === 'error' ? 'auth-error' : 'auth-success'} style={{marginBottom: 20}}>{msg.text}</div>}
-
                         <div style={{ display: 'flex', gap: 40, flexWrap: 'wrap', width: '100%', flex: 1, minHeight: 0 }}>
                             <div style={{ flex: '1 1 200px', display:'flex', flexDirection:'column' }}>
                                 <div style={{display:'flex', gap: 10}}>
                                     <div className="stat-box" style={{flex:1}}><div className="stat-label">Vistos</div><div className="stat-value">{activeWatched.length}</div></div>
                                     <div className="stat-box" style={{flex:1}}><div className="stat-label">Avaliados</div><div className="stat-value">{activeReviews.length}</div></div>
                                 </div>
+                                {!viewingProfile && (
+                                    <button className="btn-secondary" onClick={handleRefill} style={{marginTop: 10, borderColor: 'var(--success)', color: 'var(--success)'}}>⚡ RECARGA RÁPIDA (TESTE)</button>
+                                )}
                                 {!viewingProfile && <button className="btn-secondary" onClick={onLogout} style={{marginTop: 10}}>SAIR</button>}
                             </div>
                             <div style={{ flex: '2 1 300px', display:'flex', flexDirection:'column', minHeight: 0 }}>
                                 <div className="tab-header">
-                                    <button className={`tab-btn ${tab === 'history' ? 'active' : ''}`} onClick={() => setTab('history')}>HISTÓRICO</button>
-                                    <button className={`tab-btn ${tab === 'reviews' ? 'active' : ''}`} onClick={() => setTab('reviews')}>AVALIAÇÕES</button>
-                                    {!viewingProfile && <button className={`tab-btn ${tab === 'search' ? 'active' : ''}`} onClick={() => setTab('search')}>PESQUISAR</button>}
+                                    <button className={`tab-btn ${tab === 'history' ? 'active' : ''}`} onClick={() => { setTab('history'); setViewingCollection(null); }}>HISTÓRICO</button>
+                                    {!viewingProfile && <button className={`tab-btn ${tab === 'collections' ? 'active' : ''}`} onClick={() => { setTab('collections'); setViewingCollection(null); }}>COLEÇÕES</button>}
+                                    <button className={`tab-btn ${tab === 'reviews' ? 'active' : ''}`} onClick={() => { setTab('reviews'); setViewingCollection(null); }}>AVALIAÇÕES</button>
+                                    {!viewingProfile && <button className={`tab-btn ${tab === 'search' ? 'active' : ''}`} onClick={() => { setTab('search'); setViewingCollection(null); }}>PESQUISAR</button>}
                                 </div>
                                 <div style={{overflowY: 'auto', flex: 1, paddingRight: 10}}>
                                     {tab === 'history' && (
@@ -423,6 +609,15 @@
                                                     <div style={{ fontSize: '0.8rem', fontWeight: 'bold', marginTop: 5, color: '#ddd' }}>{m.titulo}</div>
                                                 </div>
                                             ))}
+                                        </div>
+                                    )}
+                                    {tab === 'collections' && !viewingProfile && (
+                                        <div>
+                                            {viewingCollection ? (
+                                                <CollectionDetail collection={viewingCollection} watchedList={watchedList} catalog={catalog} onBack={() => setViewingCollection(null)} />
+                                            ) : (
+                                                <div>{collectionList.map(col => <CollectionCard key={col.id} collection={col} watchedList={watchedList} onClick={() => setViewingCollection(col)} />)}</div>
+                                            )}
                                         </div>
                                     )}
                                     {tab === 'reviews' && (
@@ -479,6 +674,13 @@
                 try { if(user) await Api.saveRating(user.email, movie.id, selectedStar, review); onClose(); } catch(e) { setLoading(false); }
             };
 
+            const handleKeyDown = (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                }
+            };
+
             return (
                 <div className="auth-modal" style={{background:'rgba(0,0,0,0.8)'}}>
                     <div className="movie-card" style={{textAlign:'center', padding: 40, maxWidth: 450, animation: 'slideUp 0.5s', position: 'relative'}}>
@@ -490,7 +692,13 @@
                                 <span key={star} className={`star-icon ${(hoverStar || selectedStar) >= star ? 'active' : ''}`} onMouseEnter={() => setHoverStar(star)} onMouseLeave={() => setHoverStar(0)} onClick={() => setSelectedStar(star)}>★</span>
                             ))}
                         </div>
-                        <textarea className="rating-textarea" placeholder="O que você achou? (Opcional)" value={review} onChange={(e) => setReview(e.target.value)} />
+                        <textarea 
+                            className="rating-textarea" 
+                            placeholder="O que você achou? (Opcional)" 
+                            value={review} 
+                            onChange={(e) => setReview(e.target.value)} 
+                            onKeyDown={handleKeyDown}
+                        />
                         <button className="btn-main" onClick={handleSend} disabled={loading}>{loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}</button>
                     </div>
                 </div>
@@ -516,17 +724,24 @@
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
             const [fullCatalog, setFullCatalog] = React.useState(null);
+            const [collections, setCollections] = React.useState(null);
             const [currentMovie, setCurrentMovie] = React.useState(null);
             const [sortText, setSortText] = React.useState("");
             const [user, setUser] = React.useState(null);
             const [showLogin, setShowLogin] = React.useState(false);
             const [showProfile, setShowProfile] = React.useState(false); 
             const [showRating, setShowRating] = React.useState(false); 
+            const [showLoginWarning, setShowLoginWarning] = React.useState(false); 
             const [watchedList, setWatchedList] = React.useState([]);
             const [reviewsList, setReviewsList] = React.useState([]);
+            const [energy, setEnergy] = React.useState(3);
+            const [energyTs, setEnergyTs] = React.useState(0);
 
             React.useEffect(() => {
-                fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(setFullCatalog).catch(console.error);
+                fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`).then(r=>r.json()).then(data => {
+                    const { _collections, ...movies } = data;
+                    setFullCatalog(movies); setCollections(_collections);
+                }).catch(console.error);
                 const u = Api.getCurrentUser(); setUser(u);
                 if(u) syncProfile(u.email);
             }, []);
@@ -538,6 +753,7 @@
                     setUser(prev => ({ ...prev, username: data.username, avatar: data.avatar || 0, color: data.color || '#333' })); 
                 }
                 setWatchedList(data.watched || []); setReviewsList(data.reviews || []);
+                setEnergy(data.energy); setEnergyTs(data.energy_ts);
             };
 
             const handleLogout = () => { Api.signOut(); setUser(null); setShowProfile(false); setWatchedList([]); setReviewsList([]); };
@@ -545,6 +761,8 @@
 
             const startSort = () => {
                 if (!fullCatalog) return;
+                if (!user) { setShowLoginWarning(true); return; } 
+                if (energy <= 0) { alert("Sem energia! Aguarde recarregar."); return; }
                 setPhase('sorting');
                 const titles = Object.values(fullCatalog).map(m => m.titulo);
                 let steps = 0;
@@ -555,14 +773,21 @@
                 }, 100);
             };
 
-            const finishSort = () => {
+            const finishSort = async () => {
                 let ids = Object.keys(fullCatalog).filter(id => !watchedList.includes(id));
                 if (ids.length === 0) ids = Object.keys(fullCatalog); 
                 const randomId = ids[Math.floor(Math.random() * ids.length)];
-                prepareMovie(randomId);
-                const newList = [...watchedList, randomId];
-                setWatchedList(newList);
-                if(user) Api.saveMovie(user.email, randomId);
+                
+                try {
+                    const res = await Api.saveMovie(user.email, randomId);
+                    setEnergy(res.energy);
+                    prepareMovie(randomId);
+                    const newList = [...watchedList, randomId];
+                    setWatchedList(newList);
+                } catch(e) {
+                    alert("Você não tem energia suficiente!");
+                    setPhase('home');
+                }
             };
             
             const prepareMovie = (movieId) => {
@@ -581,24 +806,67 @@
             if (phase === 'popup' || showRating) videoClass += " dimmed"; 
             if (phase === 'playing' && !showRating) videoClass += " active";
 
+            const nextRecharge = new Date((energyTs + (6*3600)) * 1000);
+            const hoursLeft = energy < 3 ? Math.ceil((nextRecharge - new Date()) / (1000*3600)) + 'h' : '';
+            const showUI = phase !== 'playing'; 
+
             return (
                 <>
                     <div className={videoClass}>
                         {currentMovie && <DashPlayer url={currentMovie.videoUrl} isPlaying={phase === 'playing' && !showRating} startAt={currentMovie.capaSeconds || 0} enableControls={phase === 'playing'} onEnded={handleMovieEnd} />}
                     </div>
-                    <div className="user-bar">
-                        {user ? (
-                            <div className="user-info" onClick={() => setShowProfile(true)}>
-                                {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
+                    
+                    {/* ENERGIA NO CANTO ESQUERDO (Esconde se playing) */}
+                    {user && showUI && (
+                        <div className="energy-fixed">
+                            {[1,2,3].map(i => <span key={i} className={`energy-bar ${energy >= i ? 'active' : ''}`}></span>)}
+                            {energy < 3 && <span className="energy-timer">{hoursLeft}</span>}
+                        </div>
+                    )}
+
+                    {/* USER BAR (Esconde se playing) */}
+                    {showUI && (
+                        <div className="user-bar">
+                            {user ? (
+                                <div className="user-info" onClick={() => setShowProfile(true)}>
+                                    {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
+                                </div>
+                            ) : (
+                                <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN</button>
+                            )}
+                        </div>
+                    )}
+
+                    {/* MODAL DE AVISO LOGIN */}
+                    {showLoginWarning && (
+                        <div className="auth-modal">
+                            <div className="auth-box" style={{textAlign:'center'}}>
+                                <button className="btn-close-box btn-close-absolute" onClick={() => setShowLoginWarning(false)}>✕</button>
+                                <h2 style={{margin:'15px 0', color:'#fff'}}>PRECISA DE ENERGIA</h2>
+                                <p style={{color:'#888', fontSize:'0.9rem', marginBottom:20}}>Para sortear filmes e ganhar recompensas, você precisa entrar na sua conta.</p>
+                                <button className="btn-main" onClick={() => { setShowLoginWarning(false); setShowLogin(true); }}>FAZER LOGIN</button>
                             </div>
-                        ) : (
-                            <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN</button>
-                        )}
-                    </div>
+                        </div>
+                    )}
+
                     {showLogin && <LoginModal onClose={() => setShowLogin(false)} onLoginSuccess={refreshUser} />}
-                    {showProfile && user && <UserProfile user={user} watchedList={watchedList} reviewsList={reviewsList} catalog={fullCatalog} onClose={() => setShowProfile(false)} onLogout={handleLogout} onSelectMovie={(id) => { prepareMovie(id); setShowProfile(false); }} onUpdateUser={refreshUser} />}
+                    
+                    {showProfile && user && (
+                        <UserProfile 
+                            user={user} watchedList={watchedList} reviewsList={reviewsList} catalog={fullCatalog} collections={collections}
+                            onClose={() => setShowProfile(false)} onLogout={handleLogout} onSelectMovie={(id) => { prepareMovie(id); setShowProfile(false); }} onUpdateUser={refreshUser} 
+                        />
+                    )}
+
                     {showRating && currentMovie && <RatingCard movie={currentMovie} user={user} onClose={handleCloseRating} />}
-                    {phase !== 'home' && !showRating && <button className="btn-back-corner" onClick={handleReset}>MENU</button>}
+                    
+                    {/* Botão Encerrar Filme Manualmente */}
+                    {phase === 'playing' && !showRating && (
+                        <button className="btn-finish" onClick={handleMovieEnd}>ENCERRAR SESSÃO</button>
+                    )}
+
+                    {showUI && phase !== 'home' && !showRating && <button className="btn-back-corner" onClick={handleReset}>MENU</button>}
+                    
                     <div className="ui-layer">
                         {phase === 'home' && (
                             <div className="sort-container"><div className="big-title">SORT A SHORT</div><br/><button className="btn-main btn-sort" onClick={startSort} disabled={!fullCatalog}>{fullCatalog ? "SORTEAR" : "..."}</button></div>
