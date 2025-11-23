@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{META_TITLE}}</title>
-    <meta name="description" content="{{META_DESC}}">
-    <meta property="og:image" content="{{META_IMAGE}}" />
     <link rel="icon" href="/icon.png" type="image/png">
 
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -15,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
     <style>
-        :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; --success: #00e676; }
+        :root { --bg-color: #050505; --text: #e0e0e0; --highlight: #cc0000; --glass: rgba(15, 15, 15, 0.98); --border: #333; --success: #00e676; --pink: #e91e63; }
         * { box-sizing: border-box; }
         body { font-family: 'Space Mono', monospace; background-color: var(--bg-color); color: var(--text); margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         ::-webkit-scrollbar { width: 4px; }
@@ -133,7 +131,7 @@
         .reward-stack { display: flex; align-items: center; }
         .reward-item { position: relative; border-radius: 50%; border: 1px solid #333; overflow: hidden; background: #000; box-shadow: 2px 0 5px rgba(0,0,0,0.5); transition: 0.2s; }
         .reward-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); }
-        .reward-item.unlocked img { filter: none; }
+        .reward-item.unlocked img { filter: none; } 
         .reward-item.counter { display: flex; align-items: center; justify-content: center; background: #222; color: #fff; font-size: 0.6rem; font-weight: bold; border: 1px solid #444; }
         .lock-overlay-mini { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; background: rgba(0,0,0,0.5); }
         
@@ -161,6 +159,14 @@
         .level-status { font-size: 0.65rem; color: #555; margin-bottom: 5px; text-transform: uppercase; }
         .level-status.done { color: var(--success); }
 
+        /* NOVOS ESTILOS: User Code & Friend Button */
+        .user-code-box { display: flex; align-items: center; margin-top: 5px; gap: 10px; }
+        .user-code-text { background: #111; border: 1px solid #333; color: #666; padding: 2px 8px; font-size: 0.8rem; border-radius: 4px; letter-spacing: 1px; }
+        .btn-copy-code { background: transparent; border: 1px solid #444; color: #666; border-radius: 4px; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 0.8rem; transition: 0.2s; }
+        .btn-copy-code:hover { border-color: #fff; color: #fff; }
+        .btn-copy-code.copied { border-color: var(--success); color: var(--success); }
+        .btn-friend-add:hover { background: var(--pink) !important; color: #fff !important; }
+
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @media (max-width: 600px) { .big-title { font-size: 2rem; } .card-title { font-size: 1.5rem; } .movie-card { padding: 30px; } }
@@ -168,7 +174,10 @@
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel">
+    <script type="text/babel" data-type="module">
+        import FriendAction from './src/components/FriendAction.js';
+        import AddFriends from './src/components/AddFriends.js';
+
         const BUCKET_URL = ""; 
         const AVATAR_COUNT = 6; 
         const AVATAR_COLORS = ['#d32f2f', '#7b1fa2', '#303f9f', '#0288d1', '#00796b', '#388e3c', '#fbc02d', '#f57c00', '#5d4037', '#455a64'];
@@ -355,7 +364,6 @@
             const total = allMovies.length;
             const watchedCount = allMovies.filter(id => watchedList.includes(id)).length;
             
-            // Calcula alvo dinâmico
             const levels = collection.levels || [];
             let nextLevel = levels.find(lvl => lvl.required > watchedCount);
             let currentTarget = nextLevel ? nextLevel.required : total;
@@ -391,9 +399,8 @@
             const total = allMovies.length;
             const watchedCount = allMovies.filter(id => watchedList.includes(id)).length;
             const isComplete = total > 0 && watchedCount >= total;
-            
             const levels = collection.levels || [];
-            // Calcula progresso para barra geral
+            
             let nextLevel = levels.find(lvl => lvl.required > watchedCount);
             let currentTarget = nextLevel ? nextLevel.required : total;
             const progress = currentTarget > 0 ? (watchedCount / currentTarget) * 100 : 0;
@@ -408,7 +415,7 @@
                             <div className="progress-fill" style={{width: `${isComplete ? 100 : progress}%`, background: isComplete ? 'var(--success)' : 'var(--highlight)'}}></div>
                         </div>
                         <div style={{textAlign:'right', fontSize:'0.7rem', color: isComplete ? 'var(--success)' : '#666', marginTop: 5}}>
-                            {watchedCount}/{currentTarget} FILMES
+                            {Math.round(progress)}% CONCLUÍDO
                         </div>
                     </div>
                     <div className="col-movie-list">
@@ -455,9 +462,11 @@
             const [searchQuery, setSearchQuery] = React.useState("");
             const [searchResults, setSearchResults] = React.useState([]);
             const [searching, setSearching] = React.useState(false);
+            const [copied, setCopied] = React.useState(false);
+            const [showAddFriends, setShowAddFriends] = React.useState(false);
 
             const activeUser = viewingProfile || { 
-                username: user.username, email: user.email, avatar: user.avatar || 0, color: user.color || '#333'
+                username: user.username, email: user.email, avatar: user.avatar || 0, color: user.color || '#333', friend_code: user.friend_code
             };
             const activeWatched = viewingProfile ? (viewingProfile.watched || []) : watchedList;
             const activeReviews = viewingProfile ? (viewingProfile.reviews || []) : reviewsList;
@@ -477,7 +486,7 @@
                     }
                 });
                 return unlocked;
-            }, [watchedList, collections, viewingProfile]);
+            }, [watchedList, collections, catalog, viewingProfile]);
 
             const watchedMovies = activeWatched.map(id => catalog ? { id, ...catalog[id] } : null).filter(m => m !== null).reverse();
             const userReviews = activeReviews.map(r => {
@@ -538,6 +547,13 @@
                 setTab('search');
             };
 
+            const handleCopyCode = () => {
+                const code = activeUser.friend_code || "";
+                navigator.clipboard.writeText(code);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+            };
+
             return (
                 <div className="auth-modal">
                     <div className="auth-box profile-box">
@@ -547,36 +563,49 @@
                                 {!editing && getAvatarUI(activeUser.avatar, activeUser.username, activeUser.color, 'avatar-large')}
                                 <div style={{flex: 1}}>
                                     {viewingProfile && <span style={{background:'#222', color:'#888', fontSize:'0.6rem', padding:'2px 5px', display:'block', width:'fit-content', marginBottom:5}}>VISITANDO</span>}
-                                    <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>{viewingProfile ? 'PERFIL PÚBLICO' : 'MEU PERFIL'}</h2>
-                                    {!viewingProfile ? (
-                                        !editing ? (
-                                            <div style={{display:'flex', alignItems:'center', gap: 10}}>
-                                                <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>{activeUser.username ? activeUser.username.toUpperCase() : activeUser.email}</span>
-                                                <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
-                                            </div>
-                                        ) : (
-                                            <div style={{marginTop: 5}}>
-                                                <input className="auth-input" style={{margin:'0 0 10px 0', padding: '5px 10px'}} value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Nome..." />
-                                                <div style={{color:'#666', fontSize:'0.7rem', marginBottom: 5}}>ESCOLHA UM AVATAR:</div>
-                                                <div className="avatar-grid">
-                                                    <div className={`avatar-base avatar-letter avatar-option ${tempAvatar === 0 ? 'selected' : ''}`} style={{background: user.color || '#333', fontSize: '1.5rem'}} onClick={() => setTempAvatar(0)}>{tempName ? tempName.charAt(0).toUpperCase() : '?'}</div>
-                                                    {Array.from({length: AVATAR_COUNT}, (_, i) => i + 1).map(num => (
-                                                        <img key={num} src={`/avatars/${num}.png`} className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} onClick={() => setTempAvatar(num)} />
-                                                    ))}
-                                                    {myUnlockedAvatars.length > 0 && <div className="avatar-separator">DESBLOQUEADOS</div>}
-                                                    {myUnlockedAvatars.map(num => (
-                                                        <img key={num} src={`/avatars/${num}.png`} className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} style={{borderColor: 'var(--success)'}} onClick={() => setTempAvatar(num)} />
-                                                    ))}
+                                    <div style={{display:'flex', alignItems:'center', justifyContent:'space-between'}}>
+                                        <div>
+                                            <h2 style={{ margin: 0, fontSize: '1.2rem', color: '#fff', letterSpacing: '2px' }}>{viewingProfile ? 'PERFIL PÚBLICO' : 'MEU PERFIL'}</h2>
+                                            {!viewingProfile ? (
+                                                !editing ? (
+                                                    <div style={{display:'flex', alignItems:'center', gap: 10}}>
+                                                        <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>{activeUser.username ? activeUser.username.toUpperCase() : activeUser.email}</span>
+                                                        <button onClick={() => setEditing(true)} style={{background:'none', border:'none', color:'#666', cursor:'pointer', fontSize:'0.7rem', textDecoration:'underline'}}>[EDITAR]</button>
+                                                    </div>
+                                                ) : (
+                                                    <div style={{marginTop: 5}}>
+                                                        <input className="auth-input" style={{margin:'0 0 10px 0', padding: '5px 10px'}} value={tempName} onChange={e => setTempName(e.target.value)} placeholder="Nome..." />
+                                                        <div style={{color:'#666', fontSize:'0.7rem', marginBottom: 5}}>ESCOLHA UM AVATAR:</div>
+                                                        <div className="avatar-grid">
+                                                            <div className={`avatar-base avatar-letter avatar-option ${tempAvatar === 0 ? 'selected' : ''}`} style={{background: user.color || '#333', fontSize: '1.5rem'}} onClick={() => setTempAvatar(0)}>{tempName ? tempName.charAt(0).toUpperCase() : '?'}</div>
+                                                            {Array.from({length: AVATAR_COUNT}, (_, i) => i + 1).map(num => (
+                                                                <img key={num} src={`/avatars/${num}.png`} className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} onClick={() => setTempAvatar(num)} />
+                                                            ))}
+                                                            {myUnlockedAvatars.length > 0 && <div className="avatar-separator">DESBLOQUEADOS</div>}
+                                                            {myUnlockedAvatars.map(num => (
+                                                                <img key={num} src={`/avatars/${num}.png`} className={`avatar-base avatar-option ${tempAvatar === num ? 'selected' : ''}`} style={{borderColor: 'var(--success)'}} onClick={() => setTempAvatar(num)} />
+                                                            ))}
+                                                        </div>
+                                                        <div style={{display:'flex', gap: 10}}>
+                                                            <button onClick={handleSaveProfile} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 15px', fontWeight:'bold'}}>SALVAR</button>
+                                                            <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 15px'}}>CANCELAR</button>
+                                                        </div>
+                                                    </div>
+                                                )
+                                            ) : (
+                                                <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>{activeUser.username ? activeUser.username.toUpperCase() : "USUÁRIO"}</span>
+                                            )}
+                                            {!viewingProfile && !editing && (
+                                                <div className="user-code-box">
+                                                    <span className="user-code-text">#{activeUser.friend_code || "..."}</span>
+                                                    <button className={`btn-copy-code ${copied ? 'copied' : ''}`} onClick={handleCopyCode}>
+                                                        {copied ? '✓' : '❐'}
+                                                    </button>
                                                 </div>
-                                                <div style={{display:'flex', gap: 10}}>
-                                                    <button onClick={handleSaveProfile} disabled={loading} style={{cursor:'pointer', background:'#fff', border:'none', padding:'5px 15px', fontWeight:'bold'}}>SALVAR</button>
-                                                    <button onClick={() => {setEditing(false); setMsg(null)}} style={{cursor:'pointer', background:'transparent', border:'1px solid #fff', color:'#fff', padding:'5px 15px'}}>CANCELAR</button>
-                                                </div>
-                                            </div>
-                                        )
-                                    ) : (
-                                        <span style={{ color: '#fff', fontFamily: 'monospace', fontSize: '1rem', fontWeight: 'bold' }}>{activeUser.username ? activeUser.username.toUpperCase() : "USUÁRIO"}</span>
-                                    )}
+                                            )}
+                                        </div>
+                                        {viewingProfile && <FriendAction currentUserEmail={user.email} targetUserEmail={viewingProfile.email} />}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -636,7 +665,10 @@
                                             <div style={{display:'flex', gap: 10, marginBottom: 20}}>
                                                 <input className="auth-input" style={{marginBottom:0}} placeholder="Buscar usuário..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleSearch()} />
                                                 <button className="btn-main" style={{width:'auto'}} onClick={handleSearch}>{searching ? '...' : 'BUSCAR'}</button>
+                                                <button className="btn-login" onClick={() => setShowAddFriends(true)} style={{border:'1px solid #666', color:'#ccc'}}>+ AMIGO</button>
                                             </div>
+                                            {showAddFriends && <AddFriends userEmail={user.email} onClose={() => setShowAddFriends(false)} />}
+
                                             <div>
                                                 {searchResults.map((res, idx) => (
                                                     <div key={idx} className="search-result-item" onClick={() => handleViewUser(res)}>
@@ -647,7 +679,11 @@
                                                                 <div style={{fontSize:'0.7rem', color:'#666'}}>Usuário</div>
                                                             </div>
                                                         </div>
-                                                        <span className="search-btn-action">VER PERFIL →</span>
+                                                        
+                                                        <div style={{display:'flex', gap:10, alignItems:'center'}}>
+                                                            <span className="search-btn-action">VER PERFIL →</span>
+                                                            <FriendAction currentUserEmail={user.email} targetUserEmail={res.email} />
+                                                        </div>
                                                     </div>
                                                 ))}
                                                 {searchResults.length === 0 && !searching && searchQuery && <div className="search-empty">Nenhum usuário encontrado.</div>}
@@ -660,65 +696,6 @@
                     </div>
                 </div>
             );
-        };
-
-        const RatingCard = ({ movie, user, onClose }) => {
-            const [hoverStar, setHoverStar] = React.useState(0);
-            const [selectedStar, setSelectedStar] = React.useState(0); 
-            const [review, setReview] = React.useState("");
-            const [loading, setLoading] = React.useState(false);
-
-            const handleSend = async () => {
-                if (selectedStar === 0 && !review) { onClose(); return; } 
-                setLoading(true);
-                try { if(user) await Api.saveRating(user.email, movie.id, selectedStar, review); onClose(); } catch(e) { setLoading(false); }
-            };
-
-            const handleKeyDown = (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                }
-            };
-
-            return (
-                <div className="auth-modal" style={{background:'rgba(0,0,0,0.8)'}}>
-                    <div className="movie-card" style={{textAlign:'center', padding: 40, maxWidth: 450, animation: 'slideUp 0.5s', position: 'relative'}}>
-                        <button className="btn-close-box btn-close-absolute" onClick={onClose}>✕</button>
-                        <h3 style={{margin:0, fontSize:'0.8rem', color:'#888', letterSpacing: 2, marginTop: 15}}>SESSÃO FINALIZADA</h3>
-                        <h2 style={{margin:'10px 0 0 0', fontSize:'1.8rem', color:'#fff'}}>{movie.titulo}</h2>
-                        <div className="rating-stars">
-                            {[1,2,3,4,5].map(star => (
-                                <span key={star} className={`star-icon ${(hoverStar || selectedStar) >= star ? 'active' : ''}`} onMouseEnter={() => setHoverStar(star)} onMouseLeave={() => setHoverStar(0)} onClick={() => setSelectedStar(star)}>★</span>
-                            ))}
-                        </div>
-                        <textarea 
-                            className="rating-textarea" 
-                            placeholder="O que você achou? (Opcional)" 
-                            value={review} 
-                            onChange={(e) => setReview(e.target.value)} 
-                            onKeyDown={handleKeyDown}
-                        />
-                        <button className="btn-main" onClick={handleSend} disabled={loading}>{loading ? 'ENVIANDO...' : 'ENVIAR AVALIAÇÃO'}</button>
-                    </div>
-                </div>
-            );
-        };
-
-        const DashPlayer = ({ url, isPlaying, startAt, enableControls, onEnded }) => {
-            const videoRef = React.useRef(null);
-            React.useEffect(() => {
-                if (!url || !videoRef.current) return;
-                const player = dashjs.MediaPlayer().create();
-                player.initialize(videoRef.current, url, false);
-                if (startAt > 0) player.seek(startAt);
-                const vid = videoRef.current;
-                const handleEnd = () => { if(onEnded) onEnded(); };
-                vid.addEventListener('ended', handleEnd);
-                return () => { vid.removeEventListener('ended', handleEnd); player.destroy(); };
-            }, [url]);
-            React.useEffect(() => { if (videoRef.current) isPlaying ? videoRef.current.play() : videoRef.current.pause(); }, [isPlaying]);
-            return <video ref={videoRef} controls={enableControls} controlsList="nodownload" style={{cursor: enableControls ? 'auto' : 'none'}} />;
         };
 
         const App = () => {
@@ -750,7 +727,7 @@
                 const data = await Api.getProfile(email);
                 if(data.username) { 
                     Api.updateLocalUser(data.username, data.avatar, data.color); 
-                    setUser(prev => ({ ...prev, username: data.username, avatar: data.avatar || 0, color: data.color || '#333' })); 
+                    setUser(prev => ({ ...prev, username: data.username, avatar: data.avatar || 0, color: data.color || '#333', friend_code: data.friend_code })); 
                 }
                 setWatchedList(data.watched || []); setReviewsList(data.reviews || []);
                 setEnergy(data.energy); setEnergyTs(data.energy_ts);
@@ -777,7 +754,6 @@
                 let ids = Object.keys(fullCatalog).filter(id => !watchedList.includes(id));
                 if (ids.length === 0) ids = Object.keys(fullCatalog); 
                 const randomId = ids[Math.floor(Math.random() * ids.length)];
-                
                 try {
                     const res = await Api.saveMovie(user.email, randomId);
                     setEnergy(res.energy);
@@ -791,7 +767,6 @@
             };
             
             const prepareMovie = (movieId) => {
-                 if (!fullCatalog || !fullCatalog[movieId]) return;
                  const movieData = fullCatalog[movieId];
                  const slug = movieId.toLowerCase().replace(/ /g, "_");
                  setCurrentMovie({ id: movieId, ...movieData, videoUrl: `${BUCKET_URL}/videos/${slug}/playlist.mpd` });
@@ -811,12 +786,11 @@
             const showUI = phase !== 'playing'; 
 
             return (
-                <>
+                <React.Fragment>
                     <div className={videoClass}>
                         {currentMovie && <DashPlayer url={currentMovie.videoUrl} isPlaying={phase === 'playing' && !showRating} startAt={currentMovie.capaSeconds || 0} enableControls={phase === 'playing'} onEnded={handleMovieEnd} />}
                     </div>
                     
-                    {/* ENERGIA NO CANTO ESQUERDO (Esconde se playing) */}
                     {user && showUI && (
                         <div className="energy-fixed">
                             {[1,2,3].map(i => <span key={i} className={`energy-bar ${energy >= i ? 'active' : ''}`}></span>)}
@@ -824,20 +798,20 @@
                         </div>
                     )}
 
-                    {/* USER BAR (Esconde se playing) */}
                     {showUI && (
                         <div className="user-bar">
                             {user ? (
-                                <div className="user-info" onClick={() => setShowProfile(true)}>
-                                    {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
-                                </div>
+                                <React.Fragment>
+                                    <div className="user-info" onClick={() => setShowProfile(true)}>
+                                        {user.username ? user.username.toUpperCase() : user.email.split('@')[0]}
+                                    </div>
+                                </React.Fragment>
                             ) : (
                                 <button className="btn-login" onClick={() => setShowLogin(true)}>LOGIN</button>
                             )}
                         </div>
                     )}
 
-                    {/* MODAL DE AVISO LOGIN */}
                     {showLoginWarning && (
                         <div className="auth-modal">
                             <div className="auth-box" style={{textAlign:'center'}}>
@@ -860,7 +834,6 @@
 
                     {showRating && currentMovie && <RatingCard movie={currentMovie} user={user} onClose={handleCloseRating} />}
                     
-                    {/* Botão Encerrar Filme Manualmente */}
                     {phase === 'playing' && !showRating && (
                         <button className="btn-finish" onClick={handleMovieEnd}>ENCERRAR SESSÃO</button>
                     )}
@@ -876,12 +849,12 @@
                             <div className="movie-card"><div style={{fontSize: '0.7rem', color: '#cc0000', marginBottom: 15, letterSpacing: 2, fontWeight:'bold'}}>● SELEÇÃO</div><h2 className="card-title">{currentMovie.titulo}</h2><span className="card-meta">{currentMovie.ano} — {currentMovie.diretor}</span><div className="card-desc">{currentMovie.descricao || "..."}</div><button className="btn-main" onClick={() => setPhase('playing')}>ASSISTIR</button></div>
                         )}
                     </div>
-                </>
+                </React.Fragment>
             );
         };
 
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        root.render(React.createElement(App));
     </script>
 </body>
 </html>
