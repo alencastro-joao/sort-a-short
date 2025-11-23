@@ -42,8 +42,10 @@
         .btn-main:hover { background: #ccc; color: #000; }
         .btn-sort { background: transparent; color: #fff; border: 1px solid #fff; padding: 20px 60px; font-size: 1rem; margin-top: 20px; }
         .btn-sort:hover { background: rgba(255,255,255,0.1); }
+        
         .btn-back-corner { position: fixed; top: 70px; left: 30px; z-index: 100; color: #888; border: 1px solid #333; padding: 8px 15px; cursor: pointer; pointer-events: auto; font-family: 'Space Mono'; text-transform: uppercase; transition: 0.2s; background: #000; font-size: 0.8rem; }
         .btn-back-corner:hover { color: var(--highlight); border-color: var(--highlight); }
+        
         .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
         .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
         .btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 10; flex-shrink: 0; }
@@ -177,14 +179,14 @@
     <div id="root"></div>
 
     <script type="text/babel" data-type="module">
-        // --- IMPORTAÇÕES DOS NOVOS MÓDULOS ---
+        // --- IMPORTAÇÃO DOS MÓDULOS (FASE 1) ---
         import FriendAction from './src/components/FriendAction.js';
         import AddFriends from './src/components/AddFriends.js';
         import { Api } from './src/api.js';
         import { BUCKET_URL, AVATAR_COUNT, AVATAR_COLORS, getAvatarUI } from './src/utils.js';
 
-        // --- COMPONENTES (Ainda aqui, aguardando Fases 2 e 3 da migração) ---
-
+        // --- COMPONENTES INTERNOS (Aguardando Fases 2 e 3) ---
+        
         const LoginModal = ({ onClose, onLoginSuccess }) => {
             const [mode, setMode] = React.useState('signin'); 
             const [email, setEmail] = React.useState('');
@@ -844,8 +846,6 @@
             );
         };
 
-        // --- RENDERIZAÇÃO FINAL ---
-        // Usando React.createElement para garantir compatibilidade total
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(React.createElement(App));
     </script>
