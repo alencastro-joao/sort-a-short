@@ -1,135 +1,29 @@
 {
-  "1975hedgehoginthefog": {
-    "titulo": "Hedgehog in the Fog",
-    "tituloOriginal": "Yozhik v tumane",
+  "2010outofsight": {
+    "titulo": "Out of Sight",
+    "tituloOriginal": "Kiao Kiao",
     "capaSeconds": 15,
-    "ano": 1975,
-    "diretor": "Yuriy Norshteyn",
-    "pais": "União Soviética",
-    "duracao": "10 min",
-    "genero": "Animação / Mistério",
-    "descricao": "Um ouriço atravessa uma névoa misteriosa para encontrar seu amigo urso e tomar chá."
+    "ano": 2010,
+    "diretor": "Yu Ya-Ting",
+    "pais": "Taiwan",
+    "duracao": "5 min",
+    "genero": "Animação / Fantasia / Sensorial / Drama / Aquarela",
+    "titulo_detalhes": "Out of Sight (2010): Uma Janela Sensorial para o Mundo",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2010, Out of Sight (título original: Kiao Kiao) é uma aclamada obra de animação produzida como projeto de graduação na Universidade Nacional de Artes de Taiwan. O filme rapidamente ganhou notoriedade internacional, destacando-se no circuito de festivais por sua execução técnica impecável e profundidade emocional, tornando-se uma referência no estudo da animação estudantil asiática contemporânea.\n\n**Direção e Narrativa:** Sob a direção de Yu Ya-Ting, o curta explora a subjetividade da experiência humana. A narrativa segue uma menina com deficiência visual que, após um incidente traumático (um assalto), se desvia de seu caminho habitual. Em vez de focar no medo, a diretora utiliza a imaginação da protagonista para reconstruir a realidade. O filme é um estudo sobre resiliência e percepção, onde o desconhecido é navegado através da intuição e dos sentidos remanescentes.\n\n**Estilo Visual e Técnica:** A estética de Out of Sight é definida por uma direção de arte que emula a pintura em aquarela e ilustrações de livros infantis clássicos. A paleta de cores é intencionalmente suave e \"fofa\" (soft and cute), utilizando tons pastéis para suavizar a dureza do ambiente urbano. O grande trunfo técnico é a representação visual dos sentidos não-visuais: sons, cheiros e o tato são materializados em formas gráficas mágicas, permitindo que o espectador \"veja\" o mundo da mesma forma que a protagonista o sente.",
+    "descricao": "Uma menina cega transforma o medo em magia, usando sua imaginação para pintar o mundo com sons e cheiros."
   },
-  "2008lamaisonenpetitscubes": {
-    "titulo": "La Maison en Petits Cubes",
-    "tituloOriginal": "Tsumiki no Ie",
+  "1995onyourmark": {
+    "titulo": "On Your Mark",
+    "tituloOriginal": "On Your Mark",
     "capaSeconds": 15,
-    "ano": 2008,
-    "diretor": "Kunio Katō",
-    "pais": "Japão",
-    "duracao": "12 min",
-    "genero": "Animação / Drama",
-    "descricao": "Um viúvo constrói andares cada vez mais altos em sua casa para sobreviver à subida do nível do mar, relembrando sua vida."
-  },
-  "2020puparia": {
-    "titulo": "Puparia",
-    "tituloOriginal": "Puparia",
-    "capaSeconds": 15,
-    "ano": 2020,
-    "diretor": "Shingo Tamagawa",
-    "pais": "Japão",
-    "duracao": "3 min",
-    "genero": "Animação / Surrealismo",
-    "descricao": "Uma obra curta e onírica que explora a sensação de algo mudando dentro de nós."
-  },
-  "1972yukissun": {
-    "titulo": "Yuki's Sun",
-    "tituloOriginal": "Yuki no Taiyou",
-    "capaSeconds": 15,
-    "ano": 1972,
+    "ano": 1995,
     "diretor": "Hayao Miyazaki",
     "pais": "Japão",
-    "duracao": "5 min",
-    "genero": "Animação / Piloto",
-    "descricao": "Um raro piloto dirigido por Hayao Miyazaki muito antes da fundação do Studio Ghibli. Conta a história de uma menina forte e enérgica chamada Yuki."
-  },
-  "2011ostinato": {
-    "titulo": "Ostinato",
-    "tituloOriginal": "Ostinato",
-    "capaSeconds": 15,
-    "ano": 2011,
-    "diretor": "Carlo Vogele",
-    "pais": "Suíça",
-    "duracao": "6 min",
-    "genero": "Animação / Musical",
-    "descricao": "Um músico de rua toca seu violino em uma cidade movimentada, mas sua música começa a afetar o ambiente ao seu redor de maneiras inesperadas."
-  },
-  "2007madametutliputli": {
-    "titulo": "Madame Tutli-Putli",
-    "tituloOriginal": "Madame Tutli-Putli",
-    "capaSeconds": 15,
-    "ano": 2007,
-    "diretor": "Chris Lavis e Maciek Szczerbowski",
-    "pais": "Canadá",
-    "duracao": "17 min",
-    "genero": "Animação / Aventura",
-    "descricao": "Madame Tutli-Putli embarca em uma viagem de trem cheia de encontros estranhos e maravilhosos, explorando temas de solidão e coragem."
-  },
-  "1985interopia": {
-    "titulo": "A Voyage to Interopia",
-    "tituloOriginal": "Iz dnevnikov Iyona Tikhogo. Puteshestvie na Interopiyu",
-    "capaSeconds": 15,
-    "ano": 1985,
-    "diretor": "Gennady Tishchenko",
-    "pais": "União Soviética",
-    "duracao": "9 min",
-    "genero": "Animação / Sci-Fi Surreal",
-    "descricao": "Baseado na obra de Stanislaw Lem. O viajante espacial Ijon Tichy descobre o planeta Interopia e suas formas de vida bizarras e em constante mutação."
-  },
-  "1981threemonks": {
-    "titulo": "Three Monks",
-    "tituloOriginal": "San Ge He Shang",
-    "capaSeconds": 15,
-    "ano": 1981,
-    "diretor": "A Da (Xu Jingda)",
-    "pais": "China",
-    "duracao": "19 min",
-    "genero": "Animação / Folclore",
-    "descricao": "Uma fábula chinesa sem diálogos sobre cooperação. Um monge vive em paz no topo da montanha, mas a chegada de outros dois transforma a harmonia em caos."
-  },
-  "1986luxojr": {
-    "titulo": "Luxo Jr.",
-    "tituloOriginal": "Luxo Jr.",
-    "capaSeconds": 15,
-    "ano": 1986,
-    "diretor": "John Lasseter",
-    "pais": "Estados Unidos",
-    "duracao": "2 min",
-    "genero": "Animação / Comédia",
-    "descricao": "O icônico curta-metragem da Pixar que apresenta a luminária Luxo Jr. brincando com uma bola, marcando o início da era da animação por computador."
-  },
-  "1988tintoy": {
-    "titulo": "Tin Toy",
-    "tituloOriginal": "Tin Toy",
-    "capaSeconds": 15,
-    "ano": 1988,
-    "diretor": "John Lasseter",
-    "pais": "Estados Unidos",
-    "duracao": "5 min",
-    "genero": "Animação / Aventura",
-    "descricao": "O curta que deu origem à franquia Toy Story, mostrando os brinquedos ganhando vida quando os humanos não estão por perto."
-  },
-  "1997gerisgame": {
-    "titulo": "Geri's Game",
-    "tituloOriginal": "Geri's Game",
-    "capaSeconds": 15,
-    "ano": 1997,
-    "diretor": "Jan Pinkava",
-    "pais": "Estados Unidos",
-    "duracao": "4 min",
-    "genero": "Animação / Comédia",
-    "descricao": "Um idoso chamado Geri joga uma partida de xadrez contra si mesmo em um parque, mostrando a habilidade da Pixar em contar histórias curtas e envolventes."
-  },
-  "2000forthebirds": {
-    "titulo": "For the Birds",
-    "tituloOriginal": "For the Birds",
-    "capaSeconds": 15,
-    "ano": 2000,
-    "diretor": "Ralph Eggleston",
-    "pais": "Estados Unidos",
-    "duracao": "3 min",
-    "genero": "Animação / Comédia",
-    "descricao": "Um grupo de pássaros pequenos zomba de um pássaro maior que tenta se juntar a eles em um fio elétrico, resultando em uma reviravolta engraçada."
+    "duracao": "7 min",
+    "genero": "Animação / Cyberpunk / Musical / Ficção Científica / Ação / Distopia",
+    "titulo_detalhes": "On Your Mark (1995): O Épico Cyberpunk Experimental de Miyazaki",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 1995, On Your Mark é uma obra singular e fascinante dentro da filmografia do lendário Studio Ghibli. Embora tenha a qualidade de um longa-metragem, ele foi originalmente concebido como um videoclipe promocional para a dupla de rock japonesa Chage & Aska. Exibido nos cinemas como um curta antes do filme Sussurros do Coração (Whisper of the Heart), a obra é frequentemente citada como um exemplo do \"Ghibli Experimental Theater\", permitindo que o estúdio testasse técnicas de computação gráfica integradas à animação tradicional cel.\n\n**Direção e Temática:** Escrito e dirigido por Hayao Miyazaki, o filme condensa, em menos de sete minutos, temas recorrentes e complexos do diretor: ambientalismo, distopias tecnológicas e a fascinação pelo voo. A narrativa, totalmente desprovida de diálogos e guiada apenas pela música, situa-se em um futuro onde a humanidade vive em cidades subterrâneas para escapar da radiação da superfície. Miyazaki subverte a estrutura linear, apresentando múltiplos desfechos para a tentativa de dois policiais de resgatar uma misteriosa menina alada (um \"anjo\") de um governo opressor e de seitas religiosas.\n\n**Estilo Visual e Técnica:** Visualmente, On Your Mark é uma mistura impressionante de estética Cyberpunk com o naturalismo clássico do Ghibli. O design de produção contrasta a arquitetura opressiva, claustrofóbica e cheia de neon da cidade subterrânea com a luminosidade etérea e o céu azul da superfície \"proibida\". A animação é fluida e detalhista, destacando-se pela complexidade dos veículos futuristas e pela representação da sensação vertiginosa de liberdade, culminando em uma das sequências de fuga mais icônicas da carreira do diretor.",
+    "descricao": "Dois policiais futuristas lutam para salvar uma menina alada das garras de um governo opressor em um mundo radioativo."
   },
   "2011laluna": {
     "titulo": "La Luna",
@@ -139,31 +33,259 @@
     "diretor": "Enrico Casarosa",
     "pais": "Estados Unidos",
     "duracao": "7 min",
-    "genero": "Animação / Fantasia",
-    "descricao": "Um menino acompanha seu pai e avô em um trabalho noturno na lua, onde aprende sobre sua herança familiar e o significado de seguir seu próprio caminho."
+    "genero": "Animação / Fantasia / Fábula / Família / Infantil",
+    "titulo_detalhes": "La Luna (2011): O Brilho da Autodescoberta",
+    "detalhes": "**Contexto e Produção:** Lançado pela Pixar Animation Studios em 2011 e exibido nos cinemas junto com o filme Valente, este curta marca a estreia na direção de Enrico Casarosa. A obra foi indicada ao Oscar de Melhor Curta-Metragem de Animação e é notável por trazer uma sensibilidade europeia e pessoal ao estúdio, inspirada na infância do diretor na Itália e fortemente influenciada pelo trabalho de Hayao Miyazaki, distanciando-se do humor frenético comum em outras produções para abraçar um tom mais poético.\n\n**Narrativa e Temática:** A história é uma fábula geracional sobre o amadurecimento. Em um barco de madeira no meio do oceano, um menino é iniciado no ofício peculiar de sua família: varrer estrelas cadentes na superfície da Lua para determinar suas fases. O conflito central não é externo, mas interno e familiar, enquanto o protagonista tenta encontrar seu próprio método de trabalho em meio às instruções contraditórias de seu pai e de seu avô, simbolizando a delicada busca pela própria identidade sem rejeitar a tradição.\n\n**Estilo Visual e Influências:** Visualmente, La Luna destaca-se por sua estética \"pictórica\", utilizando texturas que lembram pastéis e pinturas a óleo para criar uma atmosfera de livro de histórias ilustrado, fugindo do fotorrealismo. O design de som é igualmente único, utilizando uma linguagem inventada (gibberish) para os diálogos, o que reforça a universalidade do conto. A iluminação é o ponto alto, com o brilho emanado pelas próprias estrelas conferindo ao curta uma qualidade onírica e mágica.",
+    "descricao": "Um menino aprende o ofício mágico de varrer estrelas na Lua, precisando escolher entre as tradições do pai e do avô."
   },
-  "1985onyourmark": {
-    "titulo": "On Your Mark",
-    "tituloOriginal": "On Your Mark",
+  "2000forthebirds": {
+    "titulo": "For the Birds",
+    "tituloOriginal": "For the Birds",
     "capaSeconds": 15,
-    "ano": 1985,
+    "ano": 2000,
+    "diretor": "Ralph Eggleston",
+    "pais": "Estados Unidos",
+    "duracao": "3 min",
+    "genero": "Animação / Comédia / Slapstick / Família / Infantil",
+    "titulo_detalhes": "For the Birds (2000): A Física do Karma em Fios de Telefone",
+    "detalhes": "**Contexto Histórico e Produção:** Vencedor do Oscar de Melhor Curta-Metragem de Animação em 2002, For the Birds é um dos curtas mais icônicos da Pixar Animation Studios. Dirigido pelo lendário diretor de arte Ralph Eggleston (conhecido por seu trabalho em Toy Story e Procurando Nemo), o filme estreou no Festival de Annecy em 2000, mas ganhou o mundo ao ser exibido nos cinemas antes de Monstros S.A. em 2001. A obra solidificou a tradição da Pixar de contar histórias universais e sem diálogos, apoiando-se puramente na pantomima e no timing cômico.\n\n**Direção e Narrativa:** O filme é uma aula magistral de comédia visual e \"justiça poética\". A trama apresenta um bando de pequenos pássaros azuis, mesquinhos e iguais entre si, que se empoleiram em um fio de telefone. A dinâmica de exclusão muda com a chegada de uma ave desengonçada e amigável, muito maior que os outros. A narrativa explora o comportamento de manada (ou \"efeito de grupo\") e o preconceito, culminando em um desfecho clássico de slapstick onde a intolerância do grupo literalmente ricocheteia contra eles mesmos.\n\n**Estilo Visual e Técnica:** Tecnicamente, o curta foi um desafio significativo para a época, especialmente na renderização de plumagens. Cada um dos pássaros pequenos possui milhares de penas individuais que precisavam reagir ao vento e ao contato físico, exigindo o desenvolvimento de novas ferramentas no software RenderMan. A direção de arte contrasta o design arredondado e \"fofo\" dos personagens com suas personalidades ácidas, enquanto o design de som substitui vozes humanas por guinchos que lembram brinquedos de borracha, acentuando o ridículo da situação.",
+    "descricao": "Pequenos pássaros zombam de uma ave grande e desajeitada, mas aprendem uma lição rápida sobre carma e física."
+  },
+  "1997gerisgame": {
+    "titulo": "Geri's Game",
+    "tituloOriginal": "Geri's Game",
+    "capaSeconds": 15,
+    "ano": 1997,
+    "diretor": "Jan Pinkava",
+    "pais": "Estados Unidos",
+    "duracao": "5 min",
+    "genero": "Animação / Comédia / Esportes / Idosos / Psicodélico (leve)",
+    "titulo_detalhes": "Geri’s Game (1997): O Xeque-Mate da Solitude",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 1997 e vencedor do Oscar de Melhor Curta-Metragem de Animação, Geri's Game marcou o retorno da Pixar aos curtas após um hiato de quase uma década. Dirigido por Jan Pinkava, o filme serviu como um campo de testes crucial para a tecnologia de \"superfícies de subdivisão\" (subdivision surfaces), permitindo ao estúdio criar formas orgânicas complexas, como a pele humana e tecidos de roupas, com um nível de realismo e suavidade nunca antes alcançado na computação gráfica.\n\n**Dinâmica Narrativa:** A genialidade do curta reside em sua economia narrativa e caracterização. Em um parque vazio de outono, um idoso chamado Geri joga xadrez contra si mesmo. Pinkava constrói a tensão alternando a personalidade do protagonista: de um lado, o Geri \"Branco\", lento, trêmulo e de óculos; do outro, o Geri \"Preto\", agressivo, sorridente e ágil. O clímax subverte a expectativa da derrota física com um truque de astúcia (um falso ataque cardíaco), provando que a mente ainda é a peça mais forte do tabuleiro.\n\n**Inovação Técnica e Visual:** Visualmente, o filme é um estudo de atuação de personagem. Sem diálogos, toda a história é contada através das expressões faciais, da respiração e da linguagem corporal distinta das duas \"personas\" de Geri. A iluminação outonal e a simulação física do paletó de Geri foram marcos técnicos que pavimentaram o caminho para produções futuras, como Toy Story 2, consolidando a capacidade da Pixar de animar humanos críveis e empáticos.",
+    "descricao": "Um idoso joga uma partida de xadrez intensa contra si mesmo, alternando entre duas personalidades distintas."
+  },
+  "1988tintoy": {
+    "titulo": "Tin Toy",
+    "tituloOriginal": "Tin Toy",
+    "capaSeconds": 15,
+    "ano": 1988,
+    "diretor": "John Lasseter",
+    "pais": "Estados Unidos",
+    "duracao": "5 min",
+    "genero": "Animação / Comédia / Histórico / Infantil / Terror (leve)",
+    "titulo_detalhes": "Tin Toy (1988): O Marco Zero da Revolução Digital",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 1988 e dirigido por John Lasseter, Tin Toy ocupa um lugar sagrado na história do cinema. Foi o primeiro filme gerado inteiramente por computador (CGI) a vencer o Oscar de Melhor Curta-Metragem de Animação, validando a computação gráfica como uma ferramenta legítima de narrativa artística, e não apenas uma curiosidade tecnológica. A premissa de brinquedos com vida própria serviu como o rascunho direto e espiritual para o que viria a ser o primeiro longa-metragem do estúdio, Toy Story.\n\n**Dinâmica Narrativa:** A história adota a perspectiva de Tinny, um brinquedo de banda de um homem só recém-desembalado. Ele experimenta o terror puro ao encarar seu \"dono\": um bebê destrutivo e babão chamado Billy. O filme explora o dilema existencial de um brinquedo — o medo de ser quebrado versus o desejo inato de trazer alegria —, criando uma empatia surpreendente por um objeto inanimado que precisa superar seu instinto de autopreservação para cumprir seu propósito.\n\n**Desafios Técnicos e Estilo:** Visualmente, a obra ilustra os desafios pioneiros da Pixar. Enquanto Tinny é animado com precisão e carisma, o bebê Billy é frequentemente citado como um exemplo clássico do \"Vale da Estranheza\" (Uncanny Valley), devido às limitações severas da época em renderizar pele humana, tecidos macios (como a fralda) e movimentos musculares complexos. Apesar do visual datado do bebê, a inovação na iluminação, nas sombras e na física dos objetos rígidos foi revolucionária para o final dos anos 80.",
+    "descricao": "Um pequeno brinquedo de lata tenta fugir de um bebê destrutivo, mas descobre que seu propósito é maior que seu medo."
+  },
+  "1986luxojr": {
+    "titulo": "Luxo Jr.",
+    "tituloOriginal": "Luxo Jr.",
+    "capaSeconds": 15,
+    "ano": 1986,
+    "diretor": "John Lasseter",
+    "pais": "Estados Unidos",
+    "duracao": "2 min",
+    "genero": "Animação / Comédia / Minimalista / Histórico / Infantil",
+    "titulo_detalhes": "Luxo Jr. (1986): A Luz que Definiu um Estúdio",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 1986 e dirigido por John Lasseter, Luxo Jr. é indiscutivelmente o filme mais importante da história da Pixar. Foi o primeiro curta produzido após o estúdio se tornar uma empresa independente e estreou na conferência SIGGRAPH, onde chocou a indústria. Até então, a computação gráfica era vista como fria e matemática; este filme provou que ela poderia transmitir emoção e personalidade, transformando a pequena luminária titular no mascote eterno da companhia.\n\n**Dinâmica Narrativa:** A trama é um estudo de pantomima pura, focando na relação entre um \"pai\" (uma luminária de mesa grande) e seu \"filho\" (uma luminária pequena). Sem rosto, membros ou falas, Lasseter consegue transmitir alegria, surpresa e vergonha apenas através do movimento das hastes e da inclinação das cúpulas enquanto brincam com uma bola de borracha. A simplicidade da interação emocional superou a barreira da tecnologia da época.\n\n**Inovação Técnica e Estilo:** O curta foi revolucionário por resolver problemas complexos de iluminação e renderização, especificamente o \"sombreamento automático\" (self-shadowing), permitindo que a luz e a sombra das próprias luminárias interagissem de forma realista com seus corpos e o chão. Além disso, introduziu a icônica \"Bola da Pixar\" (amarela com faixa azul e estrela vermelha), que se tornaria um easter egg obrigatório em quase todos os filmes subsequentes do estúdio.",
+    "descricao": "O icônico curta-metragem da Pixar que apresenta a luminária Luxo Jr. brincando com uma bola, marcando o início da era da animação por computador."
+  },
+  "1981threemonks": {
+    "titulo": "Three Monks",
+    "tituloOriginal": "San Ge He Shang",
+    "capaSeconds": 15,
+    "ano": 1981,
+    "diretor": "A Da (Xu Jingda)",
+    "pais": "China",
+    "duracao": "19 min",
+    "genero": "Animação / Folclore / Comédia / Sátira / Tradicional Chinês",
+    "titulo_detalhes": "Three Monks (1981): A Sátira Minimalista da Natureza Humana",
+    "detalhes": "**Contexto Histórico e Produção:** Produzido pelo lendário Shanghai Animation Film Studio logo após o fim da Revolução Cultural, Three Monks (título original: San ge he shang) simboliza o renascimento artístico da animação chinesa. Dirigido pelo visionário A Da (Xu Jingda), o filme rompeu com o realismo socialista rígido das décadas anteriores, abraçando a experimentação e a sátira. A obra alcançou reconhecimento global, vencendo o Urso de Prata de Melhor Curta no Festival de Berlim, provando que a animação chinesa poderia ser moderna sem perder suas raízes tradicionais.\n\n**Dinâmica Narrativa:** O roteiro é uma adaptação brilhante de um antigo provérbio chinês: \"Um monge carrega dois baldes de água; dois monges compartilham a carga; mas com três monges, ninguém tem água para beber\". A história explora a psicologia da preguiça e da difusão de responsabilidade (\"efeito espectador\") de forma cômica. Quando um terceiro monge chega ao templo no topo da colina, a cooperação colapsa devido ao egoísmo individual, levando a uma crise de sede que só é resolvida quando um incêndio obriga o trio a redescobrir o valor do trabalho em equipe.\n\n**Estilo Visual e Técnica:** A estética de Three Monks é uma aula de minimalismo e uso do espaço negativo (\"Liu Bai\" na pintura tradicional chinesa). Os cenários são esparsos, muitas vezes compostos apenas pelos personagens e alguns objetos essenciais sobre um fundo branco, focando toda a atenção na pantomima. Não há diálogos; a personalidade de cada monge (o pequeno e ágil, o alto e magro, o gordo e lento) é definida exclusivamente pela animação corporal expressiva e por instrumentos musicais distintos que acompanham seus movimentos, fundindo a linguagem da Ópera de Pequim com o design de desenho animado moderno.",
+    "descricao": "Uma fábula chinesa sem diálogos sobre cooperação, onde três monges tentam evitar o trabalho de carregar água."
+  },
+  "2007madametutliputli": {
+    "titulo": "Madame Tutli-Putli",
+    "tituloOriginal": "Madame Tutli-Putli",
+    "capaSeconds": 15,
+    "ano": 2007,
+    "diretor": "Chris Lavis e Maciek Szczerbowski",
+    "pais": "Canadá",
+    "duracao": "17 min",
+    "genero": "Animação / Aventura / Stop-Motion / Thriller Psicológico / Surrealismo / Terror",
+    "titulo_detalhes": "Madame Tutli-Putli (2007): O Expresso Surreal do Inconsciente",
+    "detalhes": "**Contexto Histórico e Produção:** Produzido pelo renomado National Film Board of Canada (NFB), este filme é uma obra-prima de paciência e arte meticulosa, levando mais de quatro anos para ser concluído pelos diretores Chris Lavis e Maciek Szczerbowski. A obra recebeu aclamação mundial, incluindo um prêmio no Festival de Cannes e uma indicação ao Oscar, destacando-se por sua atmosfera densa e adulta que desafia as convenções da animação tradicionalmente \"familiar\".\n\n**Dinâmica Narrativa:** A trama segue Madame Tutli-Putli, uma viajante solitária carregada de bagagens físicas e emocionais, que embarca em um trem noturno. O que começa como uma viagem de rotina logo se transforma em um pesadelo metafísico e junguiano. Enfrentando passageiros bizarros e predadores sobrenaturais, a protagonista é arrastada para um mistério existencial onde a realidade se dissolve, explorando temas de paranoia, vulnerabilidade e o confronto aterrorizante com o desconhecido.\n\n**Inovação Técnica e Visual:** A inovação técnica deste filme tornou-se lendária no meio da animação. Embora o mundo e os corpos sejam construídos em stop-motion tradicional (bonecos articulados), os olhos da protagonista são filmagens reais de uma atriz humana (Laurie Maher), compostos digitalmente quadro a quadro sobre o rosto do boneco. Essa técnica híbrida revolucionária criou um olhar com \"alma\" e um realismo biológico assustador, superando as limitações de expressão dos bonecos convencionais e intensificando a conexão emocional e inquietante com o espectador.",
+    "descricao": "Uma viagem de trem se transforma em um pesadelo surreal quando uma mulher enfrenta seus medos e o desconhecido."
+  },
+  "2024ostinato": {
+    "titulo": "Ostinato",
+    "tituloOriginal": "Ostinato",
+    "capaSeconds": 15,
+    "ano": 2024,
+    "diretor": "Sonia Furier",
+    "pais": "Canadá",
+    "duracao": "7 min",
+    "genero": "Animação / Musical / Drama / Psicologia / Arte 2D",
+    "titulo_detalhes": "Ostinato (2024): A Harmonia da Dissonância",
+    "detalhes": "**Contexto e Inspiração:** Dirigido por Sonia Furier, Ostinato é uma obra profundamente pessoal e tocante, inspirada diretamente na experiência da escritora Sunita Balsara com o tinnitus (zumbido crônico no ouvido). O título faz referência ao termo musical para um motivo ou frase que se repete persistentemente na mesma altura musical, traçando um paralelo inteligente entre a estrutura da música e a natureza incessante da condição auditiva retratada.\n\n**Dinâmica Narrativa:** A história acompanha uma compositora que se vê atormentada por um tom discordante e intrusivo que ameaça arruinar seu trabalho e sua sanidade. A narrativa é uma jornada de aceitação: em vez de continuar uma batalha fútil para silenciar o ruído ou \"consertar\" o que não pode ser mudado, ela descobre que a paz reside na adaptação. Ao incorporar o tom dissonante em sua melodia, ela cria uma harmonia nova e inesperada, transformando um obstáculo debilitante em um elemento vital de sua arte.\n\n**Estilo Visual e Sensorial:** Visualmente, o curta utiliza a animação 2D com um estilo gráfico elegante e cores contrastantes para traduzir a experiência sonora em imagens. O uso de luz e sombra, como visto no pôster (dividindo o rosto da protagonista entre tons quentes e frios), sugere a dualidade entre o som interno e o mundo externo. A animação consegue o feito difícil de visualizar o invisível, dando forma e cor à agonia do ruído e ao alívio da harmonia encontrada.",
+    "descricao": "Uma compositora aprende a transformar o zumbido incessante em seus ouvidos em uma nova forma de harmonia musical."
+  },
+  "1972yukissun": {
+    "titulo": "Yuki's Sun",
+    "tituloOriginal": "Yuki no Taiyou",
+    "capaSeconds": 15,
+    "ano": 1972,
     "diretor": "Hayao Miyazaki",
     "pais": "Japão",
-    "duracao": "6 min",
-    "genero": "Animação / Música",
-    "descricao": "Um videoclipe animado dirigido por Hayao Miyazaki para a dupla japonesa Chage & Aska, apresentando uma narrativa futurista e visualmente impressionante."
+    "duracao": "5 min",
+    "genero": "Animação / Piloto / Aventura / Histórico / Slice of Life",
+    "titulo_detalhes": "Yuki's Sun (1972): A Origem Esquecida de uma Lenda",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 1972, Yuki's Sun (título original: Yuki no Taiyou) é uma relíquia histórica inestimável para os estudiosos da animação. Trata-se de um curta-metragem piloto de apenas cinco minutos, produzido para tentar vender uma série de TV baseada no mangá de Tetsuya Chiba. Embora a série nunca tenha recebido sinal verde, o curta carrega a distinção monumental de ser, indiscutivelmente, a **primeira obra dirigida inteiramente por Hayao Miyazaki** (então creditado como \"Key Animator\" e diretor do piloto), servindo como o rascunho fundamental para seu estilo autoral.\n\n**Dinâmica Narrativa:** A história gira em torno de Yuki, uma órfã de 10 anos enérgica e resiliente que está sendo adotada por uma família rica, mas que luta para manter sua identidade e liberdade. Longe de ser uma menina passiva, ela exibe uma força de espírito inabalável. O piloto foca em sua vitalidade e em sua conexão instintiva com a natureza e os animais, prefigurando os arquétipos de heroínas que Miyazaki aperfeiçoaria décadas depois, como Heidi e Sheeta.\n\n**Legado e Estilo Visual:** Visualmente, a obra reflete a estética limitada dos animes televisivos do início dos anos 70, mas já contém a \"assinatura cinética\" inconfundível do diretor. É possível notar a atenção obsessiva ao movimento do vento no cabelo, a fluidez física da corrida da protagonista e a composição dinâmica dos cenários, elementos que se tornariam a marca registrada do futuro Studio Ghibli.",
+    "descricao": "Um raro piloto dirigido por Hayao Miyazaki muito antes da fundação do Studio Ghibli. Conta a história de uma menina forte e enérgica chamada Yuki."
   },
-  "2010outofsight": {
-    "titulo": "Out of Sight",
-    "tituloOriginal": "Out of Sight",
+  "2020puparia": {
+    "titulo": "Puparia",
+    "tituloOriginal": "Puparia",
     "capaSeconds": 15,
-    "ano": 2010,
-    "diretor": "Yoojin Kim",
-    "pais": "Taiwan",
-    "duracao": "6 min",
-    "genero": "Animação / Fantasia",
-    "descricao": "Uma menina cega desenvolve uma amizade especial com uma criatura mágica que a ajuda a 'ver' o mundo ao seu redor de uma maneira única."
+    "ano": 2020,
+    "diretor": "Shingo Tamagawa",
+    "pais": "Japão",
+    "duracao": "3 min",
+    "genero": "Animação / Surrealismo / Fantasia / Arte Experimental / Atmosférico",
+    "titulo_detalhes": "Puparia (2020): A Redenção da Animação Artesanal",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2020, Puparia é um fenômeno independente criado inteiramente por Shingo Tamagawa. Após anos trabalhando na indústria comercial de anime e sentindo-se criativamente esgotado, Tamagawa dedicou três anos de trabalho solitário para produzir este curta de apenas três minutos. O filme viralizou instantaneamente, tornando-se um manifesto poderoso sobre a importância da expressão autoral e do ato de \"desenhar\" como uma forma de reconexão consigo mesmo.\n\n**Dinâmica Narrativa:** A obra rejeita uma estrutura narrativa convencional em favor de uma experiência puramente onírica e sensorial. Não há diálogos; apenas uma sucessão de vinhetas hipnóticas que sugerem um mundo em metamorfose (daí o título, referindo-se ao estágio de pupa dos insetos). Os personagens, enigmáticos e solenemente belos, frequentemente quebram a quarta parede, encarando o espectador com uma intensidade que busca estabelecer uma conexão espiritual profunda, como se nos convidassem a testemunhar uma mudança iminente.\n\n**Estilo Visual e Técnica:** Visualmente, é deslumbrante e inconfundível. Tamagawa utilizou uma técnica que emula a textura rica de lápis de cor e pintura acrílica sobre papel texturizado, resultando em uma densidade de detalhes raramente vista em animação em movimento. Cada quadro parece uma ilustração completa e complexa, com cores vibrantes e jogos de luz que conferem à obra uma qualidade de \"pintura viva\", onde a beleza reside na imperfeição do traço manual.",
+    "descricao": "Uma obra curta e onírica que explora a sensação de algo mudando dentro de nós através de visuais deslumbrantes."
   },
+  "2008lamaisonenpetitscubes": {
+    "titulo": "La Maison en Petits Cubes",
+    "tituloOriginal": "Tsumiki no Ie",
+    "capaSeconds": 15,
+    "ano": 2008,
+    "diretor": "Kunio Katō",
+    "pais": "Japão",
+    "duracao": "12 min",
+    "genero": "Animação / Drama / Melancolia / Fantasia / Reflexivo",
+    "titulo_detalhes": "La Maison en Petits Cubes (2008): A Arquitetura da Memória",
+    "detalhes": "**Contexto Histórico e Produção:** Vencedor do Oscar de Melhor Curta-Metragem de Animação em 2009 e do prestigiado Cristal de Annecy, este filme japonês (cujo título original é Tsumiki no Ie) é a obra mais célebre do diretor Kunio Kato. Produzido pelo estúdio Robot Communications, o curta se destaca por romper com a estética tradicional dos animes, adotando uma linguagem visual europeia e universal que permitiu que sua mensagem sobre o envelhecimento ressoasse globalmente, transcendendo barreiras culturais.\n\n**Dinâmica Narrativa:** Em uma cidade submersa onde o nível da água nunca para de subir, um viúvo solitário é forçado a construir constantemente novos andares sobre sua casa, como se empilhasse blocos de brinquedo. Quando ele deixa cair seu cachimbo favorito na água, decide vestir um escafandro e mergulhar através do alçapão, iniciando uma jornada literal e metafórica para o fundo. Cada andar submerso que ele visita desperta uma memória de uma época diferente de sua vida, transformando a descida física em uma viagem emocional no tempo, onde ele reencontra a esposa, a filha e a juventude perdida.\n\n**Estilo Visual e Técnica:** A técnica de Kato é fundamental para a atmosfera nostálgica do filme. Utilizando uma mistura de desenho digital e texturas analógicas, o visual imita a aparência de pinturas a óleo ou pastéis sobre papel envelhecido. As bordas tremidas, as cores terrosas e suaves e a iluminação difusa criam a sensação de que estamos folheando um velho álbum de fotografias ou lendo um livro de memórias gastas pelo tempo, onde a imperfeição do traço reforça a fragilidade das lembranças.",
+    "descricao": "Um viúvo mergulha através dos andares submersos de sua casa, revivendo memórias a cada nível que desce."
+  },
+  "1967theladder": {
+    "titulo": "The Ladder",
+    "tituloOriginal": "The Ladder",
+    "capaSeconds": 15,
+    "ano": 1967,
+    "diretor": "George Dunning",
+    "pais": "Reino Unido",
+    "duracao": "5 min",
+    "genero": "Animação / Experimental / Sátira / Absurdismo / Minimalista / Surrealismo",
+    "titulo_detalhes": "The Ladder (1967): A Ascensão do Absurdo",
+    "detalhes": "**Contexto Histórico e Produção:** Dirigido por George Dunning, o visionário cineasta canadense que dirigiria o clássico Yellow Submarine dos Beatles no ano seguinte, The Ladder é uma joia da animação experimental britânica dos anos 60. Produzido pela TVC London, o filme reflete a liberdade criativa da época, utilizando um humor seco e intelectual para dissecar a condição humana, afastando-se das narrativas infantis para abraçar uma filosofia visual próxima ao teatro do absurdo de Beckett.\n\n**Dinâmica Narrativa:** O filme é uma metáfora visual cíclica e \"sisífica\" sobre a ambição e a futilidade. Figuras humanas esquemáticas e sem rosto interagem com escadas de diversas formas — subindo, caindo, carregando-as ou sendo obstruídas por elas. Não há diálogo, apenas sons guturais e efeitos sonoros que pontuam a ação. A escada atua como um símbolo de hierarquia social e progresso ilusório, onde o esforço de subir raramente leva a uma recompensa, resultando em uma \"comédia humana\" sobre a obstinação.\n\n**Estilo Visual e Técnica:** A estética é definida por um minimalismo radical. Dunning utiliza pinceladas grossas, soltas e quase rascunhadas sobre um fundo neutro/vazio. Essa técnica de \"pincel vivo\" confere aos personagens uma fluidez expressiva única; eles parecem estar constantemente se formando e se desfazendo. A simplicidade visual foca toda a atenção do espectador na linguagem corporal e no timing cômico dos movimentos.",
+    "descricao": "Figuras minimalistas interagem com escadas em um ciclo absurdo de ambição, queda e futilidade."
+  },
+  "1970moonrock": {
+    "titulo": "Moon Rock",
+    "tituloOriginal": "Moon Rock",
+    "capaSeconds": 15,
+    "ano": 1970,
+    "diretor": "George Dunning",
+    "pais": "Reino Unido",
+    "duracao": "10 min",
+    "genero": "Animação / Experimental / Ficção Científica / Sátira Social / Psicodélico / Colagem",
+    "titulo_detalhes": "Moon Rock (1970): A Odisseia Lateral do Consumismo",
+    "detalhes": "**Contexto Histórico e Colaboração:** Lançado em 1970, logo após o pouso real na Lua e na esteira do sucesso monumental de Yellow Submarine, este curta destaca a versatilidade de George Dunning. O filme é uma colaboração única com o escritor e psicólogo Edward de Bono, famoso por cunhar o termo \"pensamento lateral\". A obra utiliza a exploração espacial, o tema mais popular da época, não para celebrar a tecnologia, mas como um veículo para uma crítica social mordaz impulsionada pelas teorias de De Bono sobre a percepção humana.\n\n**Dinâmica Narrativa:** A premissa inverte a expectativa da exploração espacial. Um astronauta chega à Lua, mas em vez de encontrar uma paisagem desolada e silenciosa, ele se depara com um ambiente caótico habitado por \"monstros da sociedade de massa\". A narrativa é uma sátira surrealista onde o protagonista precisa navegar por representações grotescas do consumismo, da mídia sensacionalista e da burocracia, sugerindo que a humanidade levou seus piores vícios para o espaço sideral.\n\n**Estilo Visual e Psicodelia:** Esteticamente, Moon Rock se afasta do estilo de pincelada solta de The Ladder e abraça a colagem vibrante e a animação de recortes (cut-out), muito semelhante ao estilo visual de Yellow Submarine. As cores são saturadas e \"ácidas\", misturando fotografia real com desenhos caricatos. O visual frenético serve para simular a sobrecarga sensorial da vida moderna, criando uma experiência que é ao mesmo tempo divertida e visualmente exaustiva, refletindo a confusão mental do astronauta.",
+    "descricao": "Um astronauta explora a Lua, mas encontra monstros surrealistas que representam os vícios da mídia e do consumismo terrestre."
+  },
+  "1962thefliyingman": {
+    "titulo": "The Flying Man",
+    "tituloOriginal": "The Flying Man",
+    "capaSeconds": 15,
+    "ano": 1962,
+    "diretor": "George Dunning",
+    "pais": "Inglaterra",
+    "duracao": "2 min",
+    "genero": "Animação / Surrealismo",
+    "titulo_detalhes": "The Flying Man (1962): A Liberdade da Pintura em Movimento",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 1962, o curta-metragem \"The Flying Man\" não é apenas uma animação; é um manifesto visual que desafiou as convenções de sua época. Dirigido por George Dunning e escrito por Stan Hayward, o filme representa um momento crucial de ruptura na história da animação, servindo como um elo entre o estilo clássico e a revolução psicodélica que definiria a década de 1960.\n\n**O Autor e a Visão:** Embora o canadense George Dunning (1920–1979) seja mundialmente reconhecido como o diretor do longa-metragem dos Beatles, \"Yellow Submarine\" (1968), foi em curtas como \"The Flying Man\" que ele solidificou sua identidade artística. Operando a partir de Londres em seu estúdio, o TVC (TV Cartoons Ltd), Dunning buscou distanciar-se do \"realismo de contornos pretos\" padronizado pela Disney. Seu objetivo era elevar a animação ao status de \"pintura em movimento\".\n\n**Estética e Produção:** A grande inovação de \"The Flying Man\" reside em sua técnica. Dunning abandonou as linhas rígidas em favor de uma estética impressionista e minimalista. Cada personagem é composto por pinceladas soltas e separadas, aplicadas diretamente no acetato, criando uma sensação de vibração e efemeridade. As figuras parecem aquarelas vivas, livres da física tradicional, o que complementa perfeitamente o roteiro surrealista de Hayward.\n\n**Contexto Histórico e Legado:** O filme foi aclamado internacionalmente ao vencer o Grand Prix no Festival de Annecy em 1962, o prêmio mais prestigiado do mundo da animação. Essa vitória não apenas colocou a animação britânica experimental no mapa, mas também validou o uso de técnicas artísticas mais abstratas no cinema comercial. Visualmente, o curta é considerado um precursor direto das sequências oníricas que Dunning criaria anos mais tarde para os Beatles.\n\n**A Narrativa:** Em seus breves dois minutos, a obra apresenta uma premissa simples, porém carregada de simbolismo: um homem despe-se de suas roupas (e, metaforicamente, de suas amarras sociais) e decide voar. A leveza de seu voo contrasta com a imobilidade de um observador e seu cachorro, que permanecem no chão, presos à realidade mundana. É uma meditação visual sobre a liberdade individual e o poder da imaginação.",
+    "descricao": "Uma obra impressionista que transcende a narrativa tradicional, usando pinceladas vivas para evocar sentimentos de liberdade e a possibilidade de escapar da gravidade do cotidiano."
+  },
+  "1963theapple": {
+    "titulo": "The Apple",
+    "tituloOriginal": "The Apple",
+    "capaSeconds": 15,
+    "ano": 1963,
+    "diretor": "George Dunning",
+    "pais": "Reino Unido",
+    "duracao": "6 min",
+    "genero": "Animação / Experimental / Comédia / Absurdismo / Minimalista / Sátira",
+    "titulo_detalhes": "The Apple (1963): A Comédia da Ambição Frustrada",
+    "detalhes": "**Contexto Histórico e Colaboração:** Dirigido por George Dunning e escrito por Stan Hayward (uma dupla frequente que também colaborou em The Flying Man), este curta de 1963 faz parte da fase experimental e altamente influente de Dunning que precedeu o fenômeno Yellow Submarine. Produzido no Reino Unido, o filme é um exemplo puro do cinema de animação de vanguarda que usava a simplicidade do traço para explorar temas filosóficos complexos, distanciando-se do realismo convencional.\n\n**Dinâmica Narrativa:** O filme foca em uma premissa minimalista e absurda: um homem tenta repetidamente, e sem sucesso, apanhar uma maçã isolada no galho mais alto de uma árvore simples. A narrativa é uma sátira à ambição e à persistência humana. Cada tentativa é uma escalada cômica de absurdos, com o protagonista utilizando métodos cada vez mais complexos e ineficazes. O ponto crucial do filme é a pergunta implícita: por que ele quer a maçã? A recusa em responder a essa questão reforça o tema do absurdo, onde o desejo é mais importante que o objeto do desejo.\n\n**Estilo Visual e Técnica:** A obra é um exercício de minimalismo gráfico. O cenário é reduzido ao essencial: uma figura humana simples, um tronco de árvore e a maçã vermelha (o único ponto de cor, destacando o objeto de desejo). O estilo de animação é de traços finos e tremidos, reminiscentes de um rascunho de nanquim. Essa economia visual máxima permite que o humor e a frustração sejam transmitidos puramente através da linguagem corporal exagerada do protagonista.",
+    "descricao": "Um homem tenta de todas as formas alcançar uma maçã no topo de uma árvore em um ciclo cômico e absurdo de esforço fútil."
+  },
+  "1945thethreeblindmice": {
+    "titulo": "The Three Blind Mice",
+    "tituloOriginal": "The Three Blind Mice",
+    "capaSeconds": 15,
+    "ano": 1945,
+    "diretor": "George Dunning",
+    "pais": "Canadá",
+    "duracao": "5 min",
+    "genero": "Animação / Educacional / Propaganda / Histórico / Fábula / Industrial",
+    "titulo_detalhes": "The Three Blind Mice (1945): A Fábula de Segurança Industrial",
+    "detalhes": "**Contexto Histórico e Produção:** Este curta-metragem de 1945 representa a fase inicial da carreira de George Dunning no Canadá, antes de sua consagração com obras experimentais e Yellow Submarine. O filme foi produzido como um **\"filme de segurança animado\"** (safety film), um gênero comum na época de pós-guerra para treinar a força de trabalho e reforçar as regras de disciplina e prevenção de acidentes nas fábricas. A produção é um excelente exemplo da animação utilizada como ferramenta de comunicação prática e instrucional.\n\n**Dinâmica Narrativa:** O filme adapta a rima infantil popular \"Three Blind Mice\" (Três Ratos Cegos) para o ambiente fabril. Os três ratos são retratados como trabalhadores que, cegos para os perigos ao redor, ignoram as normas básicas de segurança. A narrativa segue de forma didática e, por vezes, com humor macabro, as consequências diretas de suas imprudências, resultando em acidentes. O uso de personagens conhecidos visava tornar as instruções de segurança mais memoráveis e eficazes para o público adulto.\n\n**Estilo Visual e Propósito:** O estilo visual é funcional e direto, típico dos curtas de treinamento industrial da época. Utiliza-se uma animação por cel (acetato) com uma paleta de cores limitada e um design de personagem simples e gráfico. O propósito principal da estética não era a arte pela arte (como viria a ser o trabalho de Dunning nos anos 60), mas sim a clareza didática, garantindo que as consequências do desrespeito às regras fossem inequivocamente compreendidas pelos trabalhadores.",
+    "descricao": "Um filme de segurança animado que adapta a rima infantil para mostrar os perigos de ignorar as regras em um ambiente fabril."
+  },
+  "1947cadetrousselle": {
+    "titulo": "Cadet Rousselle",
+    "tituloOriginal": "Cadet Rousselle",
+    "capaSeconds": 15,
+    "ano": 1947,
+    "diretor": "George Dunning",
+    "pais": "Canadá",
+    "duracao": "9 min",
+    "genero": "Animação / Folclore / Musical / Comédia / Cut-out / Histórico",
+    "titulo_detalhes": "Cadet Rousselle (1947): O Folclore Francês em Cores",
+    "detalhes": "**Contexto Histórico e Produção:** Este curta-metragem de 1947 é mais um trabalho inicial de George Dunning realizado no National Film Board of Canada (NFB), onde o diretor estava desenvolvendo sua versatilidade em diferentes técnicas de animação. A obra se enquadra na tradição do NFB de curtas educativos e culturais, adaptando canções populares. O filme se destaca pelo uso de cores vibrantes, típicas de filmes culturais que celebravam a herança franco-canadense.\n\n**Dinâmica Narrativa:** O filme é uma adaptação direta e visualmente lúdica da antiga canção folclórica francesa que conta a história de Cadet Rousselle, um personagem conhecido por ser azarado e desajeitado. A narrativa não tem um arco dramático, mas sim uma série de vinhetas cômicas nas quais o herói cai de escadas, tropeça em muros e tem seus cães desobedientes. O ritmo da animação segue de perto a melodia e a letra da canção, tornando a obra um musical visual de pantomima.\n\n**Estilo Visual e Técnica:** A imagem do filme indica o uso de bonecos coloridos e figuras animadas. Isso sugere uma técnica de **animação de recortes (cut-out)** ou stop-motion inicial, na qual figuras planas eram movidas quadro a quadro. A paleta de cores é rica e saturada, contrastando com o estilo mais didático e em preto e branco de algumas outras produções de segurança da época, o que reforça o tom de farsa e celebração folclórica do curta.",
+    "descricao": "Adaptação animada e colorida de uma canção folclórica francesa sobre as cômicas desventuras do desajeitado Cadet Rousselle."
+  },
+  "1966thesnails": {
+    "titulo": "The Snails",
+    "tituloOriginal": "Les escargots",
+    "capaSeconds": 15,
+    "ano": 1966,
+    "diretor": "René Laloux",
+    "pais": "França",
+    "duracao": "11 min",
+    "genero": "Animação / Surrealismo / Ficção Científica / Sátira / Absurdismo / Experimental",
+    "titulo_detalhes": "The Snails (1966): A Colheita do Absurdo Cósmico",
+    "detalhes": "**Contexto Histórico e Produção:** Dirigido pelo mestre francês da animação surrealista, René Laloux, The Snails (Les escargots) é uma obra fundamental que pavimentou o caminho para o seu longa-metragem mais famoso, La Planète Sauvage (1973). Produzido em 1966, o curta foi aclamado no circuito internacional, vencendo um prêmio especial no Festival de Annecy. O filme já demonstrava a capacidade de Laloux de misturar contos de fadas bizarros com comentários sociais e visuais que desafiavam a lógica.\n\n**Dinâmica Narrativa:** O curta é uma parábola sombria e cômica sobre a futilidade e as consequências inesperadas da intervenção humana. Em um planeta distante, um fazendeiro estoico tenta incessantemente cultivar vegetais gigantescos, mas sem sucesso. Sua solução — um super fertilizante — tem um resultado desastroso: em vez de vegetais, ele cria caracóis e lesmas que crescem exponencialmente e se transformam em seres gigantes, grotescos e, por fim, em humanoides que destroem sua fazenda. A história explora o tema da ambição desmedida e do desequilíbrio ecológico provocado pela arrogância científica.\n\n**Estilo Visual e Surrealismo:** A estética é inconfundível. Laloux utiliza um estilo de animação que contrasta a paisagem pintada e detalhada do planetóide com o design surreal e frequentemente perturbador dos caracóis gigantes. O filme se baseia na justaposição de imagens (como a do fazendeiro sobre um caracol gigante) para gerar humor e choque, uma característica central do surrealismo. O ritmo lento e metódico da ação enfatiza a sensação de inevitabilidade e o absurdo do esforço do protagonista.",
+    "descricao": "Um fazendeiro em um planeta distante desencadeia uma praga de caracóis e lesmas gigantescas após usar um fertilizante experimental."
+  },
+  "1968theglassharmonica": {
+    "titulo": "The Glass Harmonica",
+    "tituloOriginal": "Стеклянная гармоника",
+    "capaSeconds": 15,
+    "ano": 1968,
+    "diretor": "Andrey Khrzhanovsky",
+    "pais": "União Soviética",
+    "duracao": "20 min",
+    "genero": "Animação / Drama / Surrealismo / Sátira Social / Experimental / Histórico",
+    "titulo_detalhes": "The Glass Harmonica (1968): O Manifesto Proibido da Arte",
+    "detalhes": "**Contexto Histórico e Produção:** Produzido pelo estúdio Soyuzmultfilm em 1968 e dirigido por Andrey Khrzhanovsky, este filme é um marco sombrio na história da animação soviética. The Glass Harmonica é mais famoso por ter sido **fortemente censurado e banido** pelo regime soviético, que via sua estética abstrata e temas como uma crítica direta à burocracia e ao materialismo do Estado. O curta é um exemplo raro de arte de vanguarda que conseguiu ser produzido sob um regime repressivo, embora não pudesse ser exibido livremente na época.\n\n**Dinâmica Narrativa:** O filme é uma alegoria complexa sobre a oposição entre arte/espírito e burocracia/materialismo. Um artesão constrói uma harmônica de vidro que tem o poder de iluminar a alma humana. Ele a leva a uma cidade onde os habitantes estão deformados pela obsessão por dinheiro e pela rotina. Quando um burocrata raivoso esmaga o instrumento, o resultado imediato é o caos e a decadência moral da sociedade. No final, a arte e a humanidade retornam, simbolizando a esperança e a inevitabilidade da reforma social, ainda que em um ciclo lento.\n\n**Estilo Visual e Surrealismo:** Visualmente, o filme é um tour de force surrealista e abstrato, frequentemente descrito como uma \"galeria de arte em movimento\". Khrzhanovsky utiliza **citações visuais** de obras-primas europeias renascentistas e barrocas (como pinturas de Hieronymus Bosch e Pieter Bruegel) que se metamorfoseiam na tela, comentando satiricamente a ação e a decadência moral da cidade. O estilo é maduro, complexo e altamente simbólico, feito para o público adulto, fugindo completamente dos padrões estéticos do realismo socialista.",
+    "descricao": "Um curta soviético e alegórico sobre o conflito entre a arte (simbolizada por uma harmônica de vidro) e a burocracia materialista."
+  },
+"1969seasons": {
+    "titulo": "Seasons",
+    "tituloOriginal": "Времена года",
+    "capaSeconds": 15,
+    "ano": 1969,
+    "diretor": "Ivan Ivanov-Vano e Yuri Norstein",
+    "pais": "União Soviética",
+    "duracao": "9 min",
+    "genero": "Animação / Poético / Lírico / Observacional / Histórico / Natureza",
+    "titulo_detalhes": "Seasons (1969): O Ciclo Lírico da Natureza",
+    "detalhes": "**Contexto Histórico e Produção:** Produzido pelo estúdio soviético Soyuzmultfilm em 1969, este curta-metragem é notável por ser uma colaboração entre o veterano da animação russa, Ivan Ivanov-Vano, e o jovem e inovador mestre Yuri Norstein (futuro diretor de Hedgehog in the Fog). A obra faz parte de uma série de filmes que buscavam capturar a beleza e o lirismo da natureza russa através da animação. Embora o crédito principal seja dividido, o filme já mostrava o olhar poético e a atenção à atmosfera que definiriam o trabalho de Norstein.\n\n**Dinâmica Narrativa:** O filme é, essencialmente, uma meditação visual e musical sobre o ciclo da vida e a passagem do tempo, guiada pelas transformações das quatro estações. A \"narrativa\" é puramente observacional e poética: o foco está na delicadeza das cores, na neve que cai, no florescer e no envelhecer da paisagem. A ausência de diálogos falados (como notado na imagem) coloca a ênfase total na trilha sonora e na dança das formas e cores, convidando à contemplação.\n\n**Estilo Visual e Poesia Cinética:** O estilo visual utiliza a animação tradicional para criar ilustrações que se movem com suavidade e lirismo. Embora não utilize a técnica de stop-motion de camadas que Norstein aperfeiçoaria mais tarde, o filme já demonstra uma atenção à textura e à profundidade de campo, criando uma sensação de realismo poético. A obra é uma celebração visual da natureza, tratando a paisagem não como um pano de fundo, mas como o verdadeiro protagonista.",
+    "descricao": "Uma celebração animada e lírica da natureza e suas transformações ao longo das quatro estações do ano."
+  },
+
 
 
 
@@ -171,15 +293,6 @@
 
 
   "_collections": {
-    "anos80": {
-      "title": "Anos 80",
-      "desc": "Clássicos da década de 80.",
-      "allMovies": ["1985interopia", "1981threemonks", "1986luxojr", "1988tintoy", "1985onyourmark"],
-      "levels": [
-        {"required": 2,"rewards": [7]},
-        {"required": 4,"rewards": [8, 9]}
-      ]
-    },
     "pixar": {
       "title": "Pixar",
       "desc": "Curta metragens da Pixar Animation Studios.",
@@ -191,11 +304,20 @@
     },
     "ghibli": {
       "title": "Studio Ghibli",
-      "desc": "Curta metragens do studio Ghibli e seus fundadores.",
-      "allMovies": ["1972yukissun", "1985onyourmark", "2008lamaisonenpetitscubes", "1975hedgehoginthefog"],
+      "desc": "Obras dirigidas pelos mestres do Ghibli ou seus precursores.",
+      "allMovies": ["1972yukissun", "1995onyourmark"],
       "levels": [
-        {"required": 2,"rewards": [19, 20, 21, 22, 23]},
-        {"required": 4,"rewards": [24, 25, 26, 27, 28]}
+        {"required": 2,"rewards": [19, 20, 21, 22, 23]}
+      ]
+    },
+    "georgeDunning": {
+      "title": "George Dunning",
+      "desc": "Curta metragens do diretor George Dunning",
+      "allMovies": ["1962thefliyingman", "1967theladder", "1970moonrock","1963theapple","1945thethreeblindmice","1947cadetrousselle"],
+      "levels": [
+        {"required": 2,"rewards": [26,27,28,29,30]},
+        {"required": 4,"rewards": [31,32,33]},
+        {"required": 6,"rewards": [34,35,36,37]}
       ]
     }
   }

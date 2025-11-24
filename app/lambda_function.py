@@ -106,9 +106,7 @@ def lambda_handler(event, context):
                 if not user_email or not movie_id or rating is None: return {"statusCode": 400, "body": "Erro dados", "headers": NO_CACHE_HEADERS}
                 try:
                     timestamp = datetime.now().isoformat()
-                    # Salva na tabela geral de ratings
                     table.put_item(Item={'pk': f"RATING#{movie_id}", 'sk': f"USER#{user_email}", 'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp})
-                    # Salva dentro do perfil do usuário para facilitar o feed
                     review_obj = {'movie_id': movie_id, 'rating': Decimal(str(rating)), 'review': review, 'timestamp': timestamp}
                     table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET reviews = list_append(if_not_exists(reviews, :empty), :r)", ExpressionAttributeValues={':r': [review_obj], ':empty': []})
                     return {"statusCode": 200, "body": json.dumps({"status": "ok"}), "headers": NO_CACHE_HEADERS}
@@ -131,7 +129,7 @@ def lambda_handler(event, context):
                 return { "statusCode": 200, "body": json.dumps({"token": resp['AuthenticationResult']['AccessToken'], "email": body.get('email')}), "headers": NO_CACHE_HEADERS }
             except ClientError as e: return {"statusCode": 400, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-        # --- ROTA 3: PERFIL ---
+        # --- ROTA 3: PERFIL (ATUALIZADA) ---
         if path == '/api/history':
             if method == 'GET':
                 user_email = event.get('queryStringParameters', {}).get('email')
@@ -139,12 +137,15 @@ def lambda_handler(event, context):
                 try:
                     resp = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'})
                     item = resp.get('Item', {})
+                    
+                    # Garante friend_code
                     friend_code = item.get('friend_code')
                     if not friend_code:
                         friend_code = str(random.randint(100000, 999999))
                         try: table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET friend_code = :c", ExpressionAttributeValues={':c': friend_code})
                         except: pass
                     
+                    # Calcula energia
                     db_energy = item.get('energy', MAX_ENERGY)
                     db_ts = item.get('energy_ts', int(time.time()))
                     real_energy, real_ts = calculate_energy(db_energy, db_ts)
@@ -152,7 +153,18 @@ def lambda_handler(event, context):
                         try: table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET energy = :e, energy_ts = :t", ExpressionAttributeValues={':e': real_energy, ':t': real_ts})
                         except: pass
 
-                    return { "statusCode": 200, "body": json.dumps({ "watched": item.get('watched', []), "reviews": item.get('reviews', []), "username": item.get('username', None), "avatar": int(item.get('avatar', 0)), "color": item.get('color', '#333'), "friend_code": friend_code, "energy": int(real_energy), "energy_ts": int(real_ts) }, cls=DecimalEncoder), "headers": NO_CACHE_HEADERS }
+                    # RETORNO COMPLETO (Incluindo Friends)
+                    return { "statusCode": 200, "body": json.dumps({ 
+                        "watched": item.get('watched', []), 
+                        "reviews": item.get('reviews', []), 
+                        "friends": item.get('friends', []), # <--- NOVO CAMPO
+                        "username": item.get('username', None), 
+                        "avatar": int(item.get('avatar', 0)), 
+                        "color": item.get('color', '#333'), 
+                        "friend_code": friend_code, 
+                        "energy": int(real_energy), 
+                        "energy_ts": int(real_ts) 
+                    }, cls=DecimalEncoder), "headers": NO_CACHE_HEADERS }
                 except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
             if method == 'POST':
@@ -226,16 +238,13 @@ def lambda_handler(event, context):
                 return {"statusCode": 200, "body": json.dumps({"status": "added"}), "headers": NO_CACHE_HEADERS}
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-        # --- ROTA 7: SOCIAL FEED (NOVO) ---
+        # --- ROTA 7: SOCIAL FEED ---
         if path == '/api/social/feed' and method == 'GET':
             user_email = event.get('queryStringParameters', {}).get('email')
             if not user_email: return {"statusCode": 400, "body": "Email required"}
             try:
-                # 1. Pega lista de amigos
                 user_resp = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'})
                 friends = user_resp.get('Item', {}).get('friends', [])
-                
-                # 2. Itera amigos para pegar reviews (Simplificado para MVP)
                 feed = []
                 for f_email in friends:
                     try:
@@ -244,22 +253,15 @@ def lambda_handler(event, context):
                         f_username = f_prof.get('username', 'Usuário')
                         f_avatar = int(f_prof.get('avatar', 0))
                         f_color = f_prof.get('color', '#333')
-                        
                         for r in f_reviews:
-                            r['username'] = f_username
-                            r['avatar'] = f_avatar
-                            r['color'] = f_color
-                            r['friend_email'] = f_email
+                            r['username'] = f_username; r['avatar'] = f_avatar; r['color'] = f_color; r['friend_email'] = f_email
                             feed.append(r)
                     except: pass
-                
-                # 3. Ordena por data (mais recente primeiro)
                 feed.sort(key=lambda x: x.get('timestamp', ''), reverse=True)
-                
                 return {"statusCode": 200, "body": json.dumps(feed[:50], cls=DecimalEncoder), "headers": NO_CACHE_HEADERS}
             except Exception as e: return {"statusCode": 500, "body": str(e), "headers": NO_CACHE_HEADERS}
 
-        # --- DEBUG ---
+        # --- ROTA DEBUG (RECARGA) ---
         if path == '/api/dev/refill' and method == 'POST':
             email = body.get('email')
             try:
