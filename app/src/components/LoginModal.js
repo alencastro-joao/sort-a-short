@@ -12,9 +12,7 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
     const [msg, setMsg] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const reqs = {
-        length: pass.length >= 8, number: /\d/.test(pass), upper: /[A-Z]/.test(pass), special: /[!@#$%^&*(),.?":{}|<>]/.test(pass)
-    };
+    const reqs = { length: pass.length >= 8, number: /\d/.test(pass), upper: /[A-Z]/.test(pass), special: /[!@#$%^&*(),.?":{}|<>]/.test(pass) };
     const translateError = (err) => {
         const m = err.message || err.toString();
         if (m.includes('UserNotFound')) return "Usuário não encontrado.";
@@ -51,7 +49,8 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
 
     return createElement('div', { className: 'auth-modal' },
         createElement('div', { className: 'auth-box' }, [
-            createElement('button', { key: 'x', className: 'btn-close-box btn-close-absolute', onClick: onClose }, '✕'),
+            // PADRÃO: FECHAR NA DIREITA
+            createElement('button', { key: 'x', className: 'btn-close-box', onClick: onClose }, '✕'),
             createElement('h2', { key: 't', style: {marginTop: 15, marginBottom: 20, color: '#fff', fontSize:'1.2rem', letterSpacing: 2} }, 
                 mode === 'signin' ? 'ENTRAR' : mode === 'signup' ? 'NOVA CONTA' : 'CONFIRMAR'
             ),

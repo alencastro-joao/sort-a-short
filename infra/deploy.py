@@ -1,4 +1,5 @@
 import boto3
+from botocore.config import Config
 import os
 import shutil
 import time
@@ -22,7 +23,7 @@ S3_TARGETS = ["shorts.json", "videos", "posters"]
 
 # Clientes AWS
 s3 = boto3.client('s3')
-lambda_client = boto3.client('lambda')
+lambda_client = boto3.client('lambda', config=Config(connect_timeout=60, read_timeout=300))
 cf = boto3.client('cloudfront')
 
 # --- Logging
@@ -32,6 +33,88 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 logger = logging.getLogger('deploy')
+
+
+def upload_posters():
+    """Upload automático de posters (.jpg / .jpeg).
+
+    Procura posters em vários diretórios possíveis (prioridade):
+    - project_root/posters
+    - project_root/uploader/input
+    - project_root/input
+    - project_root/import
+    - project_root/uploader/import
+
+    Todos os arquivos `.jpg` e `.jpeg` encontrados são enviados para a chave S3 `posters/{filename}`.
+    """
+    candidate_dirs = [
+        os.path.join(PROJECT_ROOT, 'posters'),
+        os.path.join(PROJECT_ROOT, 'uploader', 'input'),
+        os.path.join(PROJECT_ROOT, 'input'),
+        os.path.join(PROJECT_ROOT, 'import'),
+        os.path.join(PROJECT_ROOT, 'uploader', 'import'),
+    ]
+
+    found = []  # list of tuples (filename, fullpath)
+    seen = set()
+
+    # arquivo de controle para evitar re-envios repetidos
+    tracker_path = os.path.join(BASE_DIR, 'posters_uploaded.csv')
+    uploaded_seen = set()
+    if os.path.exists(tracker_path):
+        try:
+            with open(tracker_path, 'r', encoding='utf-8') as t:
+                for line in t:
+                    name = line.strip().split(',')[0]
+                    if name:
+                        uploaded_seen.add(name)
+        except Exception:
+            logger.exception("   ⚠️ Falha ao ler arquivo de controle de posters: %s", tracker_path)
+
+    for d in candidate_dirs:
+        if not os.path.exists(d):
+            continue
+        try:
+            for f in os.listdir(d):
+                # aceitar .jpg e .jpeg (case-insensitive)
+                if not (f.lower().endswith('.jpg') or f.lower().endswith('.jpeg')):
+                    continue
+                if f in seen:
+                    continue
+                seen.add(f)
+                found.append((f, os.path.join(d, f)))
+        except Exception:
+            logger.exception("   ⚠️ Falha ao listar pasta de posters: %s", d)
+
+    if not found:
+        logger.info("   ✅ Nenhum poster encontrado nas pastas verificadas.")
+        return
+
+    # filtrar apenas posters novos (não registrados no CSV)
+    new_posters = [(f, p) for (f, p) in found if f not in uploaded_seen]
+    if not new_posters:
+        logger.info("   ✅ Nenhum poster novo para upload (todos já registrados).")
+        return
+
+    logger.info("   🖼️  Encontrados %d poster(s) novos para upload (de %d encontrados).", len(new_posters), len(found))
+
+    for poster_file, local_path in new_posters:
+        s3_key = f"posters/{poster_file}"
+        try:
+            logger.info("      → Uploading: %s (from %s)", poster_file, local_path)
+            # enviar como image/jpeg para .jpg/.jpeg
+            s3.upload_file(local_path, BUCKET_NAME, s3_key, ExtraArgs={'ContentType': 'image/jpeg'})
+            logger.info("         ✅ Enviado: %s", poster_file)
+
+            # registrar no CSV de controle
+            try:
+                with open(tracker_path, 'a', encoding='utf-8') as t:
+                    t.write(f"{poster_file},{int(time.time())}\n")
+            except Exception:
+                logger.exception("         ⚠️ Falha ao gravar registro de poster para %s", poster_file)
+
+        except Exception as e:
+            logger.exception("         ❌ Falha no upload de %s: %s", poster_file, e)
 
 
 def run_uploader():
@@ -83,6 +166,9 @@ def sync_s3():
                 if not ok:
                     logger.warning("Uploader reportou problemas ao subir vídeos.")
                 continue
+            if item == "posters":
+                upload_posters()  # Chama a função para fazer upload dos posters
+                continue
             local_item_path = os.path.join(PROJECT_ROOT, item)
             if not os.path.exists(local_item_path):
                 logger.info("Pular item ausente: %s", item)
@@ -105,23 +191,42 @@ def sync_s3():
 def update_lambda():
     logger.info("\n⚡ [2/3] Atualizando Lambda...")
 
+    # verificar se deve pular atualização de Lambda (útil para testes)
+    skip_lambda = os.environ.get('SKIP_LAMBDA', '').lower() in ('1', 'true', 'yes')
+    if skip_lambda:
+        logger.info("   ⏭️  Pulando atualização de Lambda (SKIP_LAMBDA=1)")
+        return
+
     if not os.path.exists(APP_DIR):
         logger.error("❌ Erro: Pasta %s não encontrada.", APP_DIR)
         return
 
     zip_filename = os.path.join(BASE_DIR, "app_package")
+    logger.info("   📦 Criando arquivo ZIP...")
     shutil.make_archive(zip_filename, 'zip', APP_DIR)
-
+    
+    zip_path = f"{zip_filename}.zip"
     try:
-        with open(f"{zip_filename}.zip", "rb") as f:
+        zip_size_mb = os.path.getsize(zip_path) / (1024 * 1024)
+        logger.info("      Tamanho do ZIP: %.2f MB", zip_size_mb)
+
+        logger.info("   📤 Fazendo upload para Lambda (isso pode levar alguns minutos)...")
+        with open(zip_path, "rb") as f:
             zip_content = f.read()
-        lambda_client.update_function_code(FunctionName=LAMBDA_NAME, ZipFile=zip_content)
-        logger.info("   ✅ Código atualizado.")
+        
+        # definir timeout de 300 segundos (5 minutos) para a operação de update
+        lambda_client.update_function_code(
+            FunctionName=LAMBDA_NAME, 
+            ZipFile=zip_content
+        )
+        logger.info("   ✅ Código atualizado com sucesso.")
     except Exception as e:
-        logger.exception("   ❌ Erro Lambda: %s", e)
+        logger.error("   ❌ Erro ao atualizar Lambda: %s", str(e))
+        logger.info("   💡 Dica: se tiver travando, rode novamente com SKIP_LAMBDA=1 para pular e depurar")
     finally:
-        if os.path.exists(f"{zip_filename}.zip"):
-            os.remove(f"{zip_filename}.zip")
+        if os.path.exists(zip_path):
+            os.remove(zip_path)
+            logger.info("   🗑️  Arquivo ZIP removido.")
 
 def invalidate_cache():
     logger.info("\n🔄 [3/3] Limpando Cache CloudFront...")

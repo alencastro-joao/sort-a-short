@@ -66,6 +66,15 @@ export const Api = {
         return res.json();
     },
 
+    // NOVO: DELETAR AVALIAÇÃO
+    deleteRating: async (email, movieId) => {
+        const res = await fetch('/api/rating', { 
+            method: 'DELETE', 
+            body: JSON.stringify({ email, movie_id: movieId }) 
+        });
+        return res.json();
+    },
+
     // --- SOCIAL ---
     searchUsers: async (query) => {
         try {
@@ -82,7 +91,6 @@ export const Api = {
         return res;
     },
 
-    // *** NOVO ***
     getSocialFeed: async (email) => {
         try {
             const res = await fetch(`/api/social/feed?email=${email}`);

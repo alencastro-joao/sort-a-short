@@ -272,7 +272,7 @@
     "detalhes": "**Contexto Histórico e Produção:** Produzido pelo estúdio Soyuzmultfilm em 1968 e dirigido por Andrey Khrzhanovsky, este filme é um marco sombrio na história da animação soviética. The Glass Harmonica é mais famoso por ter sido **fortemente censurado e banido** pelo regime soviético, que via sua estética abstrata e temas como uma crítica direta à burocracia e ao materialismo do Estado. O curta é um exemplo raro de arte de vanguarda que conseguiu ser produzido sob um regime repressivo, embora não pudesse ser exibido livremente na época.\n\n**Dinâmica Narrativa:** O filme é uma alegoria complexa sobre a oposição entre arte/espírito e burocracia/materialismo. Um artesão constrói uma harmônica de vidro que tem o poder de iluminar a alma humana. Ele a leva a uma cidade onde os habitantes estão deformados pela obsessão por dinheiro e pela rotina. Quando um burocrata raivoso esmaga o instrumento, o resultado imediato é o caos e a decadência moral da sociedade. No final, a arte e a humanidade retornam, simbolizando a esperança e a inevitabilidade da reforma social, ainda que em um ciclo lento.\n\n**Estilo Visual e Surrealismo:** Visualmente, o filme é um tour de force surrealista e abstrato, frequentemente descrito como uma \"galeria de arte em movimento\". Khrzhanovsky utiliza **citações visuais** de obras-primas europeias renascentistas e barrocas (como pinturas de Hieronymus Bosch e Pieter Bruegel) que se metamorfoseiam na tela, comentando satiricamente a ação e a decadência moral da cidade. O estilo é maduro, complexo e altamente simbólico, feito para o público adulto, fugindo completamente dos padrões estéticos do realismo socialista.",
     "descricao": "Um curta soviético e alegórico sobre o conflito entre a arte (simbolizada por uma harmônica de vidro) e a burocracia materialista."
   },
-"1969seasons": {
+  "1969seasons": {
     "titulo": "Seasons",
     "tituloOriginal": "Времена года",
     "capaSeconds": 15,
@@ -285,14 +285,202 @@
     "detalhes": "**Contexto Histórico e Produção:** Produzido pelo estúdio soviético Soyuzmultfilm em 1969, este curta-metragem é notável por ser uma colaboração entre o veterano da animação russa, Ivan Ivanov-Vano, e o jovem e inovador mestre Yuri Norstein (futuro diretor de Hedgehog in the Fog). A obra faz parte de uma série de filmes que buscavam capturar a beleza e o lirismo da natureza russa através da animação. Embora o crédito principal seja dividido, o filme já mostrava o olhar poético e a atenção à atmosfera que definiriam o trabalho de Norstein.\n\n**Dinâmica Narrativa:** O filme é, essencialmente, uma meditação visual e musical sobre o ciclo da vida e a passagem do tempo, guiada pelas transformações das quatro estações. A \"narrativa\" é puramente observacional e poética: o foco está na delicadeza das cores, na neve que cai, no florescer e no envelhecer da paisagem. A ausência de diálogos falados (como notado na imagem) coloca a ênfase total na trilha sonora e na dança das formas e cores, convidando à contemplação.\n\n**Estilo Visual e Poesia Cinética:** O estilo visual utiliza a animação tradicional para criar ilustrações que se movem com suavidade e lirismo. Embora não utilize a técnica de stop-motion de camadas que Norstein aperfeiçoaria mais tarde, o filme já demonstra uma atenção à textura e à profundidade de campo, criando uma sensação de realismo poético. A obra é uma celebração visual da natureza, tratando a paisagem não como um pano de fundo, mas como o verdadeiro protagonista.",
     "descricao": "Uma celebração animada e lírica da natureza e suas transformações ao longo das quatro estações do ano."
   },
-
-
-
+  "1963thebuffaloboyandhisflute": {
+    "titulo": "The Buffalo Boy and His Flute",
+    "tituloOriginal": "牧笛",
+    "capaSeconds": 15,
+    "ano": 1963,
+    "diretor": "Qian Jiajun e Te Wei",
+    "pais": "China",
+    "duracao": "20 min",
+    "genero": "Animação / Drama / Poético / Tradicional Chinês / Musical / Lirismo",
+    "titulo_detalhes": "The Buffalo Boy and His Flute (1963): A Poesia da Tinta Chinesa",
+    "detalhes": "**Contexto Histórico e Produção:** Produzido pelo renomado Shanghai Animation Film Studio (SAFS) em 1963, este curta é considerado uma das obras mais importantes do \"Período Dourado\" da animação chinesa. Dirigido pelos mestres Qian Jiajun e Te Wei, o filme é o auge do estilo *Shui-mo donghua* (animação de pintura a tinta chinesa). Esta técnica elevou a animação a uma forma de arte nacional, buscando traduzir a estética milenar da pintura a pincel (sumi-e) para o movimento da tela, com resultados de tirar o fôlego.\n\n**Dinâmica Narrativa:** O filme narra a vida simples de um jovem pastor de búfalos que passa seus dias tocando sua flauta à beira de um riacho. O conflito surge de forma sutil, quando o garoto adormece e sonha que perdeu seu búfalo. A busca no sonho, acompanhada apenas por música e sons ambientes (o filme não tem diálogos falados), transforma-se em uma jornada lírica. O tema central é a harmonia essencial entre o homem, a música e a natureza, celebrando a simplicidade da vida rural chinesa.\n\n**Estilo Visual e Técnica:** A grande revolução de The Buffalo Boy and His Flute reside em sua técnica de animação de tinta. O filme imita a fluidez e a gradação tonal da tinta nanquim (usando vários tons de cinza para criar profundidade e volume), em vez de contornos e cores planas tradicionais. A água, a névoa e os próprios búfalos parecem ter sido pintados diretamente em seda ou papel de arroz, com a complexidade adicional de fazer com que essas pinceladas abstratas se movam de forma orgânica e crível, um feito técnico notável para a época.",
+    "descricao": "Uma obra-prima da animação chinesa em pintura a tinta, que narra o sonho lírico de um pastor de búfalos sobre a perda de seu animal."
+  },
+  "2015missingoneplayer": {
+    "titulo": "Missing One Player",
+    "tituloOriginal": "Missing One Player",
+    "capaSeconds": 15,
+    "ano": 2015,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "4 min",
+    "genero": "Animação / Experimental / Comédia / Absurdismo / Cultura Chinesa / Naif",
+    "titulo_detalhes": "Missing One Player (2015): A Espera Absurda no Tabuleiro",
+    "detalhes": "**Contexto Histórico e Produção:** Dirigido pelo proeminente animador chinês contemporâneo Lei Lei, Missing One Player é uma obra que se encaixa perfeitamente na estética única e idiossincrática do artista. Conhecido por seu estilo deliberadamente ingênuo (naif) e influenciado por colagem, Lei Lei utiliza o Mahjong — um elemento central da cultura social chinesa — como pano de fundo para explorar temas universais de frustração e espera. O filme foi lançado em 2015 e é um exemplo do renascimento da animação de arte chinesa.\n\n**Dinâmica Narrativa:** A premissa é simples e absurda, refletindo a natureza essencial do Mahjong, que exige quatro jogadores para começar. Três figuras sentam-se à mesa, confrontadas por uma situação ruim, e choram em silêncio. A única ação é a espera frustrada, mas carregada de fé: eles olham para o céu, aguardando um milagre (a chegada do quarto jogador). O filme transforma a necessidade trivial de completar um jogo em uma meditação sobre a incompletude, a dependência do coletivo e a esperança irracional diante do inevitável.\n\n**Estilo Visual e Técnica:** A estética é o ponto mais distintivo do curta. Lei Lei emprega uma técnica que imita o visual de pinturas feitas por crianças ou recortes de feltro, com cores primárias saturadas e figuras bidimensionais de aparência primitiva. Essa escolha intencional do estilo naif não é por falta de habilidade, mas sim para subverter expectativas e amplificar o humor seco e a melancolia surreal da situação, fazendo com que o absurdo da espera seja ainda mais palpável.",
+    "descricao": "Três jogadores de Mahjong esperam em um silêncio melancólico e absurdo pela chegada do quarto jogador."
+  },
+  "2013bighandsohbiglands": {
+    "titulo": "Big Hands Oh Big Hands, Let It Be Bigger and Bigger",
+    "tituloOriginal": "Big Hands Oh Big Hands, Let It Be Bigger and Bigger",
+    "capaSeconds": 15,
+    "ano": 2013,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "6 min",
+    "genero": "Animação / Experimental / Surrealismo / Drama / Sátira Social / Naif",
+    "titulo_detalhes": "Big Hands Oh Big Hands, Let It Be Bigger and Bigger (2013): O Peso da Diferença",
+    "detalhes": "**Contexto Histórico e Produção:** Esta obra de 2013 é uma peça característica do trabalho de Lei Lei, o aclamado animador chinês que usa a estética *naif* (ingênua) e a colagem digital como forma de comentário social. O filme se insere na fase de Lei Lei em que ele explora a vida moderna e a desconexão por meio de metáforas visuais grotescas ou exageradas, mantendo um estilo que lembra a arte popular ou o desenho infantil.\n\n**Dinâmica Narrativa:** O curta-metragem se passa em uma cidade onde todos os cidadãos possuem mãos enormes, simbolizando a norma social, a conformidade ou o poder. O protagonista, um menino, é a exceção: ele tem mãos pequenas e uma mente cheia de pensamentos complexos. A tragédia surge na comunicação: ele tenta se conectar, mas é ignorado por ser prolixo e diferente, levando-o ao isolamento extremo. A narrativa é uma sátira melancólica sobre o custo da não-conformidade e o colapso da comunicação em uma sociedade que valoriza a uniformidade e a simplicidade.\n\n**Estilo Visual e Técnica:** Lei Lei utiliza uma estética de colagem digital extremamente saturada e texturizada, que confere um visual tátil e artesanal ao filme. As figuras são bidimensionais e propositalmente primitivas, o que amplifica a estranheza do cenário e a seriedade do tema. O uso da escala exagerada (as mãos gigantes) não é apenas um truque visual, mas a metáfora central da alienação, contrastando o corpo do menino com o padrão opressor da sociedade.",
+    "descricao": "Um garoto de mãos pequenas em uma cidade de mãos gigantes sofre de solidão após ser ignorado por falar demais."
+  },
+  "2014thisisnotatimetolie": {
+    "titulo": "This Is Not a Time to Lie",
+    "tituloOriginal": "This Is Not a Time to Lie",
+    "capaSeconds": 15,
+    "ano": 2014,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "4 min",
+    "genero": "Animação / Experimental / Colagem / Surrealismo / Abstrato / Onírico",
+    "titulo_detalhes": "This Is Not a Time to Lie (2014): A Busca Alucinatória da Verdade",
+    "detalhes": "**Contexto Histórico e Produção:** Esta obra de 2014 é uma peça central na filmografia de Lei Lei (também conhecido por seu apelido \"Ray\"), o animador chinês que se consolidou no cenário internacional com seu estilo inconfundível de arte de colagem. O filme se baseia na tradição surrealista de utilizar materiais encontrados e texturas visuais para criar uma experiência densa e propositalmente caótica, desafiando o espectador a montar sua própria narrativa.\n\n**Dinâmica Narrativa:** O curta é menos um filme de enredo e mais uma experiência sensorial. Ele segue um protagonista de olhos arregalados em uma \"busca\" que se desenrola inteiramente dentro de um mundo imaginário e alucinatório. A narrativa, desprovida de linearidade tradicional, é uma meditação sobre a imaginação e a percepção. O título, \"Esta Não É Uma Hora Para Mentir\", sugere um confronto com a verdade, mas essa verdade é encontrada em um ambiente de sonho, explorando a honestidade por meio do absurdo.\n\n**Estilo Visual e Técnica:** O estilo é um exercício de **colagem animada** altamente abstrata e frenética. Lei Lei utiliza a justaposição de imagens de arquivo, padrões geométricos, textos impressos e blocos de cor saturada, todos movendo-se e se transformando rapidamente na tela. Essa técnica cria uma sensação de sobrecarga de informação visual, refletindo a natureza fragmentada da memória e da imaginação. O caos visual é, na verdade, uma composição controlada que define a identidade artística de Lei Lei.",
+    "descricao": "Um curta alucinatório que segue um protagonista em uma busca através de um mundo abstrato e imaginário."
+  },
+  "2009magiccubeandpingpong": {
+    "titulo": "Magic Cube and Ping-Pong",
+    "tituloOriginal": "彩色魔方与乒乓球",
+    "capaSeconds": 15,
+    "ano": 2009,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "4 min",
+    "genero": "Animação / Experimental / Surrealismo / Esportes / Cultura Chinesa / Colagem",
+    "titulo_detalhes": "Magic Cube and Ping-Pong (2009): A Libertação pelo Jogo",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2009, este curta é uma obra inicial importante de Lei Lei, o animador chinês conhecido por sua abordagem psicodélica e naif (ingênua) da vida moderna. O filme demonstra a formação de sua estética, que frequentemente usa elementos da cultura chinesa (o Ping-Pong, o Cubo Mágico) como símbolos em contextos surreais. A obra se destaca por seu visual saturado e frenético, que critica a padronização e a monotonia urbana.\n\n**Dinâmica Narrativa:** O filme é uma alegoria vibrante sobre a busca por individualidade em um \"mundo de mesmice\" (sameness). O Cubo Mágico pode ser interpretado como um símbolo da ordem rígida, complexa e repetitiva da sociedade moderna. O Ping-Pong e o Amor, no entanto, representam o caos liberador, o movimento livre e a alegria pessoal. A narrativa mostra como a paixão e o jogo podem ser a força necessária para quebrar a monotonia e a conformidade impostas pelo ambiente.\n\n**Estilo Visual e Técnica:** Visualmente, o curta é um festival de cores e geometria complexa, muito diferente do estilo mais minimalista de seus trabalhos posteriores. Lei Lei utiliza uma estética de **colagem e ilustração digital**, com cores primárias e neon saturadas. O design de produção apresenta um cenário urbano denso, quase cyberpunk, que contrasta com a fluidez do jogo de Ping-Pong no primeiro plano, reforçando o tema da liberdade pessoal lutando contra a arquitetura opressiva da cidade.",
+    "descricao": "O amor e o ping-pong se tornam forças libertadoras contra a opressão e a mesmice em um mundo surreal e vibrante."
+  },
+  "2010thisislove": {
+    "titulo": "This Is Love",
+    "tituloOriginal": "This Is Love",
+    "capaSeconds": 15,
+    "ano": 2010,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "2 min",
+    "genero": "Animação / Comédia / Romance / Absurdismo / Naif / Experimental",
+    "titulo_detalhes": "This Is Love (2010): O Furo na Meia e a Fragilidade do Afeto",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2010, este curta é uma peça que se encaixa na crescente produção de Lei Lei que explora temas emocionais complexos através de sua estética naif (ingênua) e surrealista. O filme, como outras obras do diretor, usa o desenho propositalmente simplificado e o humor de *anti-clímax* para comentar as vulnerabilidades da vida moderna e dos relacionamentos humanos.\n\n**Dinâmica Narrativa:** O filme baseia sua narrativa inteiramente em um único momento de tensão entre expectativa e realidade. Após um longo período separados, o reencontro romântico e caloroso do casal é abruptamente interrompido. A quebra do encanto não é causada por um drama gigante, mas por um detalhe trivial: o homem nota um buraco na meia da namorada. O curta usa essa falha minúscula e doméstica para questionar a profundidade e a durabilidade do amor quando confrontado com as imperfeições e a realidade pouco glamourosa da vida cotidiana.\n\n**Estilo Visual e Técnica:** Lei Lei emprega sua estética de **desenho digital plano e colorido**, com figuras geométricas e humanas simples. O visual intencionalmente infantilizado ou primitivo cria um contraste cômico e irônico com a seriedade da pergunta final. Ao focar em cores primárias e composições diretas, o diretor amplifica a carga metafórica do objeto (a meia furada), tornando-o o ponto focal da crise existencial do casal.",
+    "descricao": "Um homem confronta a realidade do amor ao notar um buraco na meia de sua namorada em um momento de afeto."
+  },
+  "2014animafestzagreb": {
+    "titulo": "Animafest Zagreb",
+    "tituloOriginal": "Animafest Zagreb",
+    "capaSeconds": 15,
+    "ano": 2014,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "1 min",
+    "genero": "Animação / Experimental / Colagem / Musical / Festival / Curta-Metragem Promocional",
+    "titulo_detalhes": "Animafest Zagreb (2014): Celebração do Cinema em Colagem",
+    "detalhes": "**Contexto Histórico e Produção:** Esta obra de Lei Lei possui um contexto de produção singular: ela foi criada especificamente como **vinheta de identidade visual** para o Animafest Zagreb em 2014, o prestigiado Festival Mundial de Filmes de Animação realizado na Croácia. Lei Lei foi convidado a criar a abertura do festival, transformando a peça em um curta promocional de arte. O trabalho é uma colaboração, com a animação de Lei Lei casada com o *beatboxing* de Eloi Dequeker, tornando o som parte integrante da identidade visual.\n\n**Dinâmica Narrativa:** O filme narra a breve história de um \"cara de chapéu\" que se dirige ao cinema em seu \"supercarro\". A narrativa é mais uma homenagem abstrata à **experiência cinematográfica** e à antecipação do festival do que uma história linear. A velocidade, o ritmo do *beatbox* e as imagens fragmentadas celebram a arte da animação em sua forma mais experimental, convidando o público a embarcar em uma jornada visual frenética.\n\n**Estilo Visual e Técnica:** O curta é um exercício de **colagem animada** extremamente condensado. Lei Lei utiliza uma variedade de materiais encontrados, recortes de papel e imagens de arquivo justapostos em uma estética propositalmente caótica e saturada. O design do \"supercarro\" é uma montagem abstrata que mistura elementos mecânicos e ópticos (como a câmera) com formas geométricas, refletindo a visão única de Lei Lei de transformar objetos cotidianos em máquinas de sonho e movimento.",
+    "descricao": "Curta criado como vinheta de identidade para o festival Animafest Zagreb, usando colagem e beatbox para celebrar o cinema."
+  },
+  "2008pearoralien": {
+    "titulo": "Pear or Alien",
+    "tituloOriginal": "Pear or Alien",
+    "capaSeconds": 15,
+    "ano": 2008,
+    "diretor": "Lei Lei",
+    "pais": "China",
+    "duracao": "4 min",
+    "genero": "Animação / Experimental / Ficção Científica / Fábula / Moral / Desenho Manual",
+    "titulo_detalhes": "Pear or Alien (2008): A Fábula da Tolerância",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2008, este curta é um dos trabalhos mais iniciais e primitivos de Lei Lei, o animador chinês conhecido por seu estilo visual único. A produção é notável pelo seu método de criação: o filme foi **\"desenhado com canetas em cadernos de exercícios\"** (Drawn with pens on exercise books). Essa abordagem *DIY* (faça você mesmo) reflete a independência e a natureza experimental de Lei Lei, estabelecendo a base para sua estética posterior, mais sofisticada em colagem.\n\n**Dinâmica Narrativa:** A narrativa é uma fábula direta e alegre. Um planeta feliz, habitado por \"pessoas-pera\", é invadido por alienígenas malvados com a cabeça de pera invertida. A história usa essa premissa bizarra para explorar lições de vida universais. O tema central é o chamado à **paz, tolerância e perdão** diante da presença do \"outro\" e do conflito, sugerindo que a diferença, mesmo que pareça uma inversão da norma, não deve ser motivo para guerra.\n\n**Estilo Visual e Técnica:** O estilo visual é primitivo e cativante, diretamente ligado às suas ferramentas de produção limitadas (caneta e papel). Essa estética de **desenho manual simples** e ingênua (naif) confere ao filme um charme autêntico e tátil, parecendo ter sido arrancado diretamente das páginas de um diário ou caderno escolar. O resultado é um mundo altamente imaginativo e de baixa fidelidade, que prioriza a mensagem moral sobre o polimento técnico.",
+    "descricao": "Um filme simples e manual sobre um planeta invadido, que explora temas de paz, tolerância e perdão."
+  },
+  "2025niccolo": {
+    "titulo": "Niccolò",
+    "tituloOriginal": "Niccolò",
+    "capaSeconds": 15,
+    "ano": 2025,
+    "diretor": "David Florian e Axelle Granet",
+    "pais": "França",
+    "duracao": "5 min",
+    "genero": "Animação / Musical / Biografia / Drama / Fantasia Sombria / Histórico",
+    "titulo_detalhes": "Niccolò (2025): A Ascensão da Lenda Violinista",
+    "detalhes": "**Contexto Histórico e Produção:** Este curta-metragem de 2025 é uma produção da prestigiada escola francesa **Gobelins, l'École de l'Image**, conhecida mundialmente por sua excelência técnica e inovação artística. O filme, dirigido por David Florian e Axelle Granet (e equipe, como é comum em curtas de graduação da Gobelins), insere-se na tradição da escola de criar obras curtas e complexas, com alto valor de produção. A temática da ascensão de um gênio é forte e sugere uma biografia lírica e fantástica do famoso compositor e violinista **Niccolò Paganini** (implícito).\n\n**Dinâmica Narrativa:** A sinopse, \"Da inocência ao gênio, Niccolò é um jovem violinista destinado a se tornar uma lenda\", estabelece o tom épico e focado no destino. A narrativa se concentra na transformação do protagonista, explorando o que leva uma criança a se tornar uma figura lendária. A ausência de diálogos falados (indicada na imagem) implica que a **música e o design de som** são a linguagem principal, usando o violino para narrar a história, a emoção e o destino do personagem.\n\n**Estilo Visual e Técnica:** O estilo visual, como sugere o pôster, é extremamente atmosférico e dramático. A estética remete à pintura clássica europeia, utilizando a técnica de **chiaroscuro** (alto contraste entre luz e sombra) para criar um clima gótico e misterioso. Esse uso dramático da iluminação e a riqueza dos detalhes visuais são marcas registradas das produções de alta qualidade da Gobelins, que frequentemente fundem animação 2D e 3D para alcançar uma profundidade cinemática.",
+    "descricao": "A história de origem de um jovem violinista (Niccolò) em uma jornada de inocência a gênio musical, em um estilo visual dramático e gótico."
+  },
+  "2007oktapodi": {
+    "titulo": "Oktapodi",
+    "tituloOriginal": "Oktapodi",
+    "capaSeconds": 15,
+    "ano": 2007,
+    "diretor": "Julien Bocabeille, François-Xavier Chanoux e equipe",
+    "pais": "França",
+    "duracao": "2 min",
+    "genero": "Animação / Comédia / Slapstick / Aventura / CGI 3D / Romântico",
+    "titulo_detalhes": "Oktapodi (2007): A Fuga Cômica do Amor Aquático",
+    "detalhes": "**Contexto Histórico e Produção:** Produzido em 2007 pela prestigiada escola francesa Gobelins, Oktapodi rapidamente se tornou um sucesso mundial e foi indicado ao Oscar de Melhor Curta-Metragem de Animação. Dirigido por um coletivo de talentos, incluindo Julien Bocabeille e François-Xavier Chanoux, o filme demonstrou a excelência técnica da escola, especialmente na animação de personagens em CGI, e a capacidade de criar narrativas universais e cativantes baseadas puramente na ação e no som.\n\n**Dinâmica Narrativa:** A trama é uma perseguição frenética e cômica. Dois polvos (o macho, maior, e a fêmea, menor), apaixonados, são separados por um teimoso cozinheiro de restaurante em uma pequena vila grega. O enredo é simples: a fuga desesperada do casal pelas ruas, telhados e paisagens, com o chef implacável em seu encalço. O filme é um exemplo puro de *slapstick* animado, onde o amor serve como motor para uma sucessão de gags visuais e situações de alto risco.\n\n**Estilo Visual e Técnica:** Oktapodi é notável por levar a animação em **CGI 3D** ao limite da expressividade. Embora seja uma animação de computador, os personagens exibem um nível de \"squash-and-stretch\" (deformação) e atuação de personagem que lembra os desenhos animados clássicos de Looney Tunes. O design visual é vibrante, contrastando o laranja e o roxo dos polvos com os tons azuis e brancos brilhantes da arquitetura grega, criando um ambiente visualmente distinto e alegre que intensifica o humor da perseguição.",
+    "descricao": "Dois polvos lutam para escapar de um cozinheiro teimoso em uma perseguição cômica pelas ruas de uma vila grega."
+  },
+  "2023elegie": {
+    "titulo": "Élégie",
+    "tituloOriginal": "Élégie",
+    "capaSeconds": 15,
+    "ano": 2023,
+    "diretor": "Hugo Michalet, Odelia Lainé e equipe",
+    "pais": "França",
+    "duracao": "1 min",
+    "genero": "Animação / Drama / Dança / Esforço Físico / Performance / Experimental",
+    "titulo_detalhes": "Élégie (2023): A Busca Dolorosa pela Perfeição",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2023, Élégie é uma produção recente de alto nível, provavelmente oriunda de uma das grandes escolas francesas de animação (como a Gobelins), como é comum em curtas com um grande número de diretores (incluindo Hugo Michalet e Odelia Lainé). O filme insere-se na tradição do cinema de arte que utiliza a animação para explorar a psicologia do desempenho e o sacrifício pessoal.\n\n**Dinâmica Narrativa:** O curta-metragem foca na relação intensa entre uma jovem bailarina e sua professora, com o palco sendo a sala de ensaio. A narrativa é construída em torno da **busca incessante pela perfeição**, um tema central na dança clássica. A história explora o esforço físico e a tensão psicológica da protagonista, que tenta transcender seus limites corporais. O drama não está no palco, mas no bastidor, no esforço solitário e na pressão para alcançar o ideal estético da arte.\n\n**Estilo Visual e Técnica:** O estilo visual de Élégie é extremamente dramático e atmosférico. Utiliza-se uma iluminação de **alto contraste (chiaroscuro)**, deixando o cenário em escuridão para focar toda a luz e a atenção no corpo da bailarina. Essa escolha estética acentua a solidão e o isolamento da busca pela perfeição. A animação de personagem é dinâmica e complexa, com foco na anatomia e na representação do movimento corporal exaustivo.",
+    "descricao": "Uma jovem bailarina treina intensamente, explorando seus limites físicos e psicológicos em sua busca pela perfeição."
+  },
+  "2023madre": {
+    "titulo": "Madre",
+    "tituloOriginal": "Madre",
+    "capaSeconds": 15,
+    "ano": 2023,
+    "diretor": "Chloé Lopes, Marie Hareux e equipe",
+    "pais": "França",
+    "duracao": "1 min",
+    "genero": "Animação / Drama / Religioso / Cultural / Lirismo / Estilizado / Arte 2D",
+    "titulo_detalhes": "Madre (2023): O Lirismo da Maternidade Sagrada",
+    "detalhes": "**Contexto Histórico e Produção:** Lançado em 2023, Madre é uma produção coletiva de alto nível, tipicamente associada a uma escola francesa de animação de prestígio (como a Gobelins), evidenciada pelo grande número de diretores envolvidos (incluindo Chloé Lopes e Marie Hareux). O curta se destaca por sua audácia em abordar temas espirituais e culturais complexos com uma estética visual forte, recontextualizando a iconografia clássica da arte religiosa através da animação 2D moderna.\n\n**Dinâmica Narrativa:** O foco narrativo é inteiramente centrado na figura da mãe. Embora o enredo não seja detalhado na sinopse, a imagem sugere um drama profundo e lírico que se aprofunda no tema da **maternidade e da devoção**. O filme busca elevar a figura materna a um status quase sagrado ou folclórico, utilizando poses e composições que remetem diretamente à iconografia da Virgem Maria ou a figuras maternas poderosas encontradas na arte histórica.\n\n**Estilo Visual e Técnica:** O estilo visual de Madre é a sua característica mais marcante. A paleta de cores é **rica, quente e profundamente saturada** (predominância de vermelhos, dourados e tons terrosos), evocando a dramaticidade e a opulência visual das pinturas do período Barroco ou Renascentista. O design dos personagens é altamente estilizado e decorativo, com linhas fluidas e composições dinâmicas que garantem que o filme seja uma experiência visualmente densa e artística.",
+    "descricao": "Uma obra visualmente rica e lírica que celebra a maternidade, utilizando a iconografia de figuras maternas sagradas."
+  },
+  "1980crac": {
+    "titulo": "Crac",
+    "tituloOriginal": "Crac",
+    "capaSeconds": 15,
+    "ano": 1980,
+    "diretor": "Frédéric Back",
+    "pais": "Canadá",
+    "duracao": "15 min",
+    "genero": "Animação / Drama / Histórico / Ecológico / Lirismo / Contemplativo",
+    "titulo_detalhes": "Crac (1980): O Balanço da História Canadense",
+    "detalhes": "**Contexto Histórico e Produção:** Crac é uma das obras mais aclamadas e características do mestre franco-canadense Frédéric Back, uma figura icônica da animação com foco em temas ecológicos e sociais. Produzido em 1980 pela **Société Radio-Canada (CBC)**, o filme ganhou o **Oscar de Melhor Curta-Metragem de Animação**, solidificando a reputação de Back como um dos grandes contadores de histórias visuais do Canadá. O título Crac refere-se ao som de quebrar e ao estalo da própria cadeira.\n\n**Dinâmica Narrativa:** O curta utiliza uma cadeira de balanço de madeira como principal objeto narrativo e **veículo temporal**. A cadeira, que passa de geração em geração, atua como uma testemunha silenciosa da história de Quebec ao longo do último século. O filme mostra a transição da sociedade agrária e da vida rural para a urbanização e a industrialização, sempre contrastando a beleza da natureza intocada com o avanço da civilização. A ausência de diálogos coloca toda a carga narrativa na música, no design de som e na fluidez das imagens.\n\n**Estilo Visual e Técnica:** O estilo visual é a marca registrada de Frédéric Back: **desenho a lápis de cor ou pastel sobre acetato fosco**. Essa técnica confere à animação uma aparência etérea, luminosa e altamente pictórica, que lembra a pintura em movimento ou aquarela. A textura suave e os traços delicados são perfeitos para evocar a nostalgia, a fragilidade da memória e a beleza da paisagem natural, estabelecendo um tom de lirismo contemplativo.",
+    "descricao": "Uma cadeira de balanço narra a história do último século de Quebec, explorando a memória, a cultura e a natureza."
+  },
+  "1978allnothing": {
+    "titulo": "All Nothing",
+    "tituloOriginal": "Tout rien",
+    "capaSeconds": 15,
+    "ano": 1978,
+    "diretor": "Frédéric Back",
+    "pais": "Canadá",
+    "duracao": "10 min",
+    "genero": "Animação / Ecológico / Drama / Sátira Social / Contemplativo / Filosófico",
+    "titulo_detalhes": "All Nothing (1978): A Parábola da Ganância Ecológica",
+    "detalhes": "**Contexto Histórico e Produção:** All Nothing (título original: Tout rien) é uma obra essencial e pioneira na filmografia de Frédéric Back, o aclamado diretor canadense conhecido por transformar preocupações ambientais em poesia animada. Produzido pela **Société Radio-Canada (CBC)** em 1978, o filme é um manifesto ecológico que precedeu seu sucesso no Oscar, estabelecendo Back como uma voz profética sobre a crise ambiental e a necessidade de responsabilidade humana.\n\n**Dinâmica Narrativa:** A narrativa é construída como uma meditação filosófica sobre o lugar da humanidade no cosmos. O filme ilustra a rápida extinção de inúmeras espécies de plantas e animais e o esgotamento de recursos naturais, impulsionados pela ganância humana. A força do curta reside em sua mensagem, que equilibra a tragédia iminente com uma nota de esperança: é possível evitar o desastre conservando e compartilhando o que resta. A ausência de diálogo universaliza a mensagem.\n\n**Estilo Visual e Técnica:** O estilo visual é a marca registrada de Back, conhecido por sua técnica de desenhar a **lápis de cor sobre acetato fosco**. Isso confere ao filme uma estética suave, luminosa e etérea, que parece uma pintura em movimento. O uso da cor é altamente expressivo: paisagens vibrantes contrastam com a escuridão da extinção, criando metáforas visuais poderosas sobre o equilíbrio da natureza e a destruição causada pela intervenção humana.",
+    "descricao": "Um manifesto animado sobre a extinção de espécies e o esgotamento de recursos devido à ganância humana, com uma mensagem de esperança na conservação."
+  },
 
 
 
 
   "_collections": {
+      "leiLei": {
+      "title": "Lei Lei",
+      "desc": "Curta metragens do animador chinês Lei Lei",
+      "allMovies": ["2008pearoralien", "2015missingoneplayer", "2013bighandsohbiglands", "2014thisisnotatimetolie","2009magiccubeandpingpong","2010thisislove","2014animafestzagreb"],
+      "levels": [
+        {"required": 2,"rewards": [38,39,40,41]},
+        {"required": 4,"rewards": [42,43,44,45,46,47,48]}
+      ]
+    },
     "pixar": {
       "title": "Pixar",
       "desc": "Curta metragens da Pixar Animation Studios.",
@@ -304,7 +492,7 @@
     },
     "ghibli": {
       "title": "Studio Ghibli",
-      "desc": "Obras dirigidas pelos mestres do Ghibli ou seus precursores.",
+      "desc": "Curta metragens dos Studios Ghibli.",
       "allMovies": ["1972yukissun", "1995onyourmark"],
       "levels": [
         {"required": 2,"rewards": [19, 20, 21, 22, 23]}
@@ -318,6 +506,22 @@
         {"required": 2,"rewards": [26,27,28,29,30]},
         {"required": 4,"rewards": [31,32,33]},
         {"required": 6,"rewards": [34,35,36,37]}
+      ]
+    },
+    "gobelins": {
+      "title": "Gobelins",
+      "desc": "Curta metragens produzidos pela escola francesa Gobelins.",
+      "allMovies": ["2025niccolo", "2007oktapodi", "2023elegie","2023madre"],
+      "levels": [
+        {"required": 2,"rewards": [49,50,51,52,53]}
+      ]
+    },
+    "fredericBack": {
+      "title": "Frédéric Back",
+      "desc": "Curta metragens do animador canadense Frédéric Back.",
+      "allMovies": ["1980crac", "1978allnothing"],
+      "levels": [
+        {"required": 2,"rewards": [54,55,56,57,58]}
       ]
     }
   }

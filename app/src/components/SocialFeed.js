@@ -1,78 +1,77 @@
+// ARQUIVO: src/components/SocialFeed.js
 const React = window.React;
 const { useState, useEffect, createElement } = React;
 import { Api } from '../api.js';
-import { getAvatarUI } from '../utils.js';
-import FriendAction from './FriendAction.js'; // Reutilizamos para poder adicionar amigos de amigos futuramente
+import { getAvatarUI, formatDate } from '../utils.js';
+import AddFriends from './FriendAdd.js';
 
-export default function SocialFeed({ user, catalog, onClose }) {
+export default function SocialFeed({ user, catalog, onViewFriend }) {
     const [feed, setFeed] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showAddFriendsModal, setShowAddFriendsModal] = useState(false);
 
-    useEffect(() => {
-        loadFeed();
-    }, []);
+    useEffect(() => { loadFeed(); }, []);
 
     const loadFeed = async () => {
+        setLoading(true);
         try {
             const data = await Api.getSocialFeed(user.email);
+            data.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
             setFeed(data);
-        } catch (e) {
-            console.error(e);
-        }
+        } catch (e) { console.error("Erro ao carregar feed:", e); }
         setLoading(false);
     };
 
-    const formatDate = (isoString) => {
-        if (!isoString) return '';
-        const d = new Date(isoString);
-        return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute:'2-digit' });
+    const renderFeedContent = (item, movie) => {
+        const hasReviewText = item.review && item.review.length > 0;
+        const ratingValue = parseFloat(item.rating) || 0;
+        const ratingStars = '★'.repeat(Math.round(ratingValue));
+        let actionText = hasReviewText ? 'Escreveu uma avaliação de' : (ratingValue > 0 ? 'Avaliou com estrelas' : 'Assistiu e avaliou');
+        
+        return createElement('div', { className: 'feed-content' }, [
+            createElement('div', { key: 'act', style: { color: '#888', fontSize: '0.75rem', marginBottom: 5 } }, [
+                actionText + ' ',
+                createElement('span', { key: 'tt', style: { color: '#fff', fontWeight: 'bold' } }, movie.titulo)
+            ]),
+            ratingValue > 0 && createElement('div', { key: 'st', style: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 } }, [
+                createElement('span', { key: 'str', style: { color: 'var(--highlight)', fontSize: '1.2rem' } }, ratingStars),
+                createElement('span', { key: 'val', style: { color: '#444', fontSize: '0.8rem' } }, `(${ratingValue})`)
+            ]),
+            hasReviewText && createElement('div', { key: 'rv', style: { fontStyle: 'italic', color: '#bbb', fontSize: '0.9rem', borderLeft: '2px solid var(--highlight)', paddingLeft: 10, marginTop: 10 } }, `"${item.review}"`)
+        ]);
     };
 
-    return createElement('div', { className: 'auth-modal' },
-        createElement('div', { className: 'auth-box profile-box', style: { height: '80vh', display: 'flex', flexDirection: 'column' } }, [
-            
-            // Header
-            createElement('div', { key: 'h', style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20, borderBottom: '1px solid #333', paddingBottom: 15 } }, [
-                createElement('h2', { style: { margin: 0, color: '#fff', letterSpacing: 2 } }, 'FEED SOCIAL'),
-                createElement('button', { className: 'btn-close-box', onClick: onClose }, '✕')
-            ]),
-
-            // Lista (Scrollable)
-            createElement('div', { key: 'list', style: { flex: 1, overflowY: 'auto', paddingRight: 10 } }, [
-                loading && createElement('div', { className: 'sorting-anim', style:{fontSize:'0.8rem'} }, 'Carregando atualizações...'),
-                
-                !loading && feed.length === 0 && createElement('div', { className: 'search-empty' }, [
-                    createElement('p', {}, 'Nenhuma atividade recente.'),
-                    createElement('p', { style:{fontSize:'0.8rem'} }, 'Adicione amigos para ver o que eles estão assistindo!')
-                ]),
-
-                !loading && feed.map((item, idx) => {
-                    const movie = catalog[item.movie_id] || { titulo: "Filme Desconhecido" };
-                    return createElement('div', { key: idx, style: { background: '#111', border: '1px solid #333', padding: 15, marginBottom: 15, borderRadius: 4 } }, [
-                        // Linha do Usuário
-                        createElement('div', { style: { display: 'flex', alignItems: 'center', marginBottom: 10 } }, [
-                            getAvatarUI(item.avatar, item.username, item.color, 'search-avatar'),
-                            createElement('div', {}, [
-                                createElement('div', { style: { fontWeight: 'bold', color: '#fff', fontSize: '0.9rem' } }, item.username.toUpperCase()),
-                                createElement('div', { style: { fontSize: '0.7rem', color: '#666' } }, formatDate(item.timestamp))
-                            ])
-                        ]),
-                        
-                        // Conteúdo da Review
-                        createElement('div', { style: { paddingLeft: 50 } }, [
-                            createElement('div', { style: { color: '#888', fontSize: '0.75rem', marginBottom: 5 } }, [
-                                'Avaliou ',
-                                createElement('span', { style: { color: '#fff', fontWeight: 'bold' } }, movie.titulo)
-                            ]),
-                            createElement('div', { style: { display: 'flex', alignItems: 'center', gap: 10, marginBottom: 5 } }, [
-                                createElement('span', { style: { color: 'var(--highlight)', fontSize: '1.2rem' } }, '★'.repeat(Math.round(item.rating))),
-                                createElement('span', { style: { color: '#444', fontSize: '0.8rem' } }, `(${item.rating})`)
-                            ]),
-                            item.review && createElement('div', { style: { fontStyle: 'italic', color: '#bbb', fontSize: '0.9rem', borderLeft: '2px solid var(--highlight)', paddingLeft: 10, marginTop: 10 } }, `"${item.review}"`)
-                        ])
-                    ]);
-                })
+    return createElement('div', { className: 'social-screen' }, [
+        createElement('div', { key: 'h', className: 'social-header' }, [
+            createElement('h2', { key: 't', style: { margin: 0, color: '#fff', letterSpacing: 2, fontSize: '1.8rem' } }, 'FEED SOCIAL'),
+            createElement('div', { key: 'btns', style: { display: 'flex', gap: 15 } }, [
+                createElement('button', { key: 'ref', className: 'btn-login', onClick: loadFeed, disabled: loading, style: { border: '1px solid #666', color: '#ccc', padding: '8px 15px' } }, loading ? '...' : '⟳ REFRESH'),
+                createElement('button', { key: 'add', className: 'btn-login', onClick: () => setShowAddFriendsModal(true), style: { border: '1px solid #fff', color: '#fff' } }, '+ AMIGO')
             ])
-        ])
-    );
+        ]),
+
+        createElement('div', { key: 'list', className: 'social-feed-list' }, [
+            loading && createElement('div', { key: 'load', className: 'sorting-anim', style:{fontSize:'0.8rem'} }, 'Carregando atualizações...'),
+            !loading && feed.length === 0 && createElement('div', { key: 'empty', className: 'search-empty', style: { border: '1px solid #333', padding: 40, marginTop: 40 } }, [
+                createElement('h4', { key: 'et', style: { color: '#fff', margin: '0 0 15px 0', fontSize: '1.1rem' } }, 'Seu feed está vazio.'),
+                createElement('p', { key: 'ed', style:{fontSize:'0.9rem', color: '#888', marginBottom: 20} }, 'Adicione amigos para ver o que eles estão assistindo e avaliando.'),
+                createElement('button', { key: 'eb', className: 'btn-main', onClick: () => setShowAddFriendsModal(true), style: { width: '250px' } }, 'ADICIONAR AMIGO AGORA')
+            ]),
+            !loading && feed.map((item, idx) => {
+                const movie = catalog[item.movie_id] || { titulo: "Filme Desconhecido" };
+                return createElement('div', { key: item.timestamp + item.friend_email + idx, className: 'feed-card' }, [
+                    createElement('div', { key: 'ur', style: { display: 'flex', alignItems: 'center', marginBottom: 10, cursor: 'pointer' }, onClick: () => onViewFriend(item.friend_email) }, [
+                        createElement('div', {key: 'ac', style: {marginRight: 10}}, getAvatarUI(item.avatar, item.username, item.color, 'search-avatar')),
+                        createElement('div', {key: 'ic'}, [
+                            createElement('div', { style: { fontWeight: 'bold', color: '#fff', fontSize: '0.9rem' } }, item.username.toUpperCase()),
+                            createElement('div', { style: { fontSize: '0.7rem', color: '#666' } }, formatDate(item.timestamp))
+                        ])
+                    ]),
+                    renderFeedContent(item, movie)
+                ]);
+            })
+        ]),
+        // CORREÇÃO: Passa followingList
+        showAddFriendsModal && createElement(AddFriends, { key: 'adm', userEmail: user.email, followingList: user.following || [], onClose: () => setShowAddFriendsModal(false) })
+    ]);
 }
