@@ -20,10 +20,6 @@
 
     <div id="root"></div>
     <script type="text/babel" data-type="module">
-        // --- IMPORTS DOS COMPONENTES ---
-        // REMOVIDO: import FriendAction (causava erro 404)
-        // REMOVIDO: import AddFriends (não é usado diretamente no App, é usado dentro do UserProfile/SocialFeed)
-        
         import SocialFeed from '/src/components/SocialFeed.js';
         import RewardStack from '/src/components/RewardStack.js';
         import DashPlayer from '/src/components/DashPlayer.js';
@@ -35,9 +31,8 @@
         import CatalogScreen from '/src/components/CatalogScreen.js'; 
 
         import { Api } from '/src/api.js';
-        import { BUCKET_URL, AVATAR_COUNT, AVATAR_COLORS, getAvatarUI } from '/src/utils.js';
+        import { BUCKET_URL, getAvatarUI } from '/src/utils.js';
 
-        // --- APP PRINCIPAL ---
         const App = () => {
             const [phase, setPhase] = React.useState('home'); 
             const [fullCatalog, setFullCatalog] = React.useState(null);
@@ -58,6 +53,8 @@
             const [reviewsList, setReviewsList] = React.useState([]);
             const [energy, setEnergy] = React.useState(3);
             const [energyTs, setEnergyTs] = React.useState(0);
+
+            const audioRef = React.useRef(new Audio('/roleta.mp3'));
 
             React.useEffect(() => {
                 fetch(`${BUCKET_URL}/shorts.json?t=${new Date().getTime()}`)
@@ -96,29 +93,48 @@
                 if (!fullCatalog) return;
                 if (!user) { setShowLoginWarning(true); return; } 
                 if (energy <= 0) { alert("Sem energia! Aguarde recarregar."); return; }
+                
+                let ids = Object.keys(fullCatalog).filter(id => !watchedList.includes(id));
+                if (ids.length === 0) ids = Object.keys(fullCatalog);
+                const winnerId = ids[Math.floor(Math.random() * ids.length)];
+                const winnerMovie = fullCatalog[winnerId];
+
                 setPhase('sorting');
                 const titles = Object.values(fullCatalog).map(m => m.titulo);
-                let steps = 0;
+                
+                const audio = audioRef.current;
+                audio.volume = 0.5;
+                audio.currentTime = 0;
+
                 const interval = setInterval(() => {
                     setSortText(titles[Math.floor(Math.random() * titles.length)]);
-                    steps++;
-                    if (steps > 20) { clearInterval(interval); finishSort(); }
-                }, 100);
+                }, 80);
+
+                const stopAll = () => {
+                    clearInterval(interval);
+                    setSortText(winnerMovie.titulo);
+                    setTimeout(() => finishSort(winnerId), 1000);
+                };
+
+                audio.onended = stopAll;
+
+                audio.play().catch(e => {
+                    console.warn("Audio falhou, usando fallback de tempo.", e);
+                    // Fallback: Se o audio falhar (ex: mobile bloqueado), para em 3s
+                    setTimeout(stopAll, 3000);
+                });
             };
 
-            const finishSort = async () => {
-                let ids = Object.keys(fullCatalog).filter(id => !watchedList.includes(id));
-                if (ids.length === 0) ids = Object.keys(fullCatalog); 
-                
-                const randomId = ids[Math.floor(Math.random() * ids.length)];
+            const finishSort = async (winnerId) => {
                 try {
-                    const res = await Api.saveMovie(user.email, randomId);
+                    const res = await Api.saveMovie(user.email, winnerId);
                     setEnergy(res.energy);
-                    prepareMovie(randomId);
-                    const newList = [...watchedList, randomId];
-                    setWatchedList(newList);
+                    prepareMovie(winnerId);
+                    if (!watchedList.includes(winnerId)) {
+                        setWatchedList([...watchedList, winnerId]);
+                    }
                 } catch(e) {
-                    alert("Você não tem energia suficiente!");
+                    alert("Erro ao salvar sorteio ou sem energia!");
                     setPhase('home');
                 }
             };
@@ -277,7 +293,6 @@
             );
         };
 
-        // --- LÓGICA PULL TO REFRESH ---
         let touchStartY = 0;
         window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive: true});
         window.addEventListener('touchmove', e => {

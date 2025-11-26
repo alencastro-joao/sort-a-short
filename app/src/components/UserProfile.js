@@ -111,7 +111,9 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
         setSearching(false);
     };
 
+    // CORREÇÃO: Fecha o modal de lista ao trocar de perfil
     const handleViewUser = async (otherUser) => {
+        setShowListType(null); // <--- FECHA A LISTA DE SEGUIDORES
         setSearching(true);
         const profile = await Api.getProfile(otherUser.email);
         setViewingProfile({ 
@@ -245,7 +247,6 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
             ]),
             detailMovie && createElement(MovieDetailModal, { key: detailMovie.id, movie: detailMovie, user: user, onClose: handleCloseDetail, enableRating: !!editingReview, initialRating: editingReview ? editingReview.rating : 0, initialReview: editingReview ? editingReview.review : "", isWatched: safeWatchedList.includes(detailMovie.id), onPlay: (!viewingProfile && !editingReview && safeWatchedList.includes(detailMovie.id)) ? () => { setDetailMovie(null); onSelectMovie(detailMovie.id); } : null }),
             
-            // AQUI PASSAMOS A FUNÇÃO VIEW PROFILE
             showListType && createElement(FollowListModal, { 
                 title: showListType === 'following' ? 'SEGUINDO' : 'SEGUIDORES', 
                 listEmails: showListType === 'following' ? (viewingProfile ? viewingProfile.following : myFollowing) : (viewingProfile ? viewingProfile.followers : myFollowers), 

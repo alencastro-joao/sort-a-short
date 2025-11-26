@@ -90,20 +90,31 @@ def lambda_handler(event, context):
         # --- ROTA 0.1: ARQUIVOS ESTÁTICOS ---
         clean_path = path.lstrip('/')
         abs_path = os.path.abspath(os.path.join(os.getcwd(), clean_path))
+        
         if os.path.exists(abs_path) and os.getcwd() in abs_path and os.path.isfile(abs_path):
             mime_type = "text/plain"
+            # DETECÇÃO MANUAL DE MIME TYPES
             if clean_path.endswith(".js"): mime_type = "application/javascript"
             elif clean_path.endswith(".css"): mime_type = "text/css"
             elif clean_path.endswith(".html"): mime_type = "text/html"
             elif clean_path.endswith(".png"): mime_type = "image/png"
             elif clean_path.endswith(".jpg"): mime_type = "image/jpeg"
+            elif clean_path.endswith(".mp3"): mime_type = "audio/mpeg" # ADICIONADO
             else: mime_type, _ = mimetypes.guess_type(abs_path)
+            
             try:
-                with open(abs_path, 'rb' if 'image' in str(mime_type) else 'r', encoding=None if 'image' in str(mime_type) else 'utf-8') as f: content = f.read()
+                # Lógica para ler binário (Imagens e Áudio) vs Texto
+                is_binary = 'image' in str(mime_type) or 'audio' in str(mime_type)
+                read_mode = 'rb' if is_binary else 'r'
+                encoding = None if is_binary else 'utf-8'
+                
+                with open(abs_path, read_mode, encoding=encoding) as f: content = f.read()
+                
                 is_b64 = False
-                if 'image' in str(mime_type):
+                if is_binary:
                     content = base64.b64encode(content).decode('utf-8')
                     is_b64 = True
+                
                 return { "statusCode": 200, "headers": { "Content-Type": str(mime_type), "Cache-Control": "no-cache" }, "body": content, "isBase64Encoded": is_b64 }
             except: pass
 
@@ -198,7 +209,7 @@ def lambda_handler(event, context):
                 return {"statusCode": 200, "body": json.dumps(results, cls=DecimalEncoder)}
             except: return {"statusCode": 200, "body": "[]"}
 
-        # --- ROTA 6: SEGUIR (COM CÓDIGO) ---
+        # --- ROTA 6: SEGUIR ---
         if path == '/api/social/follow' and method == 'POST':
             my_email = body.get('email', '').strip().lower()
             target_email = body.get('target_email', '').strip().lower() if body.get('target_email') else None
@@ -208,7 +219,6 @@ def lambda_handler(event, context):
             if not my_email: return {"statusCode": 400, "body": "Erro email"}
             
             try:
-                # Se veio código, descobre o email
                 if target_code and not target_email:
                     resp = table.scan(FilterExpression=Attr('friend_code').eq(target_code) & Attr('sk').eq('PROFILE'))
                     if resp['Items']: target_email = resp['Items'][0]['pk'].replace('USER#', '')
@@ -259,7 +269,8 @@ def lambda_handler(event, context):
             table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET energy = :e, energy_ts = :t", ExpressionAttributeValues={':e': 3, ':t': int(time.time())})
             return {"statusCode": 200, "body": json.dumps({"status": "refilled"})}
 
-        if path.endswith('.js') or path.endswith('.css') or path.endswith('.png') or path.endswith('.jpg'):
+        # --- FALLBACK PARA 404 ---
+        if path.endswith('.js') or path.endswith('.css') or path.endswith('.png') or path.endswith('.jpg') or path.endswith('.mp3'): # ADICIONADO MP3 AQUI TAMBÉM
             return {"statusCode": 404, "body": f"File not found: {path}"}
 
         html = get_file_content('index.html')

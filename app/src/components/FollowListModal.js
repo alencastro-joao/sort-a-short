@@ -10,18 +10,35 @@ export default function FollowListModal({ title, listEmails, currentUser, onClos
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Função segura para buscar dados
         const fetchDetails = async () => {
-            if (!listEmails || listEmails.length === 0) { setUsersData([]); setLoading(false); return; }
+            if (!listEmails || listEmails.length === 0) { 
+                setUsersData([]); 
+                setLoading(false); 
+                return; 
+            }
+            
+            // Mapeia emails para promessas de perfil
             const promises = listEmails.map(async (email) => {
                 try {
                     const profile = await Api.getProfile(email);
-                    return { email: email, username: profile.username || email.split('@')[0], avatar: profile.avatar || 0, color: profile.color || '#333' };
-                } catch { return { email, username: email.split('@')[0], avatar: 0, color: '#333' }; }
+                    return { 
+                        email: email, 
+                        username: profile.username || email.split('@')[0], 
+                        avatar: profile.avatar || 0, 
+                        color: profile.color || '#333' 
+                    };
+                } catch { 
+                    // Fallback se falhar
+                    return { email, username: email.split('@')[0], avatar: 0, color: '#333' }; 
+                }
             });
+
             const results = await Promise.all(promises);
             setUsersData(results);
             setLoading(false);
         };
+        
         fetchDetails();
     }, [listEmails]);
 
@@ -37,6 +54,8 @@ export default function FollowListModal({ title, listEmails, currentUser, onClos
                 
                 !loading && usersData.map(u => (
                     createElement('div', { key: u.email, className: 'user-list-item' }, [
+                        
+                        // ÁREA CLICÁVEL (PERFIL)
                         createElement('div', { 
                             className: 'user-list-info',
                             onClick: () => { if (onViewProfile) { onViewProfile(u); } }
@@ -44,6 +63,9 @@ export default function FollowListModal({ title, listEmails, currentUser, onClos
                             getAvatarUI(u.avatar, u.username, u.color, 'search-avatar'),
                             createElement('div', { className: 'user-list-name' }, u.username.toUpperCase())
                         ]),
+
+                        // ÁREA DO BOTÃO (FIXA NA DIREITA)
+                        // Só mostra botão se não for eu mesmo
                         u.email !== currentUser.email && createElement(FollowAction, { 
                             currentUserEmail: currentUser.email, 
                             targetUserEmail: u.email, 

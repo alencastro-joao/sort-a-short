@@ -22,16 +22,19 @@ body {
     align-items: center; 
 }
 
+/* SCROLLBAR CUSTOMIZADA */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: #000; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--highlight); }
 
+/* BACKGROUND E VIDEO */
 .video-background { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; background: #000; transition: all 0.8s ease; }
 .video-background.dimmed { filter: brightness(0.2) blur(10px) grayscale(100%); transform: scale(1.05); }
 .video-background.active { z-index: 50; filter: brightness(1) blur(0) grayscale(0%); transform: scale(1); }
 video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 
+/* LAYOUT GERAL */
 .ui-layer { 
     position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; 
     display: flex; 
@@ -58,6 +61,7 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
     opacity: 1;
 }
 
+/* MODAIS E CAIXAS */
 .auth-modal { 
     position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
     background: rgba(0,0,0,0.95); z-index: 200; 
@@ -88,6 +92,7 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
     box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.5s ease-out; 
 }
 
+/* BOTÕES PADRÃO */
 .btn-main { background: #fff; color: #000; border: 1px solid #fff; padding: 15px 30px; font-family: 'Space Mono'; font-weight: bold; font-size: 0.9rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: background-color 0.2s, color 0.2s; width: 100%; }
 .btn-main:hover { background: #ccc; color: #000; }
 
@@ -100,28 +105,41 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 .btn-secondary { padding: 12px; fontSize: 0.8rem; background: #000; color: #888; border: 1px solid #333; cursor: pointer; width: 100%; transition: 0.2s; font-family: 'Space Mono'; text-transform: uppercase; }
 .btn-secondary:hover { background: var(--highlight); color: #fff; border-color: var(--highlight); }
 
-/* BOTÕES DE NAVEGAÇÃO */
-.btn-close-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 100; position: absolute; top: 20px; right: 20px; }
-.btn-close-box:hover { border-color: var(--highlight); color: var(--highlight); background: #111; }
-
-.btn-back-box { width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; display: flex; justify-content: center; align-items: center; cursor: pointer; font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 100; position: absolute; top: 20px; left: 20px; }
-.btn-back-box:hover { border-color: #fff; color: #fff; background: #111; }
-
 .btn-finish { position: fixed; top: 30px; right: 30px; z-index: 100; background: rgba(0,0,0,0.7); border: 1px solid #666; color: #fff; padding: 10px 20px; cursor: pointer; text-transform: uppercase; font-family: 'Space Mono'; font-size: 0.8rem; pointer-events: auto; transition: 0.2s; }
 .btn-finish:hover { border-color: var(--highlight); color: var(--highlight); background: #000; }
 
-.user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 15px; pointer-events: auto; align-items: center; }
 .btn-login { background: transparent; border: 1px solid var(--highlight); color: var(--highlight); padding: 8px 15px; cursor: pointer; font-family: 'Space Mono'; font-size: 0.75rem; transition: 0.2s; }
 .btn-login:hover { background: var(--highlight); color: #fff; }
 
+/* BOTÕES DE NAVEGAÇÃO PADRONIZADOS */
+.btn-close-box { 
+    width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; 
+    display: flex; justify-content: center; align-items: center; cursor: pointer; 
+    font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 100; 
+    position: absolute; top: 20px; right: 20px; /* Padrão: Direita */
+}
+.btn-close-box:hover { border-color: var(--highlight); color: var(--highlight); background: #111; }
+
+.btn-back-box {
+    width: 35px; height: 35px; background: #000; border: 1px solid #333; color: #888; 
+    display: flex; justify-content: center; align-items: center; cursor: pointer; 
+    font-family: 'Space Mono'; font-size: 1.2rem; transition: 0.2s; z-index: 100; 
+    position: absolute; top: 20px; left: 20px; /* Padrão: Esquerda */
+}
+.btn-back-box:hover { border-color: #fff; color: #fff; background: #111; }
+
+/* HEADER E USUÁRIO */
+.user-bar { position: fixed; top: 30px; right: 30px; z-index: 100; display: flex; gap: 15px; pointer-events: auto; align-items: center; }
 .user-info { cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 10px; }
 .user-info:hover { opacity: 0.8; transform: scale(1.05); }
 
+/* ENERGIA */
 .energy-fixed { position: fixed; top: 30px; left: 30px; z-index: 100; display: flex; align-items: center; gap: 6px; pointer-events: none; }
 .energy-bar { width: 20px; height: 35px; background: #222; border: 1px solid #444; transform: skewX(-15deg); transition: 0.3s; box-shadow: inset 0 0 2px #000; }
 .energy-bar.active { background: var(--highlight); border-color: var(--highlight); box-shadow: 0 0 15px var(--highlight); } 
 .energy-timer { font-size: 0.8rem; color: #fff; margin-left: 10px; font-family: monospace; text-shadow: 0 1px 2px #000; font-weight: bold; }
 
+/* INPUTS */
 .auth-input { width: 100%; padding: 12px; margin-bottom: 15px; background: #111; border: 1px solid #333; color: #fff; font-family: 'Space Mono'; outline: none; transition: 0.2s; font-size: 0.9rem; }
 .auth-input:focus { border-color: var(--highlight); background: #000; }
 .auth-link { color: #666; font-size: 0.75rem; cursor: pointer; text-decoration: underline; margin-top: 15px; display: block; transition: 0.2s; }
@@ -137,11 +155,13 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 .req-item::before { content: '• '; }
 .req-item.valid::before { content: '✓ '; }
 
+/* GRID E ITENS */
 .profile-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; margin-top: 20px; }
 .profile-movie-item { background: rgba(255,255,255,0.02); padding: 15px; border: 1px solid #222; transition: 0.2s; position: relative; overflow: hidden; cursor: pointer; display: flex; align-items: center; }
 .profile-movie-item:hover { background: rgba(255,255,255,0.05); border-color: #fff; }
 .profile-movie-item:hover::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: var(--highlight); }
 
+/* AVALIAÇÃO */
 .rating-stars { display: flex; justify-content: center; gap: 10px; margin: 20px 0; cursor: pointer; }
 .star-icon { font-size: 2rem; color: #222; transition: 0.2s; }
 .star-icon:hover, .star-icon.active { color: var(--highlight); } 
@@ -157,13 +177,19 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 .stat-label { color: #555; font-size: 0.7rem; margin-bottom: 5px; text-transform: uppercase; }
 .stat-value { font-size: 2.5rem; font-weight: bold; color: #fff; line-height: 1; }
 
+/* BUSCA E LISTAS */
 .search-result-item { display: flex; justify-content: space-between; align-items: center; background: #111; border: 1px solid #333; padding: 10px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; }
 .search-result-item:hover { border-color: var(--highlight); background: #1a1a1a; }
 .search-btn-action { background: #222; color: #fff; border: none; padding: 5px 10px; font-size: 0.7rem; cursor: pointer; }
 .search-empty { color: #666; text-align: center; margin-top: 20px; font-style: italic; }
 
+/* AVATARES (TAMANHOS AJUSTADOS EM 25% MENOS) */
 .avatar-base { border-radius: 50%; object-fit: cover; border: 1px solid #333; flex-shrink: 0; }
+
+/* Era 80px -> Agora 60px */
 .user-avatar-mini { width: 60px; height: 60px; }
+
+/* Era 160px -> Agora 120px */
 .avatar-large { width: 120px; height: 120px; border: 3px solid #333; margin-right: 15px; font-size: 3rem; }
 
 .avatar-grid { display: flex; gap: 15px; margin-top: 15px; margin-bottom: 20px; flex-wrap: wrap; }
@@ -173,6 +199,7 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 .avatar-letter { display: flex; align-items: center; justify-content: center; color: #fff; font-weight: bold; font-family: sans-serif; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
 .search-avatar { width: 35px; height: 35px; margin-right: 15px; font-size: 0.9rem; }
 
+/* COLEÇÕES */
 .collection-card { background: linear-gradient(45deg, #111, #0a0a0a); border: 1px solid #333; padding: 20px; margin-bottom: 15px; position: relative; overflow: hidden; transition: 0.3s; cursor: pointer; }
 .collection-card:hover { border-color: #666; background: #161616; }
 .collection-card.completed { border-color: var(--success); box-shadow: 0 0 15px rgba(0, 230, 118, 0.1); }
@@ -262,17 +289,19 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
 .movie-html-content p { margin-bottom: 15px; color: #ccc; line-height: 1.6; }
 .movie-html-content strong { color: #fff; font-weight: bold; }
 
+/* LAYOUT DE PERFIL */
 .profile-body { display: flex; gap: 40px; flex-wrap: wrap; width: 100%; flex: 1; min-height: 0; }
 .profile-sidebar { flex: 1 1 200px; display: flex; flex-direction: column; }
 .profile-main { flex: 2 1 300px; display: flex; flex-direction: column; min-height: 0; }
 
+/* SOCIAL FEED */
 .social-screen { width: 100%; height: 100%; padding: 0 50px; display: flex; flex-direction: column; background: var(--bg-color); overflow: hidden; pointer-events: auto; }
 .social-header { display: flex; justify-content: flex-start; align-items: center; gap: 30px; padding: 30px 0 15px 0; border-bottom: 1px solid #333; position: sticky; top: 0; z-index: 10; background: var(--bg-color); }
 .social-feed-list { flex: 1; overflow-y: auto; padding: 20px 0; }
 .feed-card { background: #111; border: 1px solid #333; padding: 15px; margin-bottom: 15px; border-radius: 4px; }
 .feed-content { padding-left: 50px; }
 
-/* --- LISTAS DE SEGUIDORES (NOVO) --- */
+/* --- LISTAS DE SEGUIDORES --- */
 .user-list-item {
     display: flex;
     justify-content: space-between;
@@ -343,6 +372,7 @@ video { width: 100%; height: 100%; object-fit: contain; outline: none; }
     background: rgba(204, 0, 0, 0.1);
 }
 
+/* RESPONSIVO MOBILE */
 @media (max-width: 768px) {
     .social-screen-container { padding: 0 15px !important; }
     .social-screen { padding: 0 15px !important; }
