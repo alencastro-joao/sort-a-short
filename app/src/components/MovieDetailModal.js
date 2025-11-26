@@ -41,7 +41,6 @@ export default function MovieDetailModal({ movie, user, onClose, enableRating = 
     const isBigText = rawText && rawText.length > 350;
 
     return createElement('div', { className: 'auth-modal', style: { background: 'rgba(0,0,0,0.95)', zIndex: 300 } },
-        // AJUSTE: maxWidth reduzido para 550px (encurtado horizontalmente)
         createElement('div', { className: 'movie-card', style: { padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', maxHeight: '90vh', maxWidth: '550px', width: '95%' } },
             
             createElement('div', { style: { position: 'absolute', top: 20, right: 20, zIndex: 10 } }, 
@@ -58,7 +57,6 @@ export default function MovieDetailModal({ movie, user, onClose, enableRating = 
                         style: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' },
                         onError: (e) => e.target.style.display = 'none' 
                     }),
-                    // AJUSTE: Gradiente aumentado (altura total) e mais intenso
                     createElement('div', { key: 'grad', style: { 
                         position: 'absolute', bottom: 0, left: 0, width: '100%', height: '450px', 
                         background: 'linear-gradient(to bottom, transparent 0%, rgba(15,15,15,0.4) 40%, #0f0f0f 100%)' 
@@ -67,9 +65,7 @@ export default function MovieDetailModal({ movie, user, onClose, enableRating = 
 
                 createElement('div', { key: 'content', style: { padding: '20px 40px 40px 40px', marginTop: posterUrl ? '-60px' : '40px', position: 'relative' } }, [
                     
-                    // AJUSTE: Título principal (h2) movido para CIMA do subtítulo (h3)
                     createElement('h2', { key: 'tit', style: { margin: '0 0 10px 0', fontSize: '2rem', color: '#fff', lineHeight: '1.1', textShadow: '0 2px 4px rgba(0,0,0,0.8)' } }, movie.titulo),
-                    
                     createElement('h3', { key: 'sub', style: { margin: 0, marginBottom: 20, fontSize: '0.8rem', color: 'var(--highlight)', letterSpacing: 1, textTransform: 'uppercase', lineHeight: '1.4', textShadow: '0 2px 4px rgba(0,0,0,0.8)' } }, finalTitle),
 
                     createElement('div', { key: 'meta', style: { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 15, marginBottom: 25, fontSize: '0.8rem', color: '#888', borderBottom: '1px solid #333', paddingBottom: 20 } }, [

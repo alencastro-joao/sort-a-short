@@ -3,7 +3,7 @@ const React = window.React;
 const { useState, useEffect, createElement } = React;
 import { Api } from '../api.js';
 import { getAvatarUI, formatDate } from '../utils.js';
-import AddFriends from './FriendAdd.js';
+import AddFriends from './AddFriends.js';
 
 export default function SocialFeed({ user, catalog, onViewFriend }) {
     const [feed, setFeed] = useState([]);
@@ -71,7 +71,6 @@ export default function SocialFeed({ user, catalog, onViewFriend }) {
                 ]);
             })
         ]),
-        // CORREÇÃO: Passa followingList
         showAddFriendsModal && createElement(AddFriends, { key: 'adm', userEmail: user.email, followingList: user.following || [], onClose: () => setShowAddFriendsModal(false) })
     ]);
 }

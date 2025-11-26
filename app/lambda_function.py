@@ -73,66 +73,48 @@ def lambda_handler(event, context):
 
         print(f"DEBUG: {method} {path}")
 
-        # --- ROTA 0: PROXY POSTERS ---
         if path.startswith('/posters/'):
             key = path.lstrip('/')
             try:
                 response = s3.get_object(Bucket=BUCKET_NAME, Key=key)
                 image_content = response['Body'].read()
-                return {
-                    "statusCode": 200,
-                    "headers": { "Content-Type": "image/jpeg", "Cache-Control": "public, max-age=86400" },
-                    "body": base64.b64encode(image_content).decode('utf-8'),
-                    "isBase64Encoded": True
-                }
+                return { "statusCode": 200, "headers": { "Content-Type": "image/jpeg", "Cache-Control": "public, max-age=86400" }, "body": base64.b64encode(image_content).decode('utf-8'), "isBase64Encoded": True }
             except: return {"statusCode": 404, "body": "Poster not found"}
 
-        # --- ROTA 0.1: ARQUIVOS ESTÁTICOS ---
         clean_path = path.lstrip('/')
         abs_path = os.path.abspath(os.path.join(os.getcwd(), clean_path))
-        
         if os.path.exists(abs_path) and os.getcwd() in abs_path and os.path.isfile(abs_path):
             mime_type = "text/plain"
-            # DETECÇÃO MANUAL DE MIME TYPES
             if clean_path.endswith(".js"): mime_type = "application/javascript"
             elif clean_path.endswith(".css"): mime_type = "text/css"
             elif clean_path.endswith(".html"): mime_type = "text/html"
             elif clean_path.endswith(".png"): mime_type = "image/png"
             elif clean_path.endswith(".jpg"): mime_type = "image/jpeg"
-            elif clean_path.endswith(".mp3"): mime_type = "audio/mpeg" # ADICIONADO
+            elif clean_path.endswith(".mp3"): mime_type = "audio/mpeg"
             else: mime_type, _ = mimetypes.guess_type(abs_path)
-            
             try:
-                # Lógica para ler binário (Imagens e Áudio) vs Texto
                 is_binary = 'image' in str(mime_type) or 'audio' in str(mime_type)
-                read_mode = 'rb' if is_binary else 'r'
-                encoding = None if is_binary else 'utf-8'
-                
-                with open(abs_path, read_mode, encoding=encoding) as f: content = f.read()
-                
+                with open(abs_path, 'rb' if is_binary else 'r', encoding=None if is_binary else 'utf-8') as f: content = f.read()
                 is_b64 = False
                 if is_binary:
                     content = base64.b64encode(content).decode('utf-8')
                     is_b64 = True
-                
                 return { "statusCode": 200, "headers": { "Content-Type": str(mime_type), "Cache-Control": "no-cache" }, "body": content, "isBase64Encoded": is_b64 }
             except: pass
 
-        # --- ROTA 1: RATING ---
         if path == '/api/rating':
             if method == 'POST':
-                user_email = body.get('email', '').strip().lower()
-                movie_id = body.get('movie_id')
+                user_email = body.get('email', '').strip().lower(); movie_id = body.get('movie_id')
                 rating = body.get('rating'); review = body.get('review', '')
                 if not user_email or not movie_id: return {"statusCode": 400, "body": "Erro dados"}
                 try:
                     ts = datetime.now().isoformat()
                     table.put_item(Item={'pk': f"RATING#{movie_id}", 'sk': f"USER#{user_email}", 'rating': Decimal(str(rating)), 'review': review, 'timestamp': ts})
                     prof = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}).get('Item', {})
-                    curr_rev = prof.get('reviews', [])
-                    new_rev = [r for r in curr_rev if r.get('movie_id') != movie_id]
-                    new_rev.append({'movie_id': movie_id, 'rating': Decimal(str(rating)), 'review': review, 'timestamp': ts})
-                    table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET reviews = :r", ExpressionAttributeValues={':r': new_rev})
+                    curr = prof.get('reviews', [])
+                    new_r = [r for r in curr if r.get('movie_id') != movie_id]
+                    new_r.append({'movie_id': movie_id, 'rating': Decimal(str(rating)), 'review': review, 'timestamp': ts})
+                    table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET reviews = :r", ExpressionAttributeValues={':r': new_r})
                     return {"statusCode": 200, "body": json.dumps({"status": "ok"})}
                 except Exception as e: return {"statusCode": 500, "body": str(e)}
             if method == 'DELETE':
@@ -140,12 +122,11 @@ def lambda_handler(event, context):
                 try:
                     table.delete_item(Key={'pk': f"RATING#{movie_id}", 'sk': f"USER#{user_email}"})
                     prof = table.get_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}).get('Item', {})
-                    curr_rev = [r for r in prof.get('reviews', []) if r.get('movie_id') != movie_id]
-                    table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET reviews = :r", ExpressionAttributeValues={':r': curr_rev})
+                    curr = [r for r in prof.get('reviews', []) if r.get('movie_id') != movie_id]
+                    table.update_item(Key={'pk': f"USER#{user_email}", 'sk': 'PROFILE'}, UpdateExpression="SET reviews = :r", ExpressionAttributeValues={':r': curr})
                     return {"statusCode": 200, "body": json.dumps({"status": "deleted"})}
                 except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-        # --- ROTA 2: AUTH ---
         if path == '/api/auth/signup': 
             email = body.get('email', '').strip().lower()
             cognito.sign_up(ClientId=COGNITO_CLIENT_ID, Username=email, Password=body.get('password'), UserAttributes=[{'Name':'email','Value':email}])
@@ -159,7 +140,6 @@ def lambda_handler(event, context):
             resp = cognito.initiate_auth(ClientId=COGNITO_CLIENT_ID, AuthFlow='USER_PASSWORD_AUTH', AuthParameters={'USERNAME': email, 'PASSWORD': body.get('password')})
             return { "statusCode": 200, "body": json.dumps({"token": resp['AuthenticationResult']['AccessToken'], "email": email}) }
 
-        # --- ROTA 3: PERFIL ---
         if path == '/api/history':
             if method == 'GET':
                 email = event.get('queryStringParameters', {}).get('email', '').strip().lower()
@@ -187,10 +167,8 @@ def lambda_handler(event, context):
                 table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET watched = list_append(if_not_exists(watched, :empty), :movie), energy = :e, energy_ts = :t", ExpressionAttributeValues={':movie': [body.get('movie_id')], ':empty': [], ':e': real_e - 1, ':t': real_ts})
                 return {"statusCode": 200, "body": json.dumps({"status": "saved", "energy": real_e - 1})}
 
-        # --- ROTA 4: ATUALIZAR PERFIL ---
         if path == '/api/profile' and method == 'POST':
-            email = body.get('email', '').strip().lower()
-            new_name = body.get('username', '').strip().lower()
+            email = body.get('email', '').strip().lower(); new_name = body.get('username', '').strip().lower()
             if not re.match("^[a-z0-9_]{3,15}$", new_name): return {"statusCode": 400, "body": "Nome invalido"}
             try:
                 table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET username = :u, avatar = :a, color = :c", ExpressionAttributeValues={':u': new_name, ':a': int(body.get('avatar', 0)), ':c': body.get('color', '#333')})
@@ -199,7 +177,6 @@ def lambda_handler(event, context):
                 return {"statusCode": 200, "body": json.dumps({"status": "ok"})}
             except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-        # --- ROTA 5: PESQUISA ---
         if path == '/api/users/search':
             q = event.get('queryStringParameters', {}).get('q', '').strip().lower()
             if len(q) < 2: return {"statusCode": 200, "body": "[]"}
@@ -209,45 +186,37 @@ def lambda_handler(event, context):
                 return {"statusCode": 200, "body": json.dumps(results, cls=DecimalEncoder)}
             except: return {"statusCode": 200, "body": "[]"}
 
-        # --- ROTA 6: SEGUIR ---
         if path == '/api/social/follow' and method == 'POST':
             my_email = body.get('email', '').strip().lower()
             target_email = body.get('target_email', '').strip().lower() if body.get('target_email') else None
             target_code = body.get('friend_code')
             action = body.get('action')
-            
             if not my_email: return {"statusCode": 400, "body": "Erro email"}
-            
             try:
                 if target_code and not target_email:
                     resp = table.scan(FilterExpression=Attr('friend_code').eq(target_code) & Attr('sk').eq('PROFILE'))
                     if resp['Items']: target_email = resp['Items'][0]['pk'].replace('USER#', '')
-                
                 if not target_email: return {"statusCode": 404, "body": "Usuário não encontrado"}
-
                 if action == 'follow':
                     table.update_item(Key={'pk': f"USER#{my_email}", 'sk': 'PROFILE'}, UpdateExpression="SET following = list_append(if_not_exists(following, :empty), :t)", ExpressionAttributeValues={':t': [target_email], ':empty': []})
                     table.update_item(Key={'pk': f"USER#{target_email}", 'sk': 'PROFILE'}, UpdateExpression="SET followers = list_append(if_not_exists(followers, :empty), :m)", ExpressionAttributeValues={':m': [my_email], ':empty': []})
                 elif action == 'unfollow':
                     me = table.get_item(Key={'pk': f"USER#{my_email}", 'sk': 'PROFILE'}).get('Item', {})
-                    new_following = [x for x in me.get('following', []) if x != target_email]
-                    table.update_item(Key={'pk': f"USER#{my_email}", 'sk': 'PROFILE'}, UpdateExpression="SET following = :f", ExpressionAttributeValues={':f': new_following})
+                    new_f = [x for x in me.get('following', []) if x != target_email]
+                    table.update_item(Key={'pk': f"USER#{my_email}", 'sk': 'PROFILE'}, UpdateExpression="SET following = :f", ExpressionAttributeValues={':f': new_f})
                     tgt = table.get_item(Key={'pk': f"USER#{target_email}", 'sk': 'PROFILE'}).get('Item', {})
-                    new_followers = [x for x in tgt.get('followers', []) if x != my_email]
-                    table.update_item(Key={'pk': f"USER#{target_email}", 'sk': 'PROFILE'}, UpdateExpression="SET followers = :f", ExpressionAttributeValues={':f': new_followers})
-
+                    new_t = [x for x in tgt.get('followers', []) if x != my_email]
+                    table.update_item(Key={'pk': f"USER#{target_email}", 'sk': 'PROFILE'}, UpdateExpression="SET followers = :f", ExpressionAttributeValues={':f': new_t})
                 return {"statusCode": 200, "body": json.dumps({"status": "ok"})}
             except Exception as e: return {"statusCode": 500, "body": str(e)}
 
-        # --- ROTA 7: SOCIAL FEED ---
         if path == '/api/social/feed':
             email = event.get('queryStringParameters', {}).get('email', '').strip().lower()
             try:
                 prof = table.get_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}).get('Item', {})
-                following_list = prof.get('following', [])
-                feed = []
-                seen = set()
-                for f_email in following_list:
+                following = prof.get('following', [])
+                feed = []; seen = set()
+                for f_email in following:
                     try:
                         f_prof = table.get_item(Key={'pk': f"USER#{f_email}", 'sk': 'PROFILE'}).get('Item', {})
                         reviews = f_prof.get('reviews', [])
@@ -269,8 +238,7 @@ def lambda_handler(event, context):
             table.update_item(Key={'pk': f"USER#{email}", 'sk': 'PROFILE'}, UpdateExpression="SET energy = :e, energy_ts = :t", ExpressionAttributeValues={':e': 3, ':t': int(time.time())})
             return {"statusCode": 200, "body": json.dumps({"status": "refilled"})}
 
-        # --- FALLBACK PARA 404 ---
-        if path.endswith('.js') or path.endswith('.css') or path.endswith('.png') or path.endswith('.jpg') or path.endswith('.mp3'): # ADICIONADO MP3 AQUI TAMBÉM
+        if path.endswith('.js') or path.endswith('.css') or path.endswith('.png') or path.endswith('.jpg') or path.endswith('.mp3'):
             return {"statusCode": 404, "body": f"File not found: {path}"}
 
         html = get_file_content('index.html')

@@ -120,7 +120,6 @@
 
                 audio.play().catch(e => {
                     console.warn("Audio falhou, usando fallback de tempo.", e);
-                    // Fallback: Se o audio falhar (ex: mobile bloqueado), para em 3s
                     setTimeout(stopAll, 3000);
                 });
             };

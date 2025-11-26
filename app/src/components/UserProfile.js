@@ -3,15 +3,13 @@ import { Api } from '../api.js';
 import { AVATAR_COUNT, AVATAR_COLORS, getAvatarUI } from '../utils.js';
 import FollowAction from './FollowAction.js';
 import FollowListModal from './FollowListModal.js';
-import AddFriends from './FriendAdd.js';
+import AddFriends from './AddFriends.js';
 import CollectionCard from './CollectionCard.js';
 import CollectionDetail from './CollectionDetail.js';
 import MovieDetailModal from './MovieDetailModal.js';
 
 const React = window.React;
 const { useState, useMemo, createElement, useEffect } = React;
-
-const TYPE_MAP = { pixar: 'studio', ghibli: 'studio', georgeDunning: 'director', leiLei: 'director' };
 
 export default function UserProfile({ user, watchedList, reviewsList, catalog, collections, onClose, onLogout, onSelectMovie, onUpdateUser, initialVisitorEmail, clearVisitorEmail }) {
     const [editing, setEditing] = useState(false);
@@ -72,24 +70,29 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
         return movie ? { ...r, title: movie.titulo, id: r.movie_id } : null;
     }).filter(r => r !== null).reverse();
 
+    const safeWatchedList = watchedList || []; 
+
+    // --- CORREÇÃO DO FILTRO ---
     const filteredCollectionList = useMemo(() => {
         if (!collections || !catalog) return [];
         const list = Object.keys(collections).map(key => ({ ...collections[key], id: key }));
+        
         if (colFilter === 'all') return list;
+        
         return list.filter(col => {
             const allMovies = col.allMovies || [];
-            const watchedCount = allMovies.filter(id => safeWatchedList.includes(id)).length;
-            const myWatchedCount = allMovies.filter(id => watchedList.includes(id)).length;
+            const myWatchedCount = allMovies.filter(id => safeWatchedList.includes(id)).length;
+            
             if (colFilter === 'completed') {
                 if (col.levels && col.levels.length > 0) { return myWatchedCount >= col.levels[0].required; }
                 return allMovies.length > 0 && myWatchedCount >= allMovies.length;
             }
-            const type = TYPE_MAP[col.id] || 'other'; 
+            
+            // AGORA LÊ O TIPO DIRETO DO JSON
+            const type = col.type || 'other'; 
             return type === colFilter;
         });
     }, [collections, catalog, colFilter, watchedList]);
-
-    const safeWatchedList = watchedList || []; 
 
     const handleSaveProfile = async () => {
         if(!tempName.trim()) return;
@@ -111,9 +114,8 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
         setSearching(false);
     };
 
-    // CORREÇÃO: Fecha o modal de lista ao trocar de perfil
     const handleViewUser = async (otherUser) => {
-        setShowListType(null); // <--- FECHA A LISTA DE SEGUIDORES
+        setShowListType(null); // Fecha lista ao trocar de perfil
         setSearching(true);
         const profile = await Api.getProfile(otherUser.email);
         setViewingProfile({ 
@@ -137,7 +139,6 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
 
     return createElement('div', { className: 'auth-modal' },
         createElement('div', { className: 'auth-box profile-box' }, [
-            
             !viewingProfile && createElement('button', { className: 'btn-close-box', onClick: onClose }, '✕'),
             viewingProfile && createElement('button', { className: 'btn-back-box', onClick: handleBackToMe }, '←'),
 
@@ -169,7 +170,6 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
                                         ])
                                     ])
                                 ),
-                                
                                 !editing && createElement('div', { style: { marginTop: 10 } }, [
                                     !viewingProfile && createElement('div', { className: 'user-code-box', style:{marginBottom: 10} }, [
                                         createElement('span', { className: 'user-code-text' }, `#${activeUser.friend_code || "..."}`),
@@ -181,7 +181,6 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
                                     ])
                                 ])
                             ]),
-                            
                             viewingProfile && createElement(FollowAction, { currentUserEmail: user.email, targetUserEmail: viewingProfile.email, isFollowing: myFollowing.includes(viewingProfile.email), onUpdate: onUpdateUser })
                         ])
                     ])
@@ -247,14 +246,7 @@ export default function UserProfile({ user, watchedList, reviewsList, catalog, c
             ]),
             detailMovie && createElement(MovieDetailModal, { key: detailMovie.id, movie: detailMovie, user: user, onClose: handleCloseDetail, enableRating: !!editingReview, initialRating: editingReview ? editingReview.rating : 0, initialReview: editingReview ? editingReview.review : "", isWatched: safeWatchedList.includes(detailMovie.id), onPlay: (!viewingProfile && !editingReview && safeWatchedList.includes(detailMovie.id)) ? () => { setDetailMovie(null); onSelectMovie(detailMovie.id); } : null }),
             
-            showListType && createElement(FollowListModal, { 
-                title: showListType === 'following' ? 'SEGUINDO' : 'SEGUIDORES', 
-                listEmails: showListType === 'following' ? (viewingProfile ? viewingProfile.following : myFollowing) : (viewingProfile ? viewingProfile.followers : myFollowers), 
-                currentUser: user, 
-                onClose: () => setShowListType(null), 
-                onUpdate: onUpdateUser,
-                onViewProfile: handleViewUser 
-            })
+            showListType && createElement(FollowListModal, { title: showListType === 'following' ? 'SEGUINDO' : 'SEGUIDORES', listEmails: showListType === 'following' ? (viewingProfile ? viewingProfile.following : myFollowing) : (viewingProfile ? viewingProfile.followers : myFollowers), currentUser: user, onClose: () => setShowListType(null), onUpdate: onUpdateUser, onViewProfile: handleViewUser })
         ])
     );
 }

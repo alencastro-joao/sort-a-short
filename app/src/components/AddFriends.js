@@ -25,7 +25,6 @@ export default function AddFriends({ onClose, userEmail, followingList = [] }) {
                 method: 'POST',
                 body: JSON.stringify({ email: userEmail, friend_code: code, action: 'follow' })
             });
-            
             if (res.status === 200) {
                 setStatus('Usuário encontrado e seguido!');
                 setTimeout(() => { onClose(); }, 1500);

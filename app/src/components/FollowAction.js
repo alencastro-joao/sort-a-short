@@ -7,11 +7,9 @@ export default function FollowAction({ currentUserEmail, targetUserEmail, isFoll
     const [followingState, setFollowingState] = useState(isFollowing);
     const [hover, setHover] = useState(false);
     
-    // REF para garantir que o componente ainda existe antes de atualizar o estado
     const isMounted = useRef(true);
 
     useEffect(() => {
-        isMounted.current = true;
         return () => { isMounted.current = false; };
     }, []);
 
@@ -20,9 +18,8 @@ export default function FollowAction({ currentUserEmail, targetUserEmail, isFoll
     }, [isFollowing]);
 
     const handleToggle = async (e) => {
-        e.stopPropagation(); // Evita abrir o perfil ao clicar no botão
+        e.stopPropagation();
         if (loading) return;
-        
         if (isMounted.current) setLoading(true);
 
         const action = followingState ? 'unfollow' : 'follow';
@@ -37,17 +34,15 @@ export default function FollowAction({ currentUserEmail, targetUserEmail, isFoll
                 })
             });
             
-            // Só atualiza estado local se ainda estiver montado
             if (isMounted.current) {
                 setFollowingState(!followingState);
                 setLoading(false);
             }
             
-            // Notifica o pai para recarregar a lista
             if (onUpdate) onUpdate();
             
         } catch (error) {
-            console.error("Erro follow:", error);
+            console.error(error);
             if (isMounted.current) setLoading(false);
         }
     };
